@@ -99,6 +99,11 @@ const DailyRewards = () => {
   });
   const [loading, setLoading] = useState(true);
   const [claimingDay, setClaimingDay] = useState<number | null>(null);
+  const [timeUntilNextClaim, setTimeUntilNextClaim] = useState<{
+    hours: number;
+    minutes: number;
+    seconds: number;
+  }>({ hours: 0, minutes: 0, seconds: 0 });
 
   // Initialize reward data
   useEffect(() => {
@@ -153,6 +158,28 @@ const DailyRewards = () => {
     fetchRewards();
   }, [navigate, toast]);
 
+  // Timer for next claim
+  useEffect(() => {
+    if (!rewardStatus.claimedToday) return;
+
+    const updateTimer = () => {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+
+      const diff = tomorrow.getTime() - now.getTime();
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      setTimeUntilNextClaim({ hours, minutes, seconds });
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [rewardStatus.claimedToday]);
   const handleClaimReward = async (day: number) => {
     try {
       setClaimingDay(day);
