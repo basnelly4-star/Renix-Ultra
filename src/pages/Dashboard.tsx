@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Eye, EyeOff, Copy, Gift, Banknote, CheckCircle2, History, Disc3, Radio, Shield, TrendingUp, Users, Home, Gamepad2, User, Send } from "lucide-react";
+import { Eye, EyeOff, Copy, Gift, Banknote, CheckCircle2, History, Disc3, Radio, Shield, TrendingUp, Users, Home, Gamepad2, User, Send, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
 import { recoverFromInvalidRefreshToken, supabase } from "@/integrations/supabase/client";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
@@ -23,7 +23,15 @@ const Dashboard = () => {
   const [lastClaimTime, setLastClaimTime] = useState<Date | null>(null);
   const [showTopUp, setShowTopUp] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState("Ready!");
+  const [showDailyRewardNotif, setShowDailyRewardNotif] = useState(false);
+  const [supportMessage, setSupportMessage] = useState("Contact Support");
   const authRetryCountRef = useRef(0);
+  const dailyRewardNotifTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const dailyRewardIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const supportIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const hasDailyClaimedRef = useRef(false);
+
+  const supportMessages = ["Support", "Contact Support", "Need Help"];
 
   useEffect(() => {
     checkAuth();
@@ -40,6 +48,85 @@ const Dashboard = () => {
       authListener.subscription.unsubscribe();
     };
   }, [navigate]);
+
+  // Daily Reward Notification Popup
+  useEffect(() => {
+    if (!profile) return;
+
+    // Check if claimed today from localStorage
+    const checkDailyReward = () => {
+      const storedData = localStorage.getItem("dailyRewardStreak");
+      const streakData = storedData ? JSON.parse(storedData) : null;
+      
+      if (streakData?.lastClaimDate) {
+        const lastClaim = new Date(streakData.lastClaimDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        lastClaim.setHours(0, 0, 0, 0);
+        
+        if (lastClaim.getTime() === today.getTime()) {
+          hasDailyClaimedRef.current = true;
+          // Clear any existing intervals
+          if (dailyRewardIntervalRef.current) {
+            clearInterval(dailyRewardIntervalRef.current);
+            dailyRewardIntervalRef.current = null;
+          }
+          return;
+        }
+      }
+      
+      hasDailyClaimedRef.current = false;
+      
+      // Show notification immediately and every 1 minute
+      const showNotif = () => {
+        setShowDailyRewardNotif(true);
+        // Auto-dismiss after 5 seconds
+        if (dailyRewardNotifTimeoutRef.current) {
+          clearTimeout(dailyRewardNotifTimeoutRef.current);
+        }
+        dailyRewardNotifTimeoutRef.current = setTimeout(() => {
+          setShowDailyRewardNotif(false);
+        }, 5000);
+      };
+
+      showNotif();
+      
+      // Set interval to show every 60 seconds
+      if (dailyRewardIntervalRef.current) {
+        clearInterval(dailyRewardIntervalRef.current);
+      }
+      dailyRewardIntervalRef.current = setInterval(showNotif, 60000);
+    };
+
+    checkDailyReward();
+
+    return () => {
+      if (dailyRewardIntervalRef.current) {
+        clearInterval(dailyRewardIntervalRef.current);
+      }
+      if (dailyRewardNotifTimeoutRef.current) {
+        clearTimeout(dailyRewardNotifTimeoutRef.current);
+      }
+    };
+  }, [profile]);
+
+  // Support Message Cycling
+  useEffect(() => {
+    let messageIndex = 0;
+    
+    const updateMessage = () => {
+      setSupportMessage(supportMessages[messageIndex]);
+      messageIndex = (messageIndex + 1) % supportMessages.length;
+    };
+
+    supportIntervalRef.current = setInterval(updateMessage, 20000);
+
+    return () => {
+      if (supportIntervalRef.current) {
+        clearInterval(supportIntervalRef.current);
+      }
+    };
+  }, [supportMessages]);
 
   useEffect(() => {
     if (lastClaimTime) {
@@ -245,6 +332,17 @@ const Dashboard = () => {
       setLastClaimTime(new Date());
       setCanClaim(false);
       await loadProfile(user.id);
+      
+      // Stop showing daily reward notification after claim
+      if (dailyRewardIntervalRef.current) {
+        clearInterval(dailyRewardIntervalRef.current);
+        dailyRewardIntervalRef.current = null;
+      }
+      if (dailyRewardNotifTimeoutRef.current) {
+        clearTimeout(dailyRewardNotifTimeoutRef.current);
+      }
+      setShowDailyRewardNotif(false);
+      hasDailyClaimedRef.current = true;
     } catch (error: any) {
       toast.error("Failed to claim bonus");
     } finally {
@@ -276,6 +374,31 @@ const Dashboard = () => {
     <div className="min-h-screen liquid-bg pb-20" style={{ position: 'relative', zIndex: 1 }}>
       <WelcomeModal />
       <WithdrawalNotification />
+
+      {/* Daily Reward Notification Popup */}
+      {showDailyRewardNotif && (
+        <div className="fixed top-4 left-4 right-4 z-50 animate-in fade-in slide-in-from-top-2">
+          <Card className="bg-gradient-to-r from-[#EAB308] to-[#FBBF24] border-0 shadow-lg shadow-[#EAB308]/30 p-4">
+            <div className="flex items-center gap-3">
+              <Gift className="w-5 h-5 text-black flex-shrink-0" />
+              <div className="flex-1">
+                <p className="font-bold text-black text-sm">Daily Reward Available!</p>
+                <p className="text-black/80 text-xs">Claim your daily reward to keep your streak alive.</p>
+              </div>
+              <Button
+                size="sm"
+                onClick={() => {
+                  setShowDailyRewardNotif(false);
+                  navigate("/daily-rewards");
+                }}
+                className="bg-black text-[#EAB308] hover:bg-black/90 flex-shrink-0"
+              >
+                Claim Now
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-secondary p-4 text-primary-foreground glow-primary" style={{ pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
@@ -403,12 +526,13 @@ const Dashboard = () => {
             </button>
             <button
               type="button"
-              onClick={() => navigate("/broadcast")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px]"
+              onClick={() => navigate("/support")}
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] relative"
               style={{ WebkitTapHighlightColor: 'transparent' }}
+              title={supportMessage}
             >
-              <Radio className="w-5 h-5 text-primary" />
-              <span className="text-xs font-semibold">Invest</span>
+              <HelpCircle className="w-5 h-5 text-[#EAB308]" />
+              <span className="text-xs font-semibold">{supportMessage}</span>
             </button>
           </div>
         </div>
