@@ -381,30 +381,30 @@ const DailyRewards = () => {
             </button>
 
             {claimedToday && (
-              <div className="mt-6 rounded-2xl border border-[#EAB308]/20 bg-black/50 p-4 backdrop-blur-sm">
-                <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Next reward available in:
+              <div className="mt-2 rounded-lg border border-[#EAB308]/20 bg-black/50 p-2 backdrop-blur-sm">
+                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Next reward in:
                 </p>
-                <div className="flex items-center justify-center gap-2 text-center">
-                  <div className="rounded-lg bg-[#EAB308]/10 px-3 py-2 border border-[#EAB308]/20">
-                    <p className="text-2xl font-bold text-[#EAB308]">
+                <div className="flex items-center justify-center gap-1 text-center">
+                  <div className="rounded bg-[#EAB308]/10 px-1.5 py-1 border border-[#EAB308]/20">
+                    <p className="text-sm font-bold text-[#EAB308]">
                       {String(timeUntilNextClaim.hours).padStart(2, "0")}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">h</p>
+                    <p className="text-[8px] text-muted-foreground">h</p>
                   </div>
-                  <span className="text-[#EAB308]/60 text-lg font-bold">:</span>
-                  <div className="rounded-lg bg-[#EAB308]/10 px-3 py-2 border border-[#EAB308]/20">
-                    <p className="text-2xl font-bold text-[#EAB308]">
+                  <span className="text-[#EAB308]/60 text-xs font-bold">:</span>
+                  <div className="rounded bg-[#EAB308]/10 px-1.5 py-1 border border-[#EAB308]/20">
+                    <p className="text-sm font-bold text-[#EAB308]">
                       {String(timeUntilNextClaim.minutes).padStart(2, "0")}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">m</p>
+                    <p className="text-[8px] text-muted-foreground">m</p>
                   </div>
-                  <span className="text-[#EAB308]/60 text-lg font-bold">:</span>
-                  <div className="rounded-lg bg-[#EAB308]/10 px-3 py-2 border border-[#EAB308]/20">
-                    <p className="text-2xl font-bold text-[#EAB308]">
+                  <span className="text-[#EAB308]/60 text-xs font-bold">:</span>
+                  <div className="rounded bg-[#EAB308]/10 px-1.5 py-1 border border-[#EAB308]/20">
+                    <p className="text-sm font-bold text-[#EAB308]">
                       {String(timeUntilNextClaim.seconds).padStart(2, "0")}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">s</p>
+                    <p className="text-[8px] text-muted-foreground">s</p>
                   </div>
                 </div>
               </div>
