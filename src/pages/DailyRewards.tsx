@@ -35,8 +35,13 @@ const getRewardStatus = (profile: any): RewardStatus => {
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
 
-  const currentDay = Number(profile?.daily_reward_day ?? 0);
-  const lastClaimDate = profile?.last_claim_date ? normalizeDay(new Date(profile.last_claim_date)) : null;
+  // Get streak data from localStorage
+  const storedData = localStorage.getItem("dailyRewardStreak");
+  const streakData = storedData ? JSON.parse(storedData) : { currentDay: 0, lastClaimDate: null };
+
+  const currentDay = streakData.currentDay || 0;
+  const lastClaimDateStr = streakData.lastClaimDate;
+  const lastClaimDate = lastClaimDateStr ? normalizeDay(new Date(lastClaimDateStr)) : null;
 
   if (!lastClaimDate) {
     return {
@@ -106,11 +111,16 @@ const DailyRewards = () => {
         }
 
         // Check user's daily rewards status
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from("profiles")
-          .select("*")
+          .select("id,balance")
           .eq("id", session.user.id)
           .single();
+
+        if (profileError) {
+          console.error('Profile fetch error:', profileError);
+          throw profileError;
+        }
 
         if (profile) {
           const rewardStatus = getRewardStatus(profile);
@@ -149,18 +159,27 @@ const DailyRewards = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast.error("Please login first");
+        setClaimingDay(null);
         return;
       }
 
-      // Get current profile
-      const { data: profile } = await supabase
+      // Get current profile - only fetch balance
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("balance, daily_reward_day, last_claim_date")
+        .select("balance")
         .eq("id", user.id)
         .single();
 
+      if (profileError) {
+        console.error('Profile fetch error:', profileError);
+        toast.error("Failed to load profile: " + (profileError?.message || "Unknown error"));
+        setClaimingDay(null);
+        return;
+      }
+
       if (!profile) {
         toast.error("Profile not found");
+        setClaimingDay(null);
         return;
       }
 
@@ -179,27 +198,40 @@ const DailyRewards = () => {
       }
 
       const rewardAmount = 10000 + (day - 1) * 5000; // Day 1: 10k, Day 2: 15k, Day 3: 20k, etc.
-      const newBalance = (profile.balance || 0) + rewardAmount;
+      const newBalance = (profile?.balance || 0) + rewardAmount;
 
-      // Update profile with new balance and claim info
+      // Update profile with new balance only
       const { error: updateError } = await supabase
         .from("profiles")
         .update({
           balance: newBalance,
-          daily_reward_day: day,
-          last_claim_date: new Date().toISOString(),
         })
         .eq("id", user.id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('Update error:', updateError);
+        throw updateError;
+      }
+
+      // Save streak data to localStorage
+      const streakData = {
+        currentDay: day,
+        lastClaimDate: new Date().toISOString(),
+      };
+      localStorage.setItem("dailyRewardStreak", JSON.stringify(streakData));
 
       // Record the claim in daily_rewards table
-      await supabase.from("daily_rewards").insert({
+      const { error: insertError } = await supabase.from("daily_rewards").insert({
         user_id: user.id,
         day,
         amount: rewardAmount,
         claimed_date: new Date().toISOString(),
       });
+
+      if (insertError) {
+        console.error('Insert error:', insertError);
+        // Still show success even if logging fails
+      }
 
       toast.success(`₦${rewardAmount.toLocaleString()} claimed for Day ${day}!`);
 
