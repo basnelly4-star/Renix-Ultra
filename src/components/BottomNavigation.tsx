@@ -3,7 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 
 const navItems = [
   { label: "Home", to: "/dashboard", Icon: Home },
-  { label: "Loan", to: "/withdraw", Icon: CreditCard },
+  { label: "Loan", to: "/loan", Icon: CreditCard },
   { label: "Finance", to: "/history", Icon: PieChart },
   { label: "Reward", to: "/daily-rewards", Icon: Gift },
   { label: "Me", to: "/profile", Icon: User },

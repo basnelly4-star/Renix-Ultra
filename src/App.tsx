@@ -10,6 +10,7 @@ import History from "./pages/History";
 import Referrals from "./pages/Referrals";
 import Profile from "./pages/Profile";
 import Withdraw from "./pages/Withdraw";
+import Loan from "./pages/Loan";
 import Upgrade from "./pages/Upgrade";
 import UpgradePayment from "./pages/UpgradePayment";
 import InvestPayment from "./pages/InvestPayment";
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/referrals" element={<Referrals />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/withdraw" element={<Withdraw />} />
+            <Route path="/loan" element={<Loan />} />
             <Route path="/upgrade" element={<Upgrade />} />
             <Route path="/upgrade-payment" element={<UpgradePayment />} />
             <Route path="/invest-payment" element={<InvestPayment />} />
