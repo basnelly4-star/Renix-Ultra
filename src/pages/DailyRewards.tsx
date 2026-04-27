@@ -13,13 +13,87 @@ interface DayReward {
   nextClaimDate?: string;
 }
 
+interface RewardStatus {
+  currentDay: number;
+  nextDay: number;
+  claimedToday: boolean;
+  streakReset: boolean;
+  streakLost: boolean;
+  hasClaimedBefore: boolean;
+}
+
+const normalizeDay = (date: Date) => {
+  const normalized = new Date(date);
+  normalized.setHours(0, 0, 0, 0);
+  return normalized;
+};
+
+const isSameDay = (a: Date, b: Date) => a.getTime() === b.getTime();
+
+const getRewardStatus = (profile: any): RewardStatus => {
+  const today = normalizeDay(new Date());
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const currentDay = Number(profile?.daily_reward_day ?? 0);
+  const lastClaimDate = profile?.last_claim_date ? normalizeDay(new Date(profile.last_claim_date)) : null;
+
+  if (!lastClaimDate) {
+    return {
+      currentDay: 0,
+      nextDay: 1,
+      claimedToday: false,
+      streakReset: false,
+      streakLost: false,
+      hasClaimedBefore: false,
+    };
+  }
+
+  if (isSameDay(lastClaimDate, today)) {
+    return {
+      currentDay,
+      nextDay: currentDay < 8 ? currentDay + 1 : 1,
+      claimedToday: true,
+      streakReset: false,
+      streakLost: false,
+      hasClaimedBefore: true,
+    };
+  }
+
+  if (isSameDay(lastClaimDate, yesterday) && currentDay >= 1 && currentDay < 8) {
+    return {
+      currentDay,
+      nextDay: currentDay + 1,
+      claimedToday: false,
+      streakReset: false,
+      streakLost: false,
+      hasClaimedBefore: true,
+    };
+  }
+
+  return {
+    currentDay: 0,
+    nextDay: 1,
+    claimedToday: false,
+    streakReset: true,
+    streakLost: true,
+    hasClaimedBefore: true,
+  };
+};
+
 const DailyRewards = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [rewards, setRewards] = useState<DayReward[]>([]);
+  const [rewardStatus, setRewardStatus] = useState<RewardStatus>({
+    currentDay: 0,
+    nextDay: 1,
+    claimedToday: false,
+    streakReset: false,
+    streakLost: false,
+  });
   const [loading, setLoading] = useState(true);
   const [claimingDay, setClaimingDay] = useState<number | null>(null);
-  const [userEmail, setUserEmail] = useState<string>("");
 
   // Initialize reward data
   useEffect(() => {
@@ -31,8 +105,6 @@ const DailyRewards = () => {
           return;
         }
 
-        setUserEmail(session.user.email || "");
-
         // Check user's daily rewards status
         const { data: profile } = await supabase
           .from("profiles")
@@ -41,28 +113,21 @@ const DailyRewards = () => {
           .single();
 
         if (profile) {
-          const lastClaimDate = profile.last_claim_date
-            ? new Date(profile.last_claim_date)
-            : null;
+          const rewardStatus = getRewardStatus(profile);
           const today = new Date();
           today.setHours(0, 0, 0, 0);
 
-          // Initialize 8 days of rewards
           const initialized: DayReward[] = Array.from({ length: 8 }, (_, i) => {
             const day = i + 1;
-            const isClaimed =
-              lastClaimDate &&
-              lastClaimDate.toDateString() === today.toDateString() &&
-              profile.daily_reward_day === day;
-
             return {
               day,
               amount: 100000,
-              claimed: isClaimed,
+              claimed: day <= rewardStatus.currentDay,
               nextClaimDate: today.toISOString(),
             };
           });
 
+          setRewardStatus(rewardStatus);
           setRewards(initialized);
         }
 
@@ -98,18 +163,16 @@ const DailyRewards = () => {
         return;
       }
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const lastClaimDate = profile.last_claim_date
-        ? new Date(profile.last_claim_date)
-        : null;
+      const rewardState = getRewardStatus(profile);
 
-      // Check if already claimed today
-      if (
-        lastClaimDate &&
-        lastClaimDate.toDateString() === today.toDateString()
-      ) {
+      if (rewardState.claimedToday) {
         toast.error("Already claimed today! Come back tomorrow.");
+        setClaimingDay(null);
+        return;
+      }
+
+      if (day !== rewardState.nextDay) {
+        toast.error("Your streak has reset. Claim Day 1.");
         setClaimingDay(null);
         return;
       }
@@ -139,9 +202,18 @@ const DailyRewards = () => {
 
       toast.success(`₦${rewardAmount.toLocaleString()} claimed for Day ${day}!`);
 
-      // Update local state
+      const updatedStatus: RewardStatus = {
+        currentDay: day,
+        nextDay: day < 8 ? day + 1 : 1,
+        claimedToday: true,
+        streakReset: false,
+        streakLost: false,
+        hasClaimedBefore: true,
+      };
+
+      setRewardStatus(updatedStatus);
       setRewards((prev) =>
-        prev.map((r) => (r.day === day ? { ...r, claimed: true } : r))
+        prev.map((r) => ({ ...r, claimed: r.day <= day }))
       );
 
       setClaimingDay(null);
@@ -163,8 +235,23 @@ const DailyRewards = () => {
     );
   }
 
-  const claimedToday = rewards.some((r) => r.claimed);
+  const claimedToday = rewardStatus.claimedToday;
+  const availableDay = rewardStatus.nextDay;
   const readyToClaim = !claimedToday;
+  const headerTitle = claimedToday
+    ? rewardStatus.currentDay === 8
+      ? "Streak Complete!"
+      : `Day ${rewardStatus.currentDay} claimed`
+    : "Your reward is ready!";
+  const headerSubtitle = claimedToday
+    ? "You already claimed today. Earn more by completing daily tasks."
+    : `Claim Day ${availableDay} now and keep your streak alive.`;
+  const headerButtonText = claimingDay
+    ? "Claiming..."
+    : claimedToday
+    ? "Earn More"
+    : `Claim Day ${availableDay}`;
+  const showStreakResetNotice = rewardStatus.streakReset && rewardStatus.hasClaimedBefore && !claimedToday;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-[#0a0a0a] to-black px-4 py-6">
@@ -179,30 +266,43 @@ const DailyRewards = () => {
             </div>
 
             <h1 className="mb-2 text-2xl font-bold text-white">
-              Your reward is ready!
+              {headerTitle}
             </h1>
             <p className="mb-6 text-sm text-muted-foreground">
-              Claim your daily bonus and grow your balance
+              {headerSubtitle}
             </p>
 
             <button
               onClick={() => {
-                if (readyToClaim && rewards.length > 0) {
-                  const firstReward = rewards.find((r) => r.day === 1);
-                  if (firstReward) {
-                    handleClaimReward(firstReward.day);
-                  }
+                if (claimedToday) {
+                  navigate("/tasks");
+                  return;
+                }
+
+                if (readyToClaim) {
+                  handleClaimReward(availableDay);
                 }
               }}
-              disabled={!readyToClaim || claimingDay !== null}
+              disabled={claimingDay !== null}
               className={`w-full rounded-2xl px-6 py-3 font-bold text-lg transition-all duration-300 ${
-                readyToClaim && claimingDay === null
-                  ? "bg-gradient-to-r from-[#EAB308] to-[#FBBF24] text-black hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] active:scale-95"
+                claimingDay === null
+                  ? claimedToday
+                    ? "bg-[#10b981] text-black hover:shadow-[0_0_30px_rgba(16,185,129,0.35)] active:scale-95"
+                    : "bg-gradient-to-r from-[#EAB308] to-[#FBBF24] text-black hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] active:scale-95"
                   : "bg-muted text-muted-foreground cursor-not-allowed"
               }`}
             >
-              {claimingDay ? "Claiming..." : "Ready to Claim! 🎉"}
+              {headerButtonText}
             </button>
+
+            {claimedToday && (
+              <div className="mt-4 rounded-2xl border border-[#10b981]/20 bg-[#101f12] p-4 text-left text-sm text-[#a7f3d0] shadow-[0_0_20px_rgba(16,185,129,0.15)]">
+                <p className="font-medium text-[#a7f3d0]">Want more rewards?</p>
+                <p className="text-xs text-muted-foreground">
+                  Complete the 10 daily tasks to keep earning after your claim.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -246,7 +346,7 @@ const DailyRewards = () => {
                       <Check className="h-4 w-4 text-[#EAB308]" />
                     </div>
                   </div>
-                ) : reward.day === 1 && readyToClaim ? (
+                ) : reward.day === availableDay && readyToClaim ? (
                   <button
                     onClick={() => handleClaimReward(reward.day)}
                     disabled={claimingDay !== null}
@@ -283,10 +383,17 @@ const DailyRewards = () => {
           </li>
           <li className="flex items-start gap-3">
             <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-[#EAB308]" />
-            Claims reset daily at midnight
+            Miss a day and the streak resets to Day 1
           </li>
         </ul>
       </div>
+      {showStreakResetNotice && (
+        <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-[#EAB308]/20 bg-[#111111]/90 p-4 text-sm text-[#EAB308] shadow-lg shadow-[#EAB308]/10">
+          <p>
+            You missed a day, so your streak has been reset. Claim Day 1 to start again.
+          </p>
+        </div>
+      )}
 
       {/* Back Button */}
       <div className="mt-8 flex justify-center">
