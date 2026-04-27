@@ -430,11 +430,11 @@ const DailyRewards = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-4 gap-2 sm:gap-2.5">
           {rewards.map((reward) => (
             <Card
               key={reward.day}
-              className={`relative overflow-hidden rounded-2xl border p-4 text-center transition-all duration-300 ${
+              className={`relative overflow-hidden rounded-lg border p-2 text-center transition-all duration-300 ${
                 reward.claimed
                   ? "border-[#EAB308] bg-gradient-to-br from-black/80 to-black shadow-[0_0_20px_rgba(234,179,8,0.2)]"
                   : "border-white/10 bg-gradient-to-br from-white/5 to-white/2 hover:border-white/20"
@@ -445,11 +445,11 @@ const DailyRewards = () => {
               )}
 
               <div className="relative z-10">
-                <p className="text-xs font-semibold text-muted-foreground mb-2">
+                <p className="text-[10px] font-semibold text-muted-foreground mb-1">
                   Day {reward.day}
                 </p>
 
-                <p className={`font-bold text-sm mb-3 ${
+                <p className={`font-bold text-xs mb-1.5 ${
                   reward.claimed ? "text-[#EAB308]" : "text-foreground"
                 }`}>
                   ₦{(reward.amount / 1000).toLocaleString()}K
@@ -457,21 +457,21 @@ const DailyRewards = () => {
 
                 {reward.claimed ? (
                   <div className="flex justify-center">
-                    <div className="rounded-full bg-[#EAB308]/20 p-2">
-                      <Check className="h-4 w-4 text-[#EAB308]" />
+                    <div className="rounded-full bg-[#EAB308]/20 p-1">
+                      <Check className="h-3 w-3 text-[#EAB308]" />
                     </div>
                   </div>
                 ) : reward.day === availableDay && readyToClaim ? (
                   <button
                     onClick={() => handleClaimReward(reward.day)}
                     disabled={claimingDay !== null}
-                    className="w-full rounded-lg bg-[#EAB308] px-2 py-1.5 text-xs font-bold text-black transition-all hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] active:scale-95"
+                    className="w-full rounded bg-[#EAB308] px-1 py-0.5 text-[10px] font-bold text-black transition-all hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] active:scale-95"
                   >
                     {claimingDay === reward.day ? "..." : "Ready"}
                   </button>
                 ) : (
                   <div className="flex justify-center">
-                    <Lock className="h-4 w-4 text-muted-foreground" />
+                    <Lock className="h-3 w-3 text-muted-foreground" />
                   </div>
                 )}
               </div>
