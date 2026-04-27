@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock, Gift, Check } from "lucide-react";
+import { Lock, Gift, Check, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -119,9 +119,10 @@ const DailyRewards = () => {
 
           const initialized: DayReward[] = Array.from({ length: 8 }, (_, i) => {
             const day = i + 1;
+            const amount = 10000 + (day - 1) * 5000; // Day 1: 10k, Day 2: 15k, Day 3: 20k, etc.
             return {
               day,
-              amount: 100000,
+              amount,
               claimed: day <= rewardStatus.currentDay,
               nextClaimDate: today.toISOString(),
             };
@@ -177,7 +178,7 @@ const DailyRewards = () => {
         return;
       }
 
-      const rewardAmount = 100000;
+      const rewardAmount = 10000 + (day - 1) * 5000; // Day 1: 10k, Day 2: 15k, Day 3: 20k, etc.
       const newBalance = (profile.balance || 0) + rewardAmount;
 
       // Update profile with new balance and claim info
@@ -255,6 +256,31 @@ const DailyRewards = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-[#0a0a0a] to-black px-4 py-6">
+      {/* Streak Counter Top Bar */}
+      <div className="mx-auto max-w-2xl mb-6">
+        <div className="flex items-center justify-between rounded-2xl border border-[#EAB308]/30 bg-gradient-to-r from-[#EAB308]/10 to-[#CA8A04]/10 px-6 py-3 shadow-lg shadow-[#EAB308]/10">
+          <div className="flex items-center gap-3">
+            <div className="rounded-full bg-[#EAB308]/20 p-2">
+              <Flame className="h-5 w-5 text-[#EAB308]" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Current Streak
+              </p>
+              <p className="text-lg font-bold text-[#EAB308]">
+                {rewardStatus.currentDay} / 8
+              </p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-muted-foreground">Total Earnings</p>
+            <p className="text-xl font-bold text-white">
+              ₦{rewards.slice(0, rewardStatus.currentDay).reduce((sum, r) => sum + r.amount, 0).toLocaleString()}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Header Section */}
       <div className="mb-8 mt-6">
         <div className="relative mx-auto max-w-2xl overflow-hidden rounded-3xl bg-gradient-to-br from-[#EAB308] via-[#FBBF24] to-[#CA8A04] p-0.5">
@@ -375,11 +401,11 @@ const DailyRewards = () => {
           </li>
           <li className="flex items-start gap-3">
             <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-[#EAB308]" />
-            Each day gives you ₦100,000 bonus
+            Day 1: ₦10,000 | Day 2: ₦15,000 | Day 3: ₦20,000 (increases by ₦5,000 per day)
           </li>
           <li className="flex items-start gap-3">
             <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-[#EAB308]" />
-            Complete the streak to earn ₦800,000 total
+            Complete all 8 days to earn ₦340,000 total
           </li>
           <li className="flex items-start gap-3">
             <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-[#EAB308]" />
