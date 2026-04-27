@@ -381,6 +381,36 @@ const DailyRewards = () => {
             </button>
 
             {claimedToday && (
+              <div className="mt-6 rounded-2xl border border-[#EAB308]/20 bg-black/50 p-4 backdrop-blur-sm">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Next reward available in:
+                </p>
+                <div className="flex items-center justify-center gap-2 text-center">
+                  <div className="rounded-lg bg-[#EAB308]/10 px-3 py-2 border border-[#EAB308]/20">
+                    <p className="text-2xl font-bold text-[#EAB308]">
+                      {String(timeUntilNextClaim.hours).padStart(2, "0")}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">h</p>
+                  </div>
+                  <span className="text-[#EAB308]/60 text-lg font-bold">:</span>
+                  <div className="rounded-lg bg-[#EAB308]/10 px-3 py-2 border border-[#EAB308]/20">
+                    <p className="text-2xl font-bold text-[#EAB308]">
+                      {String(timeUntilNextClaim.minutes).padStart(2, "0")}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">m</p>
+                  </div>
+                  <span className="text-[#EAB308]/60 text-lg font-bold">:</span>
+                  <div className="rounded-lg bg-[#EAB308]/10 px-3 py-2 border border-[#EAB308]/20">
+                    <p className="text-2xl font-bold text-[#EAB308]">
+                      {String(timeUntilNextClaim.seconds).padStart(2, "0")}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">s</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {claimedToday && (
               <div className="mt-4 rounded-2xl border border-[#10b981]/20 bg-[#101f12] p-4 text-left text-sm text-[#a7f3d0] shadow-[0_0_20px_rgba(16,185,129,0.15)]">
                 <p className="font-medium text-[#a7f3d0]">Want more rewards?</p>
                 <p className="text-xs text-muted-foreground">
