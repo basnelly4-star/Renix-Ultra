@@ -411,9 +411,9 @@ const DailyRewards = () => {
             )}
 
             {claimedToday && (
-              <div className="mt-4 rounded-2xl border border-[#10b981]/20 bg-[#101f12] p-4 text-left text-sm text-[#a7f3d0] shadow-[0_0_20px_rgba(16,185,129,0.15)]">
-                <p className="font-medium text-[#a7f3d0]">Want more rewards?</p>
-                <p className="text-xs text-muted-foreground">
+              <div className="mt-4 rounded-2xl border border-[#EAB308]/30 bg-gradient-to-br from-[#EAB308] to-[#FBBF24] p-4 text-left text-sm text-white shadow-[0_0_20px_rgba(234,179,8,0.15)]">
+                <p className="font-medium text-white">Want more rewards?</p>
+                <p className="text-xs text-white">
                   Complete the 10 daily tasks to keep earning after your claim.
                 </p>
               </div>
