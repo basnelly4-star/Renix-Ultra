@@ -27,6 +27,7 @@ import Support from "./pages/Support";
 import Community from "./pages/Community";
 import Spin from "./pages/Spin";
 import Invest from "./pages/Broadcast";
+import Testimonials from "./pages/Testimonials";
 import NotFound from "./pages/NotFound";
 import BottomNavigation from "./components/BottomNavigation";
 
@@ -63,6 +64,7 @@ const App = () => (
             <Route path="/daily-rewards" element={<DailyRewards />} />
             <Route path="/support" element={<Support />} />
             <Route path="/community" element={<Community />} />
+            <Route path="/testimonials" element={<Testimonials />} />
             <Route path="/spin" element={<Spin />} />
             <Route path="/broadcast" element={<Invest />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
