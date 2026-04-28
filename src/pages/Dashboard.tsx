@@ -376,27 +376,44 @@ const Dashboard = () => {
       <WithdrawalNotification />
 
       {/* Daily Reward Notification Popup */}
+
       {showDailyRewardNotif && (
-        <div className="fixed top-4 left-4 right-4 z-50 animate-in fade-in slide-in-from-top-2">
-          <Card className="bg-gradient-to-r from-[#EAB308] to-[#FBBF24] border-0 shadow-lg shadow-[#EAB308]/30 p-4">
-            <div className="flex items-center gap-3">
-              <Gift className="w-5 h-5 text-black flex-shrink-0" />
-              <div className="flex-1">
-                <p className="font-bold text-black text-sm">Daily Reward Available!</p>
-                <p className="text-black/80 text-xs">Claim your daily reward to keep your streak alive.</p>
-              </div>
-              <Button
-                size="sm"
-                onClick={() => {
-                  setShowDailyRewardNotif(false);
-                  navigate("/daily-rewards");
-                }}
-                className="bg-black text-[#EAB308] hover:bg-black/90 flex-shrink-0"
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-in fade-in">
+          <div className="relative w-full max-w-xs sm:max-w-sm mx-auto">
+            <Card className="rounded-2xl border border-[#22c55e]/30 bg-[#101112] shadow-2xl p-0 overflow-hidden">
+              <button
+                className="absolute top-3 right-3 text-[#22c55e] hover:text-[#16a34a] text-lg font-bold z-10"
+                onClick={() => setShowDailyRewardNotif(false)}
+                aria-label="Close"
               >
-                Claim Now
-              </Button>
-            </div>
-          </Card>
+                ×
+              </button>
+              <div className="flex flex-col items-center px-6 pt-7 pb-2">
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#101f12] border-2 border-[#22c55e] mb-4">
+                  <Gamepad2 className="w-8 h-8 text-[#22c55e]" />
+                </div>
+                <h2 className="text-xl font-bold text-white mb-2 text-center">Daily Quiz Challenge!</h2>
+                <p className="text-sm text-[#b0b0b0] text-center mb-4">
+                  Test your knowledge and earn <span className="text-[#22c55e] font-bold">₦7,000</span> for every correct answer! Play now and boost your balance.
+                </p>
+                <Button
+                  onClick={() => {
+                    setShowDailyRewardNotif(false);
+                    navigate("/daily-rewards");
+                  }}
+                  className="w-full rounded-full bg-gradient-to-r from-[#22c55e] to-[#16a34a] text-black text-base font-bold py-3 mb-2 mt-1 shadow-[0_4px_32px_rgba(34,197,94,0.18)] hover:from-[#16a34a] hover:to-[#22c55e]"
+                >
+                  <Gamepad2 className="w-5 h-5 mr-2" /> Play & Earn Now
+                </Button>
+                <button
+                  className="w-full text-xs text-[#b0b0b0] mt-1 mb-1 hover:underline"
+                  onClick={() => setShowDailyRewardNotif(false)}
+                >
+                  Remind me later
+                </button>
+              </div>
+            </Card>
+          </div>
         </div>
       )}
 

@@ -24,8 +24,14 @@ const Loan = () => {
         </div>
 
         <Button
+          onClick={() => navigate("/upgrade")}
+          className="mt-8 w-full rounded-full bg-gradient-to-r from-[#0ea5e9] to-[#22d3ee] px-6 py-4 text-white text-base font-bold shadow-[0_8px_32px_rgba(14,165,233,0.18)] hover:from-[#22d3ee] hover:to-[#0ea5e9] mb-3 animate-pulse"
+        >
+          🚀 Upgrade Now & Unlock Loans
+        </Button>
+        <Button
           onClick={() => navigate("/dashboard")}
-          className="mt-8 w-full rounded-full bg-gradient-to-r from-[#EAB308] to-[#FBBF24] px-6 py-4 text-black text-base font-bold shadow-[0_20px_60px_rgba(234,179,8,0.3)] hover:shadow-[0_22px_70px_rgba(234,179,8,0.35)]"
+          className="w-full rounded-full bg-gradient-to-r from-[#EAB308] to-[#FBBF24] px-6 py-4 text-black text-base font-bold shadow-[0_20px_60px_rgba(234,179,8,0.3)] hover:shadow-[0_22px_70px_rgba(234,179,8,0.35)]"
         >
           Back to Dashboard
         </Button>

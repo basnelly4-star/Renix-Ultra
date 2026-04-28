@@ -372,7 +372,7 @@ const DailyRewards = () => {
               className={`w-full rounded-2xl px-6 py-3 font-bold text-lg transition-all duration-300 ${
                 claimingDay === null
                   ? claimedToday
-                    ? "bg-[#10b981] text-black hover:shadow-[0_0_30px_rgba(16,185,129,0.35)] active:scale-95"
+                    ? "bg-gradient-to-r from-[#EAB308] to-[#FBBF24] text-black hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] active:scale-95"
                     : "bg-gradient-to-r from-[#EAB308] to-[#FBBF24] text-black hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] active:scale-95"
                   : "bg-muted text-muted-foreground cursor-not-allowed"
               }`}
@@ -382,8 +382,8 @@ const DailyRewards = () => {
 
             {claimedToday && (
               <div className="mt-2 rounded-lg border border-[#EAB308]/20 bg-black/50 p-2 backdrop-blur-sm">
-                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Next reward in:
+                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#EAB308]">
+                  Want more rewards?
                 </p>
                 <div className="flex items-center justify-center gap-1 text-center">
                   <div className="rounded bg-[#EAB308]/10 px-1.5 py-1 border border-[#EAB308]/20">
