@@ -74,10 +74,10 @@ const Testimonials = () => {
 
                   {/* Amount Badge */}
                   <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                    <div className="rounded-full bg-[#EAB308]/10 border border-[#EAB308]/30 px-3 py-1 text-right">
-                      <p className="text-xs text-[#EAB308] uppercase font-bold tracking-widest">{item.status}</p>
+                    <div className="rounded-full bg-[#EAB308]/10 border border-[#EAB308]/30 px-3 py-1 text-center">
+                      <p className="text-xs text-[#EAB308] uppercase font-bold tracking-wide">{item.status}</p>
+                      <p className="text-xl font-bold text-[#EAB308]">{item.amount}</p>
                     </div>
-                    <p className="text-xl font-bold text-[#EAB308]">{item.amount}</p>
                   </div>
                 </div>
 
