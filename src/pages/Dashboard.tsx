@@ -11,12 +11,6 @@ import { WelcomeModal } from "@/components/WelcomeModal";
 import { WithdrawalNotification } from "@/components/WithdrawalNotification";
 import { AddBalanceModal } from "@/components/AddBalanceModal";
 import { Link } from "react-router-dom";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -597,65 +591,44 @@ const Dashboard = () => {
 
         {/* Why Earnix9ja Section */}
         <div className="mt-6">
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            plugins={[
-              Autoplay({
-                delay: 5000,
-              }),
-            ]}
-            className="w-full"
-          >
-            <CarouselContent>
-              {[
-                {
-                  icon: Shield,
-                  title: "100% Secure",
-                  desc: "Bank-level encryption protects your transactions and personal data",
-                  bg: "from-yellow-500 to-yellow-700",
-                  textColor: "text-yellow-100",
-                },
-                {
-                  icon: TrendingUp,
-                  title: "Lightning Fast",
-                  desc: "Instant withdrawals and seamless transactions in seconds",
-                  bg: "from-yellow-400 to-yellow-600",
-                  textColor: "text-yellow-100",
-                },
-                {
-                  icon: Users,
-                  title: "100% Reliable",
-                  desc: "24/7 support and guaranteed service uptime",
-                  bg: "from-green-500 to-green-600",
-                  textColor: "text-green-200",
-                },
-              ].map((slide, idx) => (
-                <CarouselItem key={idx}>
-                  <div className="why-glow bg-gradient-to-br from-black via-amber-950 to-black rounded-2xl p-6 mb-6 mx-2 border border-yellow-600/40 relative overflow-hidden">
-                    <div className="text-center mb-4 relative z-10">
-                      <h2 className="text-2xl font-bold text-white mb-2 animate-slide-up">Why Earnix9ja⁉️</h2>
-                      <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50 animate-slide-up-delay"></div>
-                    </div>
+          <div className="why-glow bg-gradient-to-br from-black via-amber-950 to-black rounded-2xl p-6 mb-6 mx-2 border border-yellow-600/40 relative overflow-hidden">
+            <div className="text-center mb-4 relative z-10">
+              <h2 className="text-2xl font-bold text-white mb-2 animate-slide-up">Why Earnix9ja⁉️</h2>
+              <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50 animate-slide-up-delay"></div>
+            </div>
 
-                    <div className="flex items-start gap-3 relative z-10">
-                      <div className={`w-10 h-10 bg-gradient-to-br ${slide.bg} rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40 animate-slide-up-delay2`}>
-                        <slide.icon className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="animate-slide-up-delay2">
-                        <h3 className="text-white font-semibold mb-1">{slide.title}</h3>
-                        <p className={`${slide.textColor} text-sm`}>{slide.desc}</p>
-                      </div>
-                    </div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+            <div className="space-y-3 mb-6 relative z-10">
+              <div className="flex items-start gap-3 animate-slide-up-delay2">
+                <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
+                  <Shield className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold mb-1">100% Secure</h3>
+                  <p className="text-yellow-100 text-sm">Bank-level encryption protects your transactions and personal data</p>
+                </div>
+              </div>
 
-          <div className="mx-2">
+              <div className="flex items-start gap-3 animate-slide-up-delay3">
+                <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
+                  <TrendingUp className="w-5 h-5 text-black" />
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold mb-1">Lightning Fast</h3>
+                  <p className="text-yellow-100 text-sm">Instant withdrawals and seamless transactions in seconds</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 animate-slide-up-delay4">
+                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Users className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold mb-1">100% Reliable</h3>
+                  <p className="text-green-200 text-sm">24/7 support and guaranteed service uptime</p>
+                </div>
+              </div>
+            </div>
+
             <Link to="/referrals">
               <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg">
                 Invite & Earn Now
@@ -738,6 +711,14 @@ const Dashboard = () => {
 
           .animate-slide-up-delay2 {
             animation: slide-up 0.5s ease-out 0.4s both;
+          }
+
+          .animate-slide-up-delay3 {
+            animation: slide-up 0.5s ease-out 0.6s both;
+          }
+
+          .animate-slide-up-delay4 {
+            animation: slide-up 0.5s ease-out 0.8s both;
           }
         `}</style>
       </div>
