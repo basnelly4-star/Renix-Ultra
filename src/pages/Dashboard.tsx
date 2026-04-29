@@ -697,28 +697,28 @@ const Dashboard = () => {
           }
 
           @keyframes slide-up {
-            from { transform: translateY(100px); opacity: 0; }
+            from { transform: translateY(200px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
           }
 
           .animate-slide-up {
-            animation: slide-up 0.5s ease-out;
+            animation: slide-up 1s ease-out;
           }
 
           .animate-slide-up-delay {
-            animation: slide-up 0.5s ease-out 0.2s both;
+            animation: slide-up 1s ease-out 0.3s both;
           }
 
           .animate-slide-up-delay2 {
-            animation: slide-up 0.5s ease-out 0.4s both;
+            animation: slide-up 1s ease-out 0.6s both;
           }
 
           .animate-slide-up-delay3 {
-            animation: slide-up 0.5s ease-out 0.6s both;
+            animation: slide-up 1s ease-out 0.9s both;
           }
 
           .animate-slide-up-delay4 {
-            animation: slide-up 0.5s ease-out 0.8s both;
+            animation: slide-up 1s ease-out 1.2s both;
           }
         `}</style>
       </div>
