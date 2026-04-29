@@ -697,7 +697,7 @@ const Dashboard = () => {
           }
 
           @keyframes slide-up {
-            from { transform: translateY(20px); opacity: 0; }
+            from { transform: translateY(100px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
           }
 
