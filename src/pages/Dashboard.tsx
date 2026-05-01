@@ -25,13 +25,42 @@ const Dashboard = () => {
   const [timeRemaining, setTimeRemaining] = useState("Ready!");
   const [showDailyRewardNotif, setShowDailyRewardNotif] = useState(false);
   const [supportMessage, setSupportMessage] = useState("Contact Support");
+  const [testimonialIndex, setTestimonialIndex] = useState(0);
   const authRetryCountRef = useRef(0);
   const dailyRewardNotifTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const dailyRewardIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const supportIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const testimonialIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const hasDailyClaimedRef = useRef(false);
 
   const supportMessages = ["Support", "Contact Support", "Need Help"];
+
+  const testimonials = [
+    {
+      name: "Samuel T.",
+      location: "Port Harcourt",
+      amount: "₦520,000",
+      quote: "The referral bonus is the best part. I invited 6 active users.",
+    },
+    {
+      name: "Blessing O.",
+      location: "Abuja",
+      amount: "₦410,000",
+      quote: "I love how simple the tasks are. Withdrawals processed in 48 hours.",
+    },
+    {
+      name: "Chinedu A.",
+      location: "Lagos",
+      amount: "₦580,000",
+      quote: "I was skeptical but earned my first withdrawal successfully. Earnix9ja is legit!",
+    },
+    {
+      name: "Amina F.",
+      location: "Kano",
+      amount: "₦450,000",
+      quote: "Daily rewards and instant payouts. Best earning app I've used!",
+    },
+  ];
 
   useEffect(() => {
     checkAuth();
@@ -127,6 +156,19 @@ const Dashboard = () => {
       }
     };
   }, [supportMessages]);
+
+  // Testimonial Carousel Auto-rotate
+  useEffect(() => {
+    testimonialIntervalRef.current = setInterval(() => {
+      setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
+    }, 60000); // Auto-rotate every 1 minute
+
+    return () => {
+      if (testimonialIntervalRef.current) {
+        clearInterval(testimonialIntervalRef.current);
+      }
+    };
+  }, [testimonials.length]);
 
   useEffect(() => {
     if (lastClaimTime) {
@@ -632,6 +674,67 @@ const Dashboard = () => {
             <Link to="/referrals">
               <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg">
                 Invite & Earn Now
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Testimonials Carousel Section */}
+        <div className="mt-6">
+          <div className="why-glow bg-gradient-to-br from-black via-amber-950 to-black rounded-2xl p-6 mx-2 border border-yellow-600/40 relative overflow-hidden">
+            <div className="text-center mb-4 relative z-10">
+              <h2 className="text-2xl font-bold text-white mb-2">Member Success Stories</h2>
+              <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50"></div>
+            </div>
+
+            {/* Testimonial Slide */}
+            <div className="relative z-10 bg-gradient-to-r from-yellow-900/20 to-yellow-800/10 rounded-xl p-4 mb-4 border border-yellow-600/30">
+              <div className="flex items-start gap-4">
+                {/* Avatar */}
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
+                  <span className="text-sm font-bold text-black">
+                    {testimonials[testimonialIndex].name.charAt(0)}
+                  </span>
+                </div>
+
+                {/* Testimonial Content */}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="text-white font-bold text-sm">
+                      {testimonials[testimonialIndex].name}
+                    </p>
+                    <CheckCircle2 className="w-4 h-4 text-yellow-400" />
+                  </div>
+                  <p className="text-yellow-100 text-xs mb-2">
+                    📍 {testimonials[testimonialIndex].location}
+                  </p>
+                  <p className="text-yellow-300 font-bold italic text-sm mb-2">
+                    "{testimonials[testimonialIndex].quote}"
+                  </p>
+                  <p className="text-yellow-400 font-bold text-sm">
+                    Withdrawn: {testimonials[testimonialIndex].amount}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Carousel Indicators */}
+            <div className="flex justify-center gap-2 relative z-10">
+              {testimonials.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    index === testimonialIndex
+                      ? "w-6 bg-yellow-400 shadow-lg shadow-yellow-500/50"
+                      : "w-2 bg-yellow-700/50"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <Link to="/testimonials" className="block mt-4">
+              <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg">
+                See More Success Stories
               </Button>
             </Link>
           </div>
