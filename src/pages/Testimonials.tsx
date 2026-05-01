@@ -73,11 +73,11 @@ const Testimonials = () => {
                   </div>
 
                   {/* Amount Badge */}
-                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <div className="rounded-full bg-[#EAB308]/10 border border-[#EAB308]/30 px-4 py-2 text-right">
-                      <p className="text-xs text-[#EAB308] uppercase font-bold tracking-widest">{item.status}</p>
+                  <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                    <div className="rounded-full bg-[#EAB308]/10 border border-[#EAB308]/30 px-3 py-1 text-center">
+                      <p className="text-xs text-[#EAB308] uppercase font-bold tracking-wide">{item.status}</p>
+                      <p className="text-xl font-bold text-[#EAB308]">{item.amount}</p>
                     </div>
-                    <p className="text-2xl font-bold text-[#EAB308]">{item.amount}</p>
                   </div>
                 </div>
 
@@ -103,23 +103,23 @@ const Testimonials = () => {
               <p className="text-xs uppercase tracking-widest text-[#EAB308]/70">📈 THOUSANDS OF USERS SHARING SUCCESS</p>
               <h2 className="text-2xl font-bold text-white">Post your success story</h2>
               <p className="text-sm text-[#b0b0b0] max-w-md">
-                Love how you've used Earnix9ja? Share your story and inspire others. We'll feature the best ones here.
+                Got a winning Earnix9ja story? Upgrade your account to unlock the ability to share it with the community.
               </p>
-              <p className="text-xs text-[#EAB308] font-bold pt-2">RETURN TO DASHBOARD TO UPGRADE</p>
+              <p className="text-xs text-[#EAB308] font-bold pt-2">Upgrade now to post your success story.</p>
             </div>
             <div className="flex flex-col gap-3 flex-shrink-0">
               <Button
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate("/upgrade")}
                 className="rounded-full bg-gradient-to-r from-[#EAB308] to-[#FBBF24] text-black px-8 py-3 font-bold shadow-[0_8px_32px_rgba(234,179,8,0.2)] hover:shadow-[0_10px_40px_rgba(234,179,8,0.25)]"
               >
-                Back to Dashboard <ArrowRight className="ml-2 h-4 w-4" />
+                Upgrade Now <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button
-                onClick={() => navigate("/daily-rewards")}
+                onClick={() => navigate("/dashboard")}
                 variant="outline"
                 className="rounded-full border border-[#EAB308]/40 text-[#EAB308] px-8 py-3 font-bold hover:bg-[#EAB308]/5"
               >
-                Start Earning Daily
+                Back to Dashboard
               </Button>
             </div>
           </div>
