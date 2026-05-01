@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Eye, EyeOff, Copy, Gift, Banknote, CheckCircle2, History, Disc3, Radio, Shield, TrendingUp, Users, Home, Gamepad2, User, Send, HelpCircle } from "lucide-react";
+import { Eye, EyeOff, Copy, Gift, Banknote, CheckCircle2, History, Disc3, Radio, Shield, TrendingUp, Users, Home, Gamepad2, User, Send, HelpCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { recoverFromInvalidRefreshToken, supabase } from "@/integrations/supabase/client";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
@@ -656,6 +656,15 @@ const Dashboard = () => {
             {/* Why Earnix9ja Content */}
             {!showTestimonials && (
               <div className="animate-fadeIn">
+                <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
+                  <button
+                    onClick={() => setShowTestimonials(true)}
+                    className="bg-yellow-500 hover:bg-yellow-400 text-black rounded-full p-2 shadow-lg shadow-yellow-500/50 transition-all duration-200 active:scale-90"
+                    aria-label="View testimonials"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </div>
                 <div className="text-center mb-4 relative z-10">
                   <h2 className="text-2xl font-bold text-white mb-2 animate-slide-up">Why Earnix9ja⁉️</h2>
                   <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50 animate-slide-up-delay"></div>
@@ -704,6 +713,15 @@ const Dashboard = () => {
             {/* Testimonials Carousel Content */}
             {showTestimonials && (
               <div className="animate-fadeIn">
+                <div className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
+                  <button
+                    onClick={() => setShowTestimonials(false)}
+                    className="bg-yellow-500 hover:bg-yellow-400 text-black rounded-full p-2 shadow-lg shadow-yellow-500/50 transition-all duration-200 active:scale-90"
+                    aria-label="Back to Why Earnix9ja"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                </div>
                 <div className="text-center mb-4 relative z-10">
                   <h2 className="text-2xl font-bold text-white mb-2">Member Success Stories</h2>
                   <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50"></div>
@@ -740,18 +758,34 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                {/* Carousel Indicators */}
-                <div className="flex justify-center gap-2 relative z-10">
-                  {testimonials.map((_, index) => (
-                    <div
-                      key={index}
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        index === testimonialIndex
-                          ? "w-6 bg-yellow-400 shadow-lg shadow-yellow-500/50"
-                          : "w-2 bg-yellow-700/50"
-                      }`}
-                    />
-                  ))}
+                {/* Carousel Navigation */}
+                <div className="flex items-center justify-center gap-4 relative z-10 mb-4">
+                  <button
+                    onClick={() => setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
+                    className="bg-yellow-600/50 hover:bg-yellow-500 text-yellow-300 hover:text-white rounded-full p-2 transition-all duration-200 active:scale-90"
+                    aria-label="Previous testimonial"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <div className="flex gap-2">
+                    {testimonials.map((_, index) => (
+                      <div
+                        key={index}
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          index === testimonialIndex
+                            ? "w-6 bg-yellow-400 shadow-lg shadow-yellow-500/50"
+                            : "w-2 bg-yellow-700/50"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => setTestimonialIndex((prev) => (prev + 1) % testimonials.length)}
+                    className="bg-yellow-600/50 hover:bg-yellow-500 text-yellow-300 hover:text-white rounded-full p-2 transition-all duration-200 active:scale-90"
+                    aria-label="Next testimonial"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
                 </div>
 
                 <Link to="/testimonials" className="block mt-4">
