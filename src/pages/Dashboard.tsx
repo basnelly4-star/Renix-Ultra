@@ -26,7 +26,9 @@ const Dashboard = () => {
   const [showDailyRewardNotif, setShowDailyRewardNotif] = useState(false);
   const [supportMessage, setSupportMessage] = useState("Contact Support");
   const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [showTestimonials, setShowTestimonials] = useState(false);
   const authRetryCountRef = useRef(0);
+  const touchStartRef = useRef(0);
   const dailyRewardNotifTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const dailyRewardIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const supportIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -631,112 +633,134 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Why Earnix9ja Section */}
+        {/* Why Earnix9ja / Testimonials Swipeable Section */}
         <div className="mt-6">
-          <div className="why-glow bg-gradient-to-br from-black via-amber-950 to-black rounded-2xl p-6 mb-6 mx-2 border border-yellow-600/40 relative overflow-hidden">
-            <div className="text-center mb-4 relative z-10">
-              <h2 className="text-2xl font-bold text-white mb-2 animate-slide-up">Why Earnix9ja⁉️</h2>
-              <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50 animate-slide-up-delay"></div>
-            </div>
-
-            <div className="space-y-3 mb-6 relative z-10">
-              <div className="flex items-start gap-3 animate-slide-up-delay2">
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
-                  <Shield className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-1">100% Secure</h3>
-                  <p className="text-yellow-100 text-sm">Bank-level encryption protects your transactions and personal data</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 animate-slide-up-delay3">
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
-                  <TrendingUp className="w-5 h-5 text-black" />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-1">Lightning Fast</h3>
-                  <p className="text-yellow-100 text-sm">Instant withdrawals and seamless transactions in seconds</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 animate-slide-up-delay4">
-                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Users className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-1">100% Reliable</h3>
-                  <p className="text-green-200 text-sm">24/7 support and guaranteed service uptime</p>
-                </div>
-              </div>
-            </div>
-
-            <Link to="/referrals">
-              <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg">
-                Invite & Earn Now
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Testimonials Carousel Section */}
-        <div className="mt-6">
-          <div className="why-glow bg-gradient-to-br from-black via-amber-950 to-black rounded-2xl p-6 mx-2 border border-yellow-600/40 relative overflow-hidden">
-            <div className="text-center mb-4 relative z-10">
-              <h2 className="text-2xl font-bold text-white mb-2">Member Success Stories</h2>
-              <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50"></div>
-            </div>
-
-            {/* Testimonial Slide */}
-            <div className="relative z-10 bg-gradient-to-r from-yellow-900/20 to-yellow-800/10 rounded-xl p-4 mb-4 border border-yellow-600/30">
-              <div className="flex items-start gap-4">
-                {/* Avatar */}
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
-                  <span className="text-sm font-bold text-black">
-                    {testimonials[testimonialIndex].name.charAt(0)}
-                  </span>
+          <div 
+            className="why-glow bg-gradient-to-br from-black via-amber-950 to-black rounded-2xl p-6 mb-6 mx-2 border border-yellow-600/40 relative overflow-hidden cursor-grab active:cursor-grabbing transition-all duration-300"
+            onTouchStart={(e) => {
+              touchStartRef.current = e.touches[0].clientX;
+            }}
+            onTouchEnd={(e) => {
+              const touchEnd = e.changedTouches[0].clientX;
+              const diff = touchStartRef.current - touchEnd;
+              
+              if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                  setShowTestimonials(true);
+                } else {
+                  setShowTestimonials(false);
+                }
+              }
+            }}
+          >
+            {/* Why Earnix9ja Content */}
+            {!showTestimonials && (
+              <div className="animate-fadeIn">
+                <div className="text-center mb-4 relative z-10">
+                  <h2 className="text-2xl font-bold text-white mb-2 animate-slide-up">Why Earnix9ja⁉️</h2>
+                  <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50 animate-slide-up-delay"></div>
                 </div>
 
-                {/* Testimonial Content */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="text-white font-bold text-sm">
-                      {testimonials[testimonialIndex].name}
-                    </p>
-                    <CheckCircle2 className="w-4 h-4 text-yellow-400" />
+                <div className="space-y-3 mb-6 relative z-10">
+                  <div className="flex items-start gap-3 animate-slide-up-delay2">
+                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
+                      <Shield className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold mb-1">100% Secure</h3>
+                      <p className="text-yellow-100 text-sm">Bank-level encryption protects your transactions and personal data</p>
+                    </div>
                   </div>
-                  <p className="text-yellow-100 text-xs mb-2">
-                    📍 {testimonials[testimonialIndex].location}
-                  </p>
-                  <p className="text-yellow-300 font-bold italic text-sm mb-2">
-                    "{testimonials[testimonialIndex].quote}"
-                  </p>
-                  <p className="text-yellow-400 font-bold text-sm">
-                    Withdrawn: {testimonials[testimonialIndex].amount}
-                  </p>
+
+                  <div className="flex items-start gap-3 animate-slide-up-delay3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
+                      <TrendingUp className="w-5 h-5 text-black" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold mb-1">Lightning Fast</h3>
+                      <p className="text-yellow-100 text-sm">Instant withdrawals and seamless transactions in seconds</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 animate-slide-up-delay4">
+                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Users className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold mb-1">100% Reliable</h3>
+                      <p className="text-green-200 text-sm">24/7 support and guaranteed service uptime</p>
+                    </div>
+                  </div>
                 </div>
+
+                <Link to="/referrals">
+                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg">
+                    Invite & Earn Now
+                  </Button>
+                </Link>
               </div>
-            </div>
+            )}
 
-            {/* Carousel Indicators */}
-            <div className="flex justify-center gap-2 relative z-10">
-              {testimonials.map((_, index) => (
-                <div
-                  key={index}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    index === testimonialIndex
-                      ? "w-6 bg-yellow-400 shadow-lg shadow-yellow-500/50"
-                      : "w-2 bg-yellow-700/50"
-                  }`}
-                />
-              ))}
-            </div>
+            {/* Testimonials Carousel Content */}
+            {showTestimonials && (
+              <div className="animate-fadeIn">
+                <div className="text-center mb-4 relative z-10">
+                  <h2 className="text-2xl font-bold text-white mb-2">Member Success Stories</h2>
+                  <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50"></div>
+                </div>
 
-            <Link to="/testimonials" className="block mt-4">
-              <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg">
-                See More Success Stories
-              </Button>
-            </Link>
+                {/* Testimonial Slide */}
+                <div className="relative z-10 bg-gradient-to-r from-yellow-900/20 to-yellow-800/10 rounded-xl p-4 mb-4 border border-yellow-600/30">
+                  <div className="flex items-start gap-4">
+                    {/* Avatar */}
+                    <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
+                      <span className="text-sm font-bold text-black">
+                        {testimonials[testimonialIndex].name.charAt(0)}
+                      </span>
+                    </div>
+
+                    {/* Testimonial Content */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-white font-bold text-sm">
+                          {testimonials[testimonialIndex].name}
+                        </p>
+                        <CheckCircle2 className="w-4 h-4 text-yellow-400" />
+                      </div>
+                      <p className="text-yellow-100 text-xs mb-2">
+                        📍 {testimonials[testimonialIndex].location}
+                      </p>
+                      <p className="text-yellow-300 font-bold italic text-sm mb-2">
+                        "{testimonials[testimonialIndex].quote}"
+                      </p>
+                      <p className="text-yellow-400 font-bold text-sm">
+                        Withdrawn: {testimonials[testimonialIndex].amount}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Carousel Indicators */}
+                <div className="flex justify-center gap-2 relative z-10">
+                  {testimonials.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        index === testimonialIndex
+                          ? "w-6 bg-yellow-400 shadow-lg shadow-yellow-500/50"
+                          : "w-2 bg-yellow-700/50"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <Link to="/testimonials" className="block mt-4">
+                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg">
+                    See More Success Stories
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 
@@ -822,6 +846,15 @@ const Dashboard = () => {
 
           .animate-slide-up-delay4 {
             animation: slide-up 1s ease-out 1.2s both;
+          }
+
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+
+          .animate-fadeIn {
+            animation: fadeIn 0.3s ease-in-out;
           }
         `}</style>
       </div>
