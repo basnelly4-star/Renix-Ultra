@@ -11,6 +11,28 @@ const Tasks = () => {
 
   const tasks = [
     {
+      id: 1,
+      title: "Join Telegram Channel",
+      description: "Join our official Telegram channel for updates",
+      reward: "₦5,000",
+      link: "https://t.me/earnixupdate",
+    },
+    {
+      id: 2,
+      title: "Join WhatsApp Group",
+      description: "Join our WhatsApp community for instant updates",
+      reward: "₦5,000",
+      link: "https://whatsapp.com/channel/0029VbCUz1HF6smt6EnLWw0F",
+    },
+    {
+      id: 3,
+      title: "Earn Extra",
+      description:
+        "Tap on our sponsorship ads to earn extra and get closer to your minimum withdrawal!",
+      reward: "₦5,000",
+      link: "https://otieu.com/4/10573002",
+    },
+    {
       id: 4,
       title: "Join Telegram Channel",
       description: "Join our official Telegram channel for updates",
@@ -32,58 +54,84 @@ const Tasks = () => {
       link: "https://www.effectivegatecpm.com/vmv8q8003e?key=86df7f349a5444d876061f4d1430b01c",
     },
     {
-      id: 1,
-      title: "Join Telegram Channel",
-      description: "Join our official Telegram channel for updates",
+      id: 7,
+      title: "Sponsor Verification",
+      description:
+        "Complete the official sponsor verification process to secure your bonus reward.",
       reward: "₦5,000",
-      link: "https://t.me/earnixupdate",
+      link: "https://www.effectivegatecpm.com/vmv8q8003e?key=86df7f349a5444d876061f4d1430b01c",
     },
     {
-      id: 2,
+      id: 8,
       title: "Join WhatsApp Group",
       description: "Join our WhatsApp community for instant updates",
       reward: "₦5,000",
       link: "https://whatsapp.com/channel/0029VbCUz1HF6smt6EnLWw0F",
     },
     {
-      id: 3,
+      id: 9,
       title: "Earn Extra",
       description:
         "Tap on our sponsorship ads to earn extra and get closer to your minimum withdrawal!",
       reward: "₦5,000",
-      link: `https://otieu.com/4/10573002 `,
-    },
-    {
-      id: 7,
-      title: "Sponsorship ads",
-      description:
-        "Tap on our sponsorship ads to earn extra and get closer to your minimum withdrawal!",
-      reward: "₦5,000",
-      link: `https://otieu.com/4/10573002 `,
-    },
-    {
-      id: 8,
-      title: "Earn More",
-      description:
-        "Tap on our sponsorship ads to earn extra and get closer to your minimum withdrawal!",
-      reward: "₦5,000",
-      link: `https://otieu.com/4/10573002 `,
-    },
-    {
-      id: 9,
-      title: "JEarmers",
-      description:
-        "Tap on our sponsorship ads to earn extra and get closer to your minimum withdrawal!",
-      reward: "₦5,000",
-      link: `https://otieu.com/4/10573002 `,
+      link: "https://otieu.com/4/10573002",
     },
     {
       id: 10,
-      title: "Earn more",
+      title: "Join Telegram Channel",
+      description: "Join our official Telegram channel for updates",
+      reward: "₦5,000",
+      link: "https://otieu.com/4/10573002",
+    },
+    {
+      id: 11,
+      title: "Join Telegram Channel",
+      description: "Join our official Telegram channel for updates",
+      reward: "₦5,000",
+      link: "https://otieu.com/4/10573002",
+    },
+    {
+      id: 12,
+      title: "Join Telegram Channel",
+      description: "Join our official Telegram channel for updates",
+      reward: "₦5,000",
+      link: "https://www.effectivegatecpm.com/vmv8q8003e?key=86df7f349a5444d876061f4d1430b01c",
+    },
+    {
+      id: 13,
+      title: "Join Telegram Channel",
+      description: "Join our official Telegram channel for updates",
+      reward: "₦5,000",
+      link: "https://t.me/earnixupdate",
+    },
+    {
+      id: 14,
+      title: "Join WhatsApp Group",
+      description: "Join our WhatsApp community for instant updates",
+      reward: "₦5,000",
+      link: "https://whatsapp.com/channel/0029VbCUz1HF6smt6EnLWw0F",
+    },
+    {
+      id: 15,
+      title: "Earn Extra",
       description:
         "Tap on our sponsorship ads to earn extra and get closer to your minimum withdrawal!",
       reward: "₦5,000",
-      link: `https://otieu.com/4/10573002 `,
+      link: "https://otieu.com/4/10573002",
+    },
+    {
+      id: 16,
+      title: "Join Telegram Channel",
+      description: "Join our official Telegram channel for updates",
+      reward: "₦5,000",
+      link: "https://otieu.com/4/10573002",
+    },
+    {
+      id: 17,
+      title: "Join Telegram Channel",
+      description: "Join our official Telegram channel for updates",
+      reward: "₦5,000",
+      link: "https://otieu.com/4/10573002",
     },
   ];
 
@@ -129,6 +177,10 @@ const Tasks = () => {
       let amount = 0;
       if (task.id === 1 || task.id === 2) amount = 5000;
       if (task.id === 5) amount = 15000;
+
+      if (task.id === 7) {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
 
       const newBalance = profile.balance + amount;
 
@@ -178,7 +230,7 @@ const Tasks = () => {
         <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-lg border-border/50 p-6">
           <h2 className="text-xl font-bold mb-2">Earn Extra Rewards</h2>
           <p className="text-sm text-muted-foreground">
-            Complete tasks to earn bonus credits and boost your earnings
+            Complete 17 daily tasks to earn bonus credits and boost your earnings
           </p>
         </Card>
 

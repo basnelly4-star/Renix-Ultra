@@ -141,14 +141,9 @@ const Dashboard = () => {
         }
         dailyRewardNotifTimeoutRef.current = setTimeout(() => {
           setShowDailyRewardNotif(false);
-        }, 5000);
+        }, 10000);
       };
 
-      showNotif();
-
-      if (dailyRewardIntervalRef.current) {
-        clearInterval(dailyRewardIntervalRef.current);
-      }
       dailyRewardIntervalRef.current = setInterval(showNotif, 60000);
     };
 

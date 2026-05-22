@@ -444,7 +444,7 @@ const DailyRewards = () => {
               <div className="mt-4 rounded-2xl border border-[#EAB308]/30 bg-gradient-to-br from-[#EAB308] to-[#FBBF24] p-4 text-left text-sm text-white shadow-[0_0_20px_rgba(234,179,8,0.15)]">
                 <p className="font-medium text-white">Want more rewards?</p>
                 <p className="text-xs text-white">
-                  Complete the 10 daily tasks to keep earning after your claim.
+                  Complete the 17 daily tasks to keep earning after your claim.
                 </p>
               </div>
             )}
