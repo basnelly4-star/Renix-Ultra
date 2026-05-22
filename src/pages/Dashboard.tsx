@@ -679,10 +679,10 @@ const Dashboard = () => {
             {/* Why Earnix9ja Content */}
             {!showTestimonials && (
               <div className="animate-fadeIn">
-                <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
+                <div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-20">
                   <button
                     onClick={() => setShowTestimonials(true)}
-                    className="bg-yellow-500 hover:bg-yellow-400 text-black rounded-full p-2 shadow-lg shadow-yellow-500/50 transition-all duration-200 active:scale-90"
+                    className="bg-yellow-500 hover:bg-yellow-400 text-black rounded-full p-2 shadow-[0_0_30px_rgba(234,179,8,0.55)] border border-yellow-300/80 transition-all duration-200 active:scale-90 glow-arrow"
                     aria-label="View testimonials"
                   >
                     <ChevronRight className="w-6 h-6" />
@@ -726,7 +726,7 @@ const Dashboard = () => {
                 </div>
 
                 <Link to="/referrals">
-                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg">
+                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(234,179,8,0.45)] hover:shadow-[0_0_40px_rgba(234,179,8,0.65)] glow-cta">
                     Invite & Earn Now
                   </Button>
                 </Link>
@@ -736,10 +736,10 @@ const Dashboard = () => {
             {/* Testimonials Carousel Content */}
             {showTestimonials && (
               <div className="animate-fadeIn">
-                <div className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
+                <div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-20">
                   <button
                     onClick={() => setShowTestimonials(false)}
-                    className="bg-yellow-500 hover:bg-yellow-400 text-black rounded-full p-2 shadow-lg shadow-yellow-500/50 transition-all duration-200 active:scale-90"
+                    className="bg-yellow-500 hover:bg-yellow-400 text-black rounded-full p-2 shadow-[0_0_30px_rgba(234,179,8,0.55)] border border-yellow-300/80 transition-all duration-200 active:scale-90 glow-arrow"
                     aria-label="Back to Why Earnix9ja"
                   >
                     <ChevronLeft className="w-6 h-6" />
@@ -785,7 +785,7 @@ const Dashboard = () => {
                 <div className="flex items-center justify-center gap-4 relative z-10 mb-4">
                   <button
                     onClick={() => setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
-                    className="bg-yellow-600/50 hover:bg-yellow-500 text-yellow-300 hover:text-white rounded-full p-2 transition-all duration-200 active:scale-90"
+                    className="bg-yellow-600/50 hover:bg-yellow-500 text-yellow-300 hover:text-white rounded-full p-2 shadow-[0_0_25px_rgba(234,179,8,0.45)] hover:shadow-[0_0_35px_rgba(234,179,8,0.6)] transition-all duration-200 active:scale-90 glow-arrow"
                     aria-label="Previous testimonial"
                   >
                     <ChevronLeft className="w-5 h-5" />
@@ -804,7 +804,7 @@ const Dashboard = () => {
                   </div>
                   <button
                     onClick={() => setTestimonialIndex((prev) => (prev + 1) % testimonials.length)}
-                    className="bg-yellow-600/50 hover:bg-yellow-500 text-yellow-300 hover:text-white rounded-full p-2 transition-all duration-200 active:scale-90"
+                    className="bg-yellow-600/50 hover:bg-yellow-500 text-yellow-300 hover:text-white rounded-full p-2 shadow-[0_0_25px_rgba(234,179,8,0.45)] hover:shadow-[0_0_35px_rgba(234,179,8,0.6)] transition-all duration-200 active:scale-90 glow-arrow"
                     aria-label="Next testimonial"
                   >
                     <ChevronRight className="w-5 h-5" />
@@ -812,7 +812,7 @@ const Dashboard = () => {
                 </div>
 
                 <Link to="/testimonials" className="block mt-4">
-                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg">
+                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(234,179,8,0.45)] hover:shadow-[0_0_40px_rgba(234,179,8,0.65)] glow-cta">
                     See More Success Stories
                   </Button>
                 </Link>
@@ -912,6 +912,22 @@ const Dashboard = () => {
 
           .animate-fadeIn {
             animation: fadeIn 0.3s ease-in-out;
+          }
+
+          .glow-cta {
+            box-shadow: 0 0 28px rgba(234,179,8,0.35);
+          }
+
+          .glow-cta:hover {
+            box-shadow: 0 0 40px rgba(234,179,8,0.55);
+          }
+
+          .glow-arrow {
+            box-shadow: 0 0 26px rgba(234,179,8,0.55);
+          }
+
+          .glow-arrow:hover {
+            box-shadow: 0 0 36px rgba(234,179,8,0.75);
           }
         `}</style>
       </div>
