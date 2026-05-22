@@ -431,7 +431,7 @@ const Dashboard = () => {
         <Card className="w-full max-w-md p-6 text-center space-y-3">
           <p className="font-semibold">Unable to load your profile</p>
           <p className="text-sm text-muted-foreground">Please login again to continue.</p>
-          <Button onClick={() => navigate("/auth")}>Go to Login</Button>
+          <Button onClick={() => navigate("/auth")} className="gold-glow-btn">Go to Login</Button>
         </Card>
       </div>
     );
@@ -443,11 +443,10 @@ const Dashboard = () => {
       <WithdrawalNotification />
 
       {/* Daily Reward Notification Popup */}
-
       {showDailyRewardNotif && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-in fade-in">
           <div className="relative w-full max-w-xs sm:max-w-sm mx-auto">
-            <Card className="rounded-2xl border border-[#EAB308]/30 bg-[#101112] shadow-2xl p-0 overflow-hidden">
+            <Card className="rounded-2xl border border-[#EAB308]/30 bg-[#101112] shadow-2xl p-0 overflow-hidden gold-glow-card">
               <button
                 className="absolute top-3 right-3 text-[#EAB308] hover:text-[#fbbf24] text-lg font-bold z-10"
                 onClick={() => setShowDailyRewardNotif(false)}
@@ -456,7 +455,7 @@ const Dashboard = () => {
                 ×
               </button>
               <div className="flex flex-col items-center px-6 pt-7 pb-2">
-                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#181200] border-2 border-[#EAB308] mb-4">
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#181200] border-2 border-[#EAB308] mb-4 gold-glow-icon">
                   <Gift className="w-8 h-8 text-[#EAB308]" />
                 </div>
                 <h2 className="text-xl font-bold text-white mb-2 text-center">Don't Miss Your Daily Reward!</h2>
@@ -468,7 +467,7 @@ const Dashboard = () => {
                     setShowDailyRewardNotif(false);
                     navigate("/daily-rewards");
                   }}
-                  className="w-full rounded-full bg-gradient-to-r from-[#EAB308] to-[#FBBF24] text-black text-base font-bold py-3 mb-2 mt-1 shadow-[0_4px_32px_rgba(234,179,8,0.18)] hover:from-[#fbbf24] hover:to-[#EAB308]"
+                  className="w-full rounded-full bg-gradient-to-r from-[#EAB308] to-[#FBBF24] text-black text-base font-bold py-3 mb-2 mt-1 gold-glow-btn hover:from-[#fbbf24] hover:to-[#EAB308]"
                 >
                   <Gift className="w-5 h-5 mr-2" /> Claim Daily Reward
                 </Button>
@@ -487,7 +486,7 @@ const Dashboard = () => {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-secondary p-4 text-primary-foreground glow-primary" style={{ pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-background/20 backdrop-blur-lg flex items-center justify-center text-lg font-bold">
+          <div className="w-10 h-10 rounded-full bg-background/20 backdrop-blur-lg flex items-center justify-center text-lg font-bold gold-glow-avatar">
             {profile.full_name?.charAt(0) || "U"}
           </div>
           <div>
@@ -498,9 +497,9 @@ const Dashboard = () => {
       </div>
 
       <div className="space-y-4 py-4" style={{ position: 'relative', zIndex: 2, pointerEvents: 'auto' }}>
-        {/* Balance Card - NOW WITH CLAIM BUTTON INSTEAD OF TOP UP */}
+        {/* Balance Card */}
         <div className="px-4">
-          <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-lg border-border/50 p-4 glow-primary animate-fade-in">
+          <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-lg border-border/50 p-4 gold-glow-card animate-fade-in">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">Your Balance</p>
@@ -516,11 +515,10 @@ const Dashboard = () => {
               <h2 className="text-3xl md:text-4xl font-bold gradient-text">
                 {showBalance ? `₦${Number(profile.balance || 0).toLocaleString()}.00` : "****"}
               </h2>
-              {/* CLAIM BUTTON REPLACES TOP UP BUTTON */}
               <Button
                 onClick={handleClaim}
                 disabled={!canClaim || claiming}
-                className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-sm py-2"
+                className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-sm py-2 gold-glow-btn"
               >
                 {claiming ? "Claiming..." : canClaim ? "Claim ₦1,000" : timeRemaining}
               </Button>
@@ -530,7 +528,7 @@ const Dashboard = () => {
 
         {/* Join Telegram Channel Card */}
         <div className="px-4">
-          <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20 p-3">
+          <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20 p-3 gold-glow-card">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-start gap-2 flex-1 min-w-0">
                 <Send className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
@@ -541,7 +539,7 @@ const Dashboard = () => {
               </div>
               <Button
                 onClick={() => window.open('https://t.me/earnix9jachannel')}
-                className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-xs px-3 py-1 h-auto flex-shrink-0"
+                className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-xs px-3 py-1 h-auto flex-shrink-0 gold-glow-btn"
               >
                 Join
               </Button>
@@ -566,7 +564,7 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => navigate("/referrals")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px]"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <Gift className="w-5 h-5 text-primary" />
@@ -575,7 +573,7 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => navigate("/withdraw")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px]"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <Banknote className="w-5 h-5 text-secondary" />
@@ -584,7 +582,7 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => navigate("/tasks")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px]"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <CheckCircle2 className="w-5 h-5 text-green-500" />
@@ -593,7 +591,7 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => navigate("/history")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px]"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <History className="w-5 h-5 text-blue-500" />
@@ -602,7 +600,7 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => toast.info("Coming Soon! 🚀")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px]"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <Disc3 className="w-5 h-5 text-accent" />
@@ -611,7 +609,7 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => navigate("/support")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] relative"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] relative gold-glow-action"
               style={{ WebkitTapHighlightColor: 'transparent' }}
               title={supportMessage}
             >
@@ -623,7 +621,7 @@ const Dashboard = () => {
 
         {/* Referral Card */}
         <div className="px-4">
-          <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-4">
+          <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-4 gold-glow-card">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Gift className="w-4 h-4 text-primary" />
@@ -639,14 +637,14 @@ const Dashboard = () => {
                   <p className="text-xl font-bold gradient-text">₦{Number((profile.total_referrals || 0) * 12000).toLocaleString()}</p>
                 </div>
               </div>
-              <div className="bg-muted/50 p-3 rounded-lg">
+              <div className="bg-muted/50 p-3 rounded-lg gold-glow-inner">
                 <p className="text-xs text-muted-foreground mb-1.5">Your Referral Link</p>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 text-[10px] font-bold text-foreground truncate">{window.location.origin}/auth?ref={profile.referral_code}</code>
                   <Button
                     size="sm"
                     onClick={copyReferralCode}
-                    className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 flex-shrink-0 h-7 w-7 p-0"
+                    className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 flex-shrink-0 h-7 w-7 p-0 gold-glow-btn"
                   >
                     <Copy className="w-3 h-3" />
                   </Button>
@@ -659,7 +657,7 @@ const Dashboard = () => {
         {/* Why Earnix9ja / Testimonials Swipeable Section */}
         <div className="mt-6">
           <div 
-            className="why-glow bg-gradient-to-br from-black via-amber-950 to-black rounded-2xl p-6 mb-6 mx-2 border border-yellow-600/40 relative overflow-hidden cursor-grab active:cursor-grabbing transition-all duration-300"
+            className="why-glow bg-gradient-to-br from-black via-amber-950 to-black rounded-2xl p-6 mb-6 mx-2 border border-yellow-600/40 relative overflow-hidden cursor-grab active:cursor-grabbing transition-all duration-300 gold-glow-section"
             onTouchStart={(e) => {
               touchStartRef.current = e.touches[0].clientX;
             }}
@@ -695,7 +693,7 @@ const Dashboard = () => {
 
                 <div className="space-y-3 mb-6 relative z-10">
                   <div className="flex items-start gap-3 animate-slide-up-delay2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
+                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40 gold-glow-icon">
                       <Shield className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -705,7 +703,7 @@ const Dashboard = () => {
                   </div>
 
                   <div className="flex items-start gap-3 animate-slide-up-delay3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
+                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40 gold-glow-icon">
                       <TrendingUp className="w-5 h-5 text-black" />
                     </div>
                     <div>
@@ -726,7 +724,7 @@ const Dashboard = () => {
                 </div>
 
                 <Link to="/referrals">
-                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(234,179,8,0.45)] hover:shadow-[0_0_40px_rgba(234,179,8,0.65)] glow-cta">
+                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(234,179,8,0.45)] hover:shadow-[0_0_40px_rgba(234,179,8,0.65)] glow-cta gold-glow-btn">
                     Invite & Earn Now
                   </Button>
                 </Link>
@@ -751,10 +749,10 @@ const Dashboard = () => {
                 </div>
 
                 {/* Testimonial Slide */}
-                <div className="relative z-10 bg-gradient-to-r from-yellow-900/20 to-yellow-800/10 rounded-xl p-4 mb-4 border border-yellow-600/30">
+                <div className="relative z-10 bg-gradient-to-r from-yellow-900/20 to-yellow-800/10 rounded-xl p-4 mb-4 border border-yellow-600/30 gold-glow-inner">
                   <div className="flex items-start gap-4">
                     {/* Avatar */}
-                    <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40">
+                    <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40 gold-glow-icon">
                       <span className="text-sm font-bold text-black">
                         {testimonials[testimonialIndex].name.charAt(0)}
                       </span>
@@ -812,7 +810,7 @@ const Dashboard = () => {
                 </div>
 
                 <Link to="/testimonials" className="block mt-4">
-                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(234,179,8,0.45)] hover:shadow-[0_0_40px_rgba(234,179,8,0.65)] glow-cta">
+                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(234,179,8,0.45)] hover:shadow-[0_0_40px_rgba(234,179,8,0.65)] glow-cta gold-glow-btn">
                     See More Success Stories
                   </Button>
                 </Link>
@@ -840,6 +838,78 @@ const Dashboard = () => {
             50% { left: 120%; }
             100% { left: -120%; }
           }
+
+          /* ========== GOLD GLOW SYSTEM ========== */
+
+          /* Pulsing gold glow for CTA buttons */
+          @keyframes gold-pulse {
+            0%, 100% { box-shadow: 0 0 8px 2px rgba(234,179,8,0.45), 0 0 20px 4px rgba(234,179,8,0.2); }
+            50% { box-shadow: 0 0 16px 4px rgba(234,179,8,0.7), 0 0 36px 8px rgba(234,179,8,0.35); }
+          }
+
+          /* Subtle border glow for cards */
+          @keyframes gold-border-pulse {
+            0%, 100% { box-shadow: 0 0 6px 1px rgba(234,179,8,0.2), inset 0 0 6px 0px rgba(234,179,8,0.05); }
+            50% { box-shadow: 0 0 14px 3px rgba(234,179,8,0.38), inset 0 0 10px 1px rgba(234,179,8,0.08); }
+          }
+
+          /* Gold glow for primary CTA buttons */
+          .gold-glow-btn {
+            box-shadow: 0 0 10px 2px rgba(234,179,8,0.5), 0 0 24px 4px rgba(234,179,8,0.25);
+            animation: gold-pulse 2.5s ease-in-out infinite;
+          }
+
+          .gold-glow-btn:hover {
+            box-shadow: 0 0 18px 4px rgba(234,179,8,0.75), 0 0 40px 8px rgba(234,179,8,0.4);
+          }
+
+          .gold-glow-btn:disabled {
+            box-shadow: 0 0 5px 1px rgba(234,179,8,0.2);
+            animation: none;
+          }
+
+          /* Gold glow for cards / bordered containers */
+          .gold-glow-card {
+            box-shadow: 0 0 0 1px rgba(234,179,8,0.15), 0 0 12px 2px rgba(234,179,8,0.15);
+            animation: gold-border-pulse 3s ease-in-out infinite;
+          }
+
+          /* Gold glow for the quick-action grid buttons */
+          .gold-glow-action {
+            box-shadow: 0 0 8px 1px rgba(234,179,8,0.18);
+            animation: gold-border-pulse 3s ease-in-out infinite;
+            transition: box-shadow 0.2s ease;
+          }
+
+          .gold-glow-action:hover {
+            box-shadow: 0 0 16px 3px rgba(234,179,8,0.4);
+          }
+
+          /* Gold glow for the whole Why / Testimonials section border */
+          .gold-glow-section {
+            box-shadow: 0 0 20px 4px rgba(234,179,8,0.22), 0 0 50px 10px rgba(234,179,8,0.1);
+            animation: gold-border-pulse 3.5s ease-in-out infinite;
+          }
+
+          /* Gold glow for icon circles */
+          .gold-glow-icon {
+            box-shadow: 0 0 12px 3px rgba(234,179,8,0.45);
+            animation: gold-pulse 2.5s ease-in-out infinite;
+          }
+
+          /* Gold glow for avatar */
+          .gold-glow-avatar {
+            box-shadow: 0 0 10px 2px rgba(234,179,8,0.4);
+            animation: gold-pulse 3s ease-in-out infinite;
+          }
+
+          /* Gold glow for inner containers (referral box, testimonial card) */
+          .gold-glow-inner {
+            box-shadow: 0 0 8px 1px rgba(234,179,8,0.2);
+            animation: gold-border-pulse 3s ease-in-out infinite;
+          }
+
+          /* ======================================= */
 
           .why-glow {
             position: relative;
