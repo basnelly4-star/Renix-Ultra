@@ -48,25 +48,18 @@ const Dashboard = () => {
   const [showTopUp, setShowTopUp] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState("Ready!");
   const [showDailyRewardNotif, setShowDailyRewardNotif] = useState(false);
-  const [supportMessage, setSupportMessage] = useState("Contact Support");
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [showTestimonials, setShowTestimonials] = useState(false);
   const [showMilestoneModal, setShowMilestoneModal] = useState(false);
-  // NEW: state to trigger the paste animation on the support Telegram card
-  const [showPasteLabel, setShowPasteLabel] = useState(false);
   const authRetryCountRef = useRef(0);
   const touchStartRef = useRef(0);
   const milestoneShownRef = useRef(false);
   const dailyRewardNotifTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const dailyRewardIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const supportIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const testimonialIntervalRef = useRef<NodeJS.Timeout | null>(null);
   // NEW: ref for the auto-slide interval
   const whySlideshowRef = useRef<NodeJS.Timeout | null>(null);
-  const pasteLabelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hasDailyClaimedRef = useRef(false);
-
-  const supportMessages = ["Support", "Contact Support", "Need Help"];
 
   const testimonials = [
     {
@@ -171,24 +164,6 @@ const Dashboard = () => {
     };
   }, [profile]);
 
-  // Support Message Cycling
-  useEffect(() => {
-    let messageIndex = 0;
-
-    const updateMessage = () => {
-      setSupportMessage(supportMessages[messageIndex]);
-      messageIndex = (messageIndex + 1) % supportMessages.length;
-    };
-
-    supportIntervalRef.current = setInterval(updateMessage, 20000);
-
-    return () => {
-      if (supportIntervalRef.current) {
-        clearInterval(supportIntervalRef.current);
-      }
-    };
-  }, [supportMessages]);
-
   // Withdrawal Milestone Check
   useEffect(() => {
     if (!profile) return;
@@ -247,30 +222,6 @@ const Dashboard = () => {
       setShowTestimonials((prev) => !prev);
     }, 5000);
   };
-
-  // ── NEW: Paste animation – fires on mount then every 30 seconds ────────────
-  useEffect(() => {
-    const triggerPaste = () => {
-      setShowPasteLabel(true);
-      if (pasteLabelTimeoutRef.current)
-        clearTimeout(pasteLabelTimeoutRef.current);
-      pasteLabelTimeoutRef.current = setTimeout(() => {
-        setShowPasteLabel(false);
-      }, 7500); // slightly longer than the CSS animation so retract finishes cleanly
-    };
-
-    // Delay first trigger so the page has settled
-    const initialDelay = setTimeout(triggerPaste, 3000);
-
-    const repeatInterval = setInterval(triggerPaste, 30000);
-
-    return () => {
-      clearTimeout(initialDelay);
-      clearInterval(repeatInterval);
-      if (pasteLabelTimeoutRef.current)
-        clearTimeout(pasteLabelTimeoutRef.current);
-    };
-  }, []);
 
   useEffect(() => {
     if (lastClaimTime) {
@@ -644,39 +595,15 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* ── UPDATED: Support Telegram Card with paste animation ── */}
+        {/* ── Support Telegram Card ── */}
         <div className="px-4">
           <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20 p-3 gold-glow-card overflow-hidden">
-            {/*
-              Layout strategy:
-              - The icon + text block is a flex row.
-              - When paste is active the icon shrinks/shifts left via CSS transition
-                and the extruded label grows in from behind the icon (transform-origin: left).
-              - The whole inner div has `relative overflow-hidden` so the label clips cleanly.
-            */}
-            <div className="flex items-center justify-between gap-2">
-              {/* Left: icon + paste label + text */}
-              <div
-                className="flex items-center gap-2 flex-1 min-w-0 relative"
-                style={{ minHeight: 36 }}
-              >
-                {/* Icon — shifts left when paste is active */}
-                <div
-                  className={`flex-shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${showPasteLabel ? "tg-icon-pushed" : ""}`}
-                  style={{ position: "relative", zIndex: 2 }}
-                >
+                <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 flex-1 min-w-0" style={{ minHeight: 36 }}>
+                <div className="flex-shrink-0" style={{ position: "relative", zIndex: 2 }}>
                   <Send className="w-4 h-4 text-secondary mt-0.5" />
                 </div>
 
-                {/* Paste label — extrudes from behind the icon */}
-                <div
-                  className={`tg-paste-label ${showPasteLabel ? "tg-paste-label--active" : ""}`}
-                  aria-hidden="true"
-                >
-                  Contact Support
-                </div>
-
-                {/* Static text block */}
                 <div className="text-xs min-w-0">
                   <p className="font-semibold text-foreground">Support</p>
                   <p className="text-muted-foreground truncate">
@@ -757,12 +684,11 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => navigate("/support")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] relative gold-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
-              title={supportMessage}
             >
               <HelpCircle className="w-5 h-5 text-[#EAB308]" />
-              <span className="text-xs font-semibold">{supportMessage}</span>
+              <span className="text-xs font-semibold">Support</span>
             </button>
           </div>
         </div>
@@ -1098,51 +1024,6 @@ const Dashboard = () => {
           }
           .glow-arrow-pulse {
             animation: arrowGlow 1.6s ease-in-out infinite !important;
-          }
-
-          /* ── 2. PASTE / TUBE ANIMATION ──────────────────────────────────── */
-          /*
-            The label starts scaleX(0) at its left origin (right behind the icon).
-            On activation it extrudes rightward (scaleX → 1), stays visible,
-            then collapses back.  The icon gets nudged left simultaneously.
-          */
-          .tg-paste-label {
-            position: absolute;
-            left: 20px;           /* start right behind the icon */
-            top: 50%;
-            transform: translateY(-50%) scaleX(0);
-            transform-origin: left center;
-            background: linear-gradient(90deg, #EAB308, #FBBF24);
-            color: #000;
-            font-size: 11px;
-            font-weight: 700;
-            white-space: nowrap;
-            border-radius: 0 14px 14px 0;
-            padding: 4px 12px 4px 8px;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0;
-            transition: none;
-          }
-
-          @keyframes pasteExtrude {
-            /* 0 – squeeze out from behind icon */
-            0%   { opacity: 0;   transform: translateY(-50%) scaleX(0.04); }
-            /* 8% – fully extruded, visible */
-            8%   { opacity: 1;   transform: translateY(-50%) scaleX(1); }
-            /* Hold until ~93% */
-            93%  { opacity: 1;   transform: translateY(-50%) scaleX(1); }
-            /* Retract back into the icon */
-            100% { opacity: 0;   transform: translateY(-50%) scaleX(0.04); }
-          }
-
-          .tg-paste-label--active {
-            animation: pasteExtrude 7.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-          }
-
-          /* Icon shifts left when label is active to make room */
-          .tg-icon-pushed {
-            transform: translateX(-4px) scale(0.88);
           }
 
           /* ── (existing styles kept below, unchanged) ─────────────────────── */

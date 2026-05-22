@@ -7,9 +7,15 @@ import { Card } from "@/components/ui/card";
 export const FloatingActionButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [telegramVisible, setTelegramVisible] = useState(true);
+  const [supportMessage, setSupportMessage] = useState("Contact Support");
+  const [showPasteLabel, setShowPasteLabel] = useState(false);
   const navigate = useNavigate();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const supportIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pasteLabelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const supportMessages = ["Support", "Contact Support", "Need Help"];
 
   const menuItems = [
     { icon: CheckCircle2, label: "Tasks", path: "/tasks" },
@@ -35,8 +41,85 @@ export const FloatingActionButton = () => {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    let messageIndex = 0;
+
+    const updateMessage = () => {
+      setSupportMessage(supportMessages[messageIndex]);
+      setShowPasteLabel(true);
+
+      if (pasteLabelTimeoutRef.current) {
+        clearTimeout(pasteLabelTimeoutRef.current);
+      }
+
+      pasteLabelTimeoutRef.current = setTimeout(() => {
+        setShowPasteLabel(false);
+      }, 7200);
+
+      messageIndex = (messageIndex + 1) % supportMessages.length;
+    };
+
+    updateMessage();
+    supportIntervalRef.current = setInterval(updateMessage, 20000);
+
+    return () => {
+      if (supportIntervalRef.current) {
+        clearInterval(supportIntervalRef.current);
+      }
+      if (pasteLabelTimeoutRef.current) {
+        clearTimeout(pasteLabelTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <>
+      <style>{`
+        .tg-paste-label {
+          position: absolute;
+          right: 100%;
+          top: 50%;
+          transform: translate(6px, -50%) scaleX(0.04);
+          transform-origin: right center;
+          opacity: 0;
+          white-space: nowrap;
+          padding: 0.5rem 0.875rem;
+          border-radius: 999px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: #ffffff;
+          background: linear-gradient(90deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95));
+          box-shadow: 0 15px 30px rgba(59, 130, 246, 0.16);
+          pointer-events: none;
+        }
+
+        .tg-paste-label--active {
+          animation: tgPasteExtrude 7.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes tgPasteExtrude {
+          0% {
+            opacity: 0;
+            transform: translate(6px, -50%) scaleX(0.04);
+          }
+          8% {
+            opacity: 1;
+            transform: translate(6px, -50%) scaleX(1);
+          }
+          93% {
+            opacity: 1;
+            transform: translate(6px, -50%) scaleX(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translate(6px, -50%) scaleX(0.04);
+          }
+        }
+
+        .tg-icon-pushed {
+          transform: translateX(-5px) scale(0.92);
+        }
+      `}</style>
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40" 
@@ -48,15 +131,25 @@ export const FloatingActionButton = () => {
       <div className="fixed bottom-6 right-6 z-50" ref={sidebarRef}>
         {/* Telegram Support Circle - Absolute positioning above menu button */}
         {telegramVisible && (
-          <button
-            onClick={() => window.location.href = "https://t.me/Earnix9jasupport"}
-            className="absolute -top-20 right-0 w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer z-10"
-            style={{ WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto' }}
-            aria-label="Telegram Support"
-            title="Telegram Support"
-          >
-            <Send className="w-6 h-6 text-white" />
-          </button>
+          <div className="absolute -top-20 right-0">
+            <div className="relative">
+              <div
+                className={`tg-paste-label ${showPasteLabel ? "tg-paste-label--active" : ""}`}
+                aria-hidden="true"
+              >
+                {supportMessage}
+              </div>
+              <button
+                onClick={() => window.location.href = "https://t.me/Earnix9jasupport"}
+                className={`w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer z-10 ${showPasteLabel ? "tg-icon-pushed" : ""}`}
+                style={{ WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto' }}
+                aria-label="Telegram Support"
+                title="Telegram Support"
+              >
+                <Send className="w-6 h-6 text-white" />
+              </button>
+            </div>
+          </div>
         )}
 
         {isOpen && (
