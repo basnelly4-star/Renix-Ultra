@@ -10,6 +10,7 @@ import { ArrowRight } from "lucide-react";
 import { WelcomeModal } from "@/components/WelcomeModal";
 import { WithdrawalNotification } from "@/components/WithdrawalNotification";
 import { AddBalanceModal } from "@/components/AddBalanceModal";
+import { WithdrawalMilestoneModal } from "@/components/WithdrawalMilestoneModal";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
@@ -27,8 +28,10 @@ const Dashboard = () => {
   const [supportMessage, setSupportMessage] = useState("Contact Support");
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [showTestimonials, setShowTestimonials] = useState(false);
+  const [showMilestoneModal, setShowMilestoneModal] = useState(false);
   const authRetryCountRef = useRef(0);
   const touchStartRef = useRef(0);
+  const milestoneShownRef = useRef(false);
   const dailyRewardNotifTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const dailyRewardIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const supportIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -158,6 +161,26 @@ const Dashboard = () => {
       }
     };
   }, [supportMessages]);
+
+  // Withdrawal Milestone Check
+  useEffect(() => {
+    if (!profile) return;
+
+    const MINIMUM_WITHDRAW = 180000;
+    const hasReachedMilestone = profile.balance >= MINIMUM_WITHDRAW;
+
+    // Check localStorage to see if user has already seen this milestone
+    const milestoneKey = `withdrawal_milestone_seen_${profile.id}`;
+    const hasSeenMilestone = localStorage.getItem(milestoneKey) === "true";
+
+    if (hasReachedMilestone && !hasSeenMilestone && !milestoneShownRef.current) {
+      milestoneShownRef.current = true;
+      setTimeout(() => {
+        setShowMilestoneModal(true);
+        localStorage.setItem(milestoneKey, "true");
+      }, 500); // Small delay for better UX
+    }
+  }, [profile]);
 
   // Testimonial Carousel Auto-rotate
   useEffect(() => {
@@ -901,6 +924,16 @@ const Dashboard = () => {
         onSuccess={() => {
           if (user) loadProfile(user.id);
         }}
+      />
+
+      <WithdrawalMilestoneModal
+        open={showMilestoneModal}
+        onOpenChange={setShowMilestoneModal}
+        onViewDetails={() => {
+          setShowMilestoneModal(false);
+          navigate("/withdraw");
+        }}
+        balance={profile?.balance || 0}
       />
     </div>
   );

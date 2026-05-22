@@ -96,9 +96,13 @@ const DailyRewards = () => {
     claimedToday: false,
     streakReset: false,
     streakLost: false,
+    hasClaimedBefore: false,
   });
   const [loading, setLoading] = useState(true);
   const [claimingDay, setClaimingDay] = useState<number | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [claimedAmount, setClaimedAmount] = useState(0);
+  const [claimedDayNum, setClaimedDayNum] = useState(0);
   const [timeUntilNextClaim, setTimeUntilNextClaim] = useState<{
     hours: number;
     minutes: number;
@@ -150,7 +154,7 @@ const DailyRewards = () => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching rewards:", error);
-        toast.error("Failed to load rewards");
+        toast({ description: "Failed to load rewards" });
         setLoading(false);
       }
     };
@@ -182,11 +186,9 @@ const DailyRewards = () => {
   }, [rewardStatus.claimedToday]);
   const handleClaimReward = async (day: number) => {
     try {
-      setClaimingDay(day);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        toast.error("Please login first");
-        setClaimingDay(null);
+        toast({ description: "Please login first" });
         return;
       }
 
@@ -197,70 +199,29 @@ const DailyRewards = () => {
         .eq("id", user.id)
         .single();
 
-      if (profileError) {
-        console.error('Profile fetch error:', profileError);
-        toast.error("Failed to load profile: " + (profileError?.message || "Unknown error"));
-        setClaimingDay(null);
-        return;
-      }
-
-      if (!profile) {
-        toast.error("Profile not found");
-        setClaimingDay(null);
+      if (profileError || !profile) {
+        toast({ description: "Failed to load profile" });
         return;
       }
 
       const rewardState = getRewardStatus(profile);
 
       if (rewardState.claimedToday) {
-        toast.error("Already claimed today! Come back tomorrow.");
-        setClaimingDay(null);
+        toast({ description: "Already claimed today! Come back tomorrow." });
         return;
       }
 
       if (day !== rewardState.nextDay) {
-        toast.error("Your streak has reset. Claim Day 1.");
-        setClaimingDay(null);
+        toast({ description: "Your streak has reset. Claim Day 1." });
         return;
       }
 
-      const rewardAmount = 10000 + (day - 1) * 5000; // Day 1: 10k, Day 2: 15k, Day 3: 20k, etc.
-      const newBalance = (profile?.balance || 0) + rewardAmount;
+      const rewardAmount = 10000 + (day - 1) * 5000;
 
-      // Update profile with new balance only
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .update({
-          balance: newBalance,
-        })
-        .eq("id", user.id);
-
-      if (updateError) {
-        console.error('Update error:', updateError);
-        throw updateError;
-      }
-
-      // Save streak data to localStorage
-      const streakData = {
-        currentDay: day,
-        lastClaimDate: new Date().toISOString(),
-      };
-      localStorage.setItem("dailyRewardStreak", JSON.stringify(streakData));
-
-      // Record the claim in daily_rewards table
-      const { error: insertError } = await supabase.from("daily_rewards").insert({
-        user_id: user.id,
-        day,
-        amount: rewardAmount,
-        claimed_date: new Date().toISOString(),
-      });
-
-      if (insertError) {
-        console.error('Insert error:', insertError);
-        // Still show success even if logging fails
-      }
-
-      toast.success(`₦${rewardAmount.toLocaleString()} claimed for Day ${day}!`);
+      // OPTIMISTIC UPDATE - Update UI immediately
+      setClaimingDay(day);
+      setClaimedAmount(rewardAmount);
+      setClaimedDayNum(day);
 
       const updatedStatus: RewardStatus = {
         currentDay: day,
@@ -272,14 +233,56 @@ const DailyRewards = () => {
       };
 
       setRewardStatus(updatedStatus);
-      setRewards((prev) =>
-        prev.map((r) => ({ ...r, claimed: r.day <= day }))
-      );
+      setRewards((prev) => prev.map((r) => ({ ...r, claimed: r.day <= day })));
+
+      // Show confetti immediately
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
+
+      // Save streak data to localStorage immediately
+      const streakData = {
+        currentDay: day,
+        lastClaimDate: new Date().toISOString(),
+      };
+      localStorage.setItem("dailyRewardStreak", JSON.stringify(streakData));
+
+      // Do database operations in background (non-blocking)
+      const newBalance = (profile.balance || 0) + rewardAmount;
+      
+      // Update balance in background
+      supabase
+        .from("profiles")
+        .update({ balance: newBalance })
+        .eq("id", user.id)
+        .then((result) => {
+          if (!result.error) {
+            toast({ description: `₦${rewardAmount.toLocaleString()} added to your balance!` });
+          } else {
+            console.error('Update error:', result.error);
+            toast({ description: "Failed to save balance (try refreshing)" });
+          }
+        });
+
+      // Log the claim in claims table (non-blocking)
+      const claimData = {
+        user_id: user.id,
+        amount: rewardAmount,
+        claimed_at: new Date().toISOString(),
+      };
+      
+      supabase
+        .from("claims")
+        .insert([claimData])
+        .then((result) => {
+          if (result.error) {
+            console.error('Insert error:', result.error);
+          }
+        });
 
       setClaimingDay(null);
     } catch (error) {
       console.error("Claim error:", error);
-      toast.error("Failed to claim reward");
+      toast({ description: "Failed to claim reward" });
       setClaimingDay(null);
     }
   };
@@ -315,6 +318,33 @@ const DailyRewards = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-[#0a0a0a] to-black px-4 py-6">
+      {/* Confetti Celebration Popup */}
+      {showConfetti && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+          {/* Confetti Burst - Multiple Particles */}
+          {Array.from({ length: 50 }).map((_, i) => (
+            <div
+              key={i}
+              className={`absolute w-2 h-2 animate-pulse confetti-particle confetti-${i} confetti-color-${i % 4}`}
+            />
+          ))}
+          
+          {/* Celebration Card */}
+          <div className="absolute bg-gradient-to-br from-[#EAB308] via-[#FBBF24] to-[#CA8A04] rounded-3xl p-1 shadow-2xl shadow-[#EAB308]/50 animate-bounce-slow z-10">
+            <div className="bg-black rounded-3xl p-8 text-center min-w-[280px]">
+              <div className="mb-4 text-5xl animate-bounce">🎉</div>
+              <h2 className="text-2xl font-bold text-[#EAB308] mb-2">Congratulations!</h2>
+              <p className="text-white text-lg font-bold mb-1">Day {claimedDayNum} Reward Claimed!</p>
+              <p className="text-[#FBBF24] text-3xl font-bold">₦{claimedAmount.toLocaleString()}</p>
+              <div className="mt-4 text-green-400 flex items-center justify-center gap-2">
+                <Check className="w-5 h-5" />
+                <span className="font-semibold">Added to your balance</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Streak Counter Top Bar */}
       <div className="mx-auto max-w-2xl mb-6">
         <div className="flex items-center justify-between rounded-2xl border border-[#EAB308]/30 bg-gradient-to-r from-[#EAB308]/10 to-[#CA8A04]/10 px-6 py-3 shadow-lg shadow-[#EAB308]/10">
@@ -520,6 +550,65 @@ const DailyRewards = () => {
           Back to Dashboard
         </Button>
       </div>
+
+      <style>{`
+        @keyframes confetti-burst {
+          0% {
+            transform: translate(0, 0) scale(1);
+            opacity: 1;
+            left: 50%;
+            top: 50%;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+        
+        @keyframes bounce-slow {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+        }
+        
+        .animate-bounce-slow {
+          animation: bounce-slow 1s ease-in-out infinite;
+        }
+
+        .confetti-particle {
+          left: 50%;
+          top: 50%;
+          position: absolute;
+        }
+
+        .confetti-color-0 {
+          background-color: #EAB308;
+        }
+
+        .confetti-color-1 {
+          background-color: #FBBF24;
+        }
+
+        .confetti-color-2 {
+          background-color: #CA8A04;
+        }
+
+        .confetti-color-3 {
+          background-color: #FFD700;
+        }
+
+        ${Array.from({ length: 50 }).map((_, i) => {
+          const angle = (i / 50) * Math.PI * 2;
+          const distance = 150 + Math.random() * 150;
+          const tx = Math.cos(angle) * distance;
+          const ty = Math.sin(angle) * distance - 100;
+          const delay = i * 0.02;
+          return `.confetti-${i} {
+            animation: confetti-burst 2.5s ease-out ${delay}s forwards !important;
+            --tx: ${tx}px;
+            --ty: ${ty}px;
+            transform: translate(var(--tx), var(--ty)) scale(0);
+          }`;
+        }).join('')}
+      `}</style>
     </div>
   );
 };
