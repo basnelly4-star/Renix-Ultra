@@ -197,39 +197,39 @@ const Withdraw = () => {
               </div>
             </div>
 
-            {/* Complete 5 Tasks */}
+            {/* Complete 17 Tasks */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <CheckSquare className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-semibold">Complete 5 Tasks</span>
+                  <span className="text-sm font-semibold">Complete 17 Tasks</span>
                 </div>
-                <span className="text-sm font-bold text-primary">{Math.min(tasksCompleted, 5)}/5</span>
+                <span className="text-sm font-bold text-primary">{Math.min(tasksCompleted, 17)}/17</span>
               </div>
               <div className="w-full bg-muted/50 rounded-full h-2 overflow-hidden">
                 <div
                   className="bg-gradient-to-r from-primary to-secondary h-full transition-all duration-300"
                   style={{
-                    width: `${Math.min((tasksCompleted / 5) * 100, 100)}%`
+                    width: `${Math.min((tasksCompleted / 17) * 100, 100)}%`
                   }}
                 />
               </div>
             </div>
 
-            {/* Make 5 Claims */}
+            {/* Make 17 Claims */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Gift className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-semibold">Make 5 Claims</span>
+                  <span className="text-sm font-semibold">Make 17 Claims</span>
                 </div>
-                <span className="text-sm font-bold text-primary">{Math.min(claimsMade, 5)}/5</span>
+                <span className="text-sm font-bold text-primary">{Math.min(claimsMade, 17)}/17</span>
               </div>
               <div className="w-full bg-muted/50 rounded-full h-2 overflow-hidden">
                 <div
                   className="bg-gradient-to-r from-primary to-secondary h-full transition-all duration-300"
                   style={{
-                    width: `${Math.min((claimsMade / 5) * 100, 100)}%`
+                    width: `${Math.min((claimsMade / 17) * 100, 100)}%`
                   }}
                 />
               </div>
