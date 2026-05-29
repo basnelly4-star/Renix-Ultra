@@ -16,7 +16,7 @@ const Loan = () => {
         </h1>
 
         <p className="mt-5 text-sm leading-6 text-[#d1d5db]">
-          Free loans are exclusive to <span className="font-semibold text-[#EAB308]">Monthly</span> and <span className="font-semibold text-[#EAB308]">Yearly</span> subscribers.
+          Free loans are exclusive to <span className="font-semibold text-[#EAB308]">Only</span> Upgraded <span className="font-semibold text-[#EAB308]">Users</span>.
         </p>
 
         <div className="mt-6 rounded-3xl border border-[#EAB308]/20 bg-[#111111]/70 px-5 py-4 text-sm text-[#EAB308] shadow-[inset_0_0_0_1px_rgba(234,179,8,0.1)]">

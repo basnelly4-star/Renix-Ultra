@@ -123,7 +123,7 @@ const UpgradePayment = () => {
                   <CopyButton text="3608496838" />
                 </div>
                 <p>Name: Micheal Micheal</p>
-                <p>Bank: Renmoney </p>
+                <p>Bank: RENMONEY </p>
               </div>
             </div>
             <div className="bg-muted/50 p-3 rounded-lg flex items-center justify-between">

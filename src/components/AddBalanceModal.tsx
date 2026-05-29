@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const FEE_PERCENT = 2;
 const BANK_DETAILS = {
-  bankName: "Renmoney ",
+  bankName: "renmoney ",
   accountName: "Micheal Micheal ",
   accountNumber: "3608496838",
 };
