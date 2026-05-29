@@ -41,6 +41,25 @@ const Withdraw = () => {
     trackProgress();
   }, []);
 
+  // Auto-update progress every 500ms for real-time reflection
+  useEffect(() => {
+    const interval = setInterval(() => {
+      trackProgress();
+    }, 500);
+
+    // Also listen for storage changes (in case updates happen in other tabs/windows)
+    const handleStorageChange = () => {
+      trackProgress();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
   const trackProgress = () => {
     // Count tasks completed today from localStorage
     let taskCount = 0;
