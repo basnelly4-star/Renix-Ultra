@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, DollarSign, CheckCircle2, Users, CheckSquare, Gift } from "lucide-react";
+import { ArrowLeft, DollarSign, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
@@ -17,8 +17,6 @@ const Withdraw = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [tasksCompleted, setTasksCompleted] = useState(0);
-  const [claimsMade, setClaimsMade] = useState(0);
   const [withdrawData, setWithdrawData] = useState({
     amount: "",
     accountName: "",
@@ -38,39 +36,7 @@ const Withdraw = () => {
 
   useEffect(() => {
     loadProfile();
-    trackProgress();
   }, []);
-
-  // Auto-update progress every 500ms for real-time reflection
-  useEffect(() => {
-    const interval = setInterval(() => {
-      trackProgress();
-    }, 500);
-
-    // Also listen for storage changes (in case updates happen in other tabs/windows)
-    const handleStorageChange = () => {
-      trackProgress();
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
-  const trackProgress = () => {
-    // Count tasks completed today from localStorage
-    let taskCount = 0;
-    for (let i = 1; i <= 17; i++) {
-      if (localStorage.getItem(`task_${i}_claimed`)) {
-        taskCount++;
-      }
-    }
-    setTasksCompleted(taskCount);
-    setClaimsMade(taskCount);
-  };
 
   const loadProfile = async () => {
     try {
@@ -185,77 +151,6 @@ const Withdraw = () => {
       </div>
 
       <div className="p-6 space-y-6">
-        {/* Your Progress Section */}
-        <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-lg border-border/50 p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-primary/20 rounded-lg">
-              <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8m3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5m-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11m3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
-              </svg>
-            </div>
-            <h2 className="text-xl font-bold">Your Progress</h2>
-          </div>
-
-          <div className="space-y-4">
-            {/* Refer 10 Friends */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-semibold">Refer 10 Friends</span>
-                </div>
-                <span className="text-sm font-bold text-primary">{Math.min(profile?.total_referrals || 0, 10)}/10</span>
-              </div>
-              <div className="w-full bg-muted/50 rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-primary to-secondary h-full transition-all duration-300"
-                  style={{
-                    width: `${Math.min(((profile?.total_referrals || 0) / 10) * 100, 100)}%`
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Complete 17 Tasks */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <CheckSquare className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-semibold">Complete 17 Tasks</span>
-                </div>
-                <span className="text-sm font-bold text-primary">{Math.min(tasksCompleted, 17)}/17</span>
-              </div>
-              <div className="w-full bg-muted/50 rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-primary to-secondary h-full transition-all duration-300"
-                  style={{
-                    width: `${Math.min((tasksCompleted / 17) * 100, 100)}%`
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Make 17 Claims */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Gift className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-semibold">Make 17 Claims</span>
-                </div>
-                <span className="text-sm font-bold text-primary">{Math.min(claimsMade, 17)}/17</span>
-              </div>
-              <div className="w-full bg-muted/50 rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-primary to-secondary h-full transition-all duration-300"
-                  style={{
-                    width: `${Math.min((claimsMade / 17) * 100, 100)}%`
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </Card>
-
         <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-6">
           <div className="flex items-center justify-between mb-6 p-4 bg-muted/50 rounded-lg">
             <div>
