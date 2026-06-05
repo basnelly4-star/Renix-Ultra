@@ -7,9 +7,10 @@ import { Card } from "@/components/ui/card";
 type FABProps = {
   position?: "left" | "right";
   messageIntervalMs?: number;
+  supportOnly?: boolean;
 };
 
-export const FloatingActionButton = ({ position = "right", messageIntervalMs = 20000 }: FABProps) => {
+export const FloatingActionButton = ({ position = "right", messageIntervalMs = 20000, supportOnly = false }: FABProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [telegramVisible, setTelegramVisible] = useState(true);
   const [supportMessage, setSupportMessage] = useState("Contact Support");
@@ -38,13 +39,17 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
   };
 
   useEffect(() => {
+    if (supportOnly) {
+      return;
+    }
+
     if (!isOpen) {
       const timer = setTimeout(() => {
         setTelegramVisible(true);
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [isOpen]);
+  }, [isOpen, supportOnly]);
 
   useEffect(() => {
     let messageIndex = 0;
@@ -125,7 +130,7 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
           transform: translateX(-5px) scale(0.92);
         }
       `}</style>
-      {isOpen && (
+      {!supportOnly && isOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40" 
           onClick={() => setIsOpen(false)}
@@ -157,7 +162,7 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
           </div>
         )}
 
-        {isOpen && (
+          {!supportOnly && isOpen && (
           <Card className="absolute bottom-16 right-0 p-2 bg-card/95 backdrop-blur-lg border-border/50 shadow-lg animate-fade-in mb-2" style={{ pointerEvents: 'auto', zIndex: 60 }}>
             <div className="flex flex-col gap-2">
               {menuItems.map((item, index) => (
@@ -179,16 +184,18 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
           </Card>
         )}
 
-        <button
-          ref={menuButtonRef}
-          type="button"
-          onClick={toggleMenu}
-          className={`w-14 h-14 rounded-full bg-gradient-to-r from-primary to-secondary shadow-lg glow-primary hover:opacity-90 flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer relative ${position === "left" ? "ml-0" : "mr-0"}`}
-          style={{ WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto', zIndex: 20 }}
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-        >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        {!supportOnly && (
+          <button
+            ref={menuButtonRef}
+            type="button"
+            onClick={toggleMenu}
+            className={`w-14 h-14 rounded-full bg-gradient-to-r from-primary to-secondary shadow-lg glow-primary hover:opacity-90 flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer relative ${position === "left" ? "ml-0" : "mr-0"}`}
+            style={{ WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto', zIndex: 20 }}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        )}
       </div>
     </>
   );
