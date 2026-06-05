@@ -15,14 +15,14 @@ const Tasks = () => {
       title: "Tap Sponsor Link",
       description: "Join our official Telegram channel for updates",
       reward: "₦5,000",
-      link: "https://t.me/earnixupdate",
+      link: "https://otieu.com/4/10573002",
     },
     {
       id: 2,
       title: "Join WhatsApp Group",
       description: "Join our WhatsApp community for instant updates",
       reward: "₦5,000",
-      link: "https://whatsapp.com/channel/0029VbCUz1HF6smt6EnLWw0F",
+      link: "https://otieu.com/4/10573002",
     },
     {
       id: 3,
@@ -66,7 +66,7 @@ const Tasks = () => {
       title: "Join WhatsApp Group",
       description: "Join our WhatsApp community for instant updates",
       reward: "₦5,000",
-      link: "https://whatsapp.com/channel/0029VbCUz1HF6smt6EnLWw0F",
+      link: "https://otieu.com/4/10573002",
     },
     {
       id: 9,
@@ -109,7 +109,7 @@ const Tasks = () => {
       title: "Join WhatsApp Group",
       description: "Join our WhatsApp community for instant updates",
       reward: "₦5,000",
-      link: "https://whatsapp.com/channel/0029VbCUz1HF6smt6EnLWw0F",
+      link: "https://otieu.com/4/10573002",
     },
     {
       id: 15,
