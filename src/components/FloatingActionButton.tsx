@@ -103,6 +103,16 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
           pointer-events: none;
         }
 
+        .tg-paste-label--left {
+          right: auto;
+          left: 100%;
+          transform-origin: left center;
+        }
+
+        .tg-paste-label--left.tg-paste-label--active {
+          animation: tgPasteExtrudeLeft 7.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
         .tg-paste-label--active {
           animation: tgPasteExtrude 7.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
@@ -126,6 +136,25 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
           }
         }
 
+        @keyframes tgPasteExtrudeLeft {
+          0% {
+            opacity: 0;
+            transform: translate(-6px, -50%) scaleX(0.04);
+          }
+          8% {
+            opacity: 1;
+            transform: translate(-6px, -50%) scaleX(1);
+          }
+          93% {
+            opacity: 1;
+            transform: translate(-6px, -50%) scaleX(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translate(-6px, -50%) scaleX(0.04);
+          }
+        }
+
         .tg-icon-pushed {
           transform: translateX(-5px) scale(0.92);
         }
@@ -144,7 +173,7 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
           <div className={`absolute -top-20 ${position === "left" ? "left-0" : "right-0"}`}>
             <div className="relative">
               <div
-                className={`tg-paste-label ${showPasteLabel ? "tg-paste-label--active" : ""}`}
+                className={`tg-paste-label ${position === "left" ? "tg-paste-label--left" : ""} ${showPasteLabel ? "tg-paste-label--active" : ""}`}
                 aria-hidden="true"
               >
                 {supportMessage}
