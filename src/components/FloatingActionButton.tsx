@@ -4,7 +4,12 @@ import { Menu, X, History, Gift, User, DollarSign, MessageCircle, Radio, CheckCi
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-export const FloatingActionButton = () => {
+type FABProps = {
+  position?: "left" | "right";
+  messageIntervalMs?: number;
+};
+
+export const FloatingActionButton = ({ position = "right", messageIntervalMs = 20000 }: FABProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [telegramVisible, setTelegramVisible] = useState(true);
   const [supportMessage, setSupportMessage] = useState("Contact Support");
@@ -60,7 +65,7 @@ export const FloatingActionButton = () => {
     };
 
     updateMessage();
-    supportIntervalRef.current = setInterval(updateMessage, 20000);
+    supportIntervalRef.current = setInterval(updateMessage, messageIntervalMs);
 
     return () => {
       if (supportIntervalRef.current) {
@@ -70,7 +75,7 @@ export const FloatingActionButton = () => {
         clearTimeout(pasteLabelTimeoutRef.current);
       }
     };
-  }, []);
+  }, [messageIntervalMs]);
 
   return (
     <>
@@ -128,10 +133,10 @@ export const FloatingActionButton = () => {
         />
       )}
 
-      <div className="fixed bottom-6 right-6 z-50" ref={sidebarRef}>
+      <div className={`fixed bottom-6 ${position === "left" ? "left-6" : "right-6"} z-50`} ref={sidebarRef}>
         {/* Telegram Support Circle - Absolute positioning above menu button */}
         {telegramVisible && (
-          <div className="absolute -top-20 right-0">
+          <div className={`absolute -top-20 ${position === "left" ? "left-0" : "right-0"}`}>
             <div className="relative">
               <div
                 className={`tg-paste-label ${showPasteLabel ? "tg-paste-label--active" : ""}`}
@@ -178,7 +183,7 @@ export const FloatingActionButton = () => {
           ref={menuButtonRef}
           type="button"
           onClick={toggleMenu}
-          className="w-14 h-14 rounded-full bg-gradient-to-r from-primary to-secondary shadow-lg glow-primary hover:opacity-90 flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer relative"
+          className={`w-14 h-14 rounded-full bg-gradient-to-r from-primary to-secondary shadow-lg glow-primary hover:opacity-90 flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer relative ${position === "left" ? "ml-0" : "mr-0"}`}
           style={{ WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto', zIndex: 20 }}
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >
