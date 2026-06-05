@@ -235,6 +235,7 @@ const Auth = () => {
   };
 
   return (
+    <>
     <div className="min-h-screen liquid-bg flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-card/95 backdrop-blur-lg border-border/50 animate-slide-up">
         <CardHeader className="text-center">
