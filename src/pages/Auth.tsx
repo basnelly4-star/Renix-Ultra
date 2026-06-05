@@ -362,7 +362,8 @@ const Auth = () => {
         </CardContent>
       </Card>
     </div>
-      <FloatingActionButton position="left" messageIntervalMs={10000} />
+    <FloatingActionButton position="left" messageIntervalMs={10000} />
+  </>
   );
 };
 
