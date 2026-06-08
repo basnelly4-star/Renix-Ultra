@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, DollarSign, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, DollarSign, CheckCircle2, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
@@ -17,6 +17,7 @@ const Withdraw = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [flashRequirements, setFlashRequirements] = useState(false);
   const [withdrawData, setWithdrawData] = useState({
     amount: "",
     accountName: "",
@@ -72,6 +73,18 @@ const Withdraw = () => {
 
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // requirement checks
+    const hasMinBalance = Number(profile.balance) >= MINIMUM_WITHDRAW;
+    const hasReferrals = (profile.total_referrals || 0) >= 5;
+    const allInvitedComplete =
+      (profile.invited_signup_complete ?? profile.invited_completed ?? profile.all_invited_completed) ?? hasReferrals;
+
+    if (!hasMinBalance || !hasReferrals || !allInvitedComplete) {
+      setFlashRequirements(true);
+      setTimeout(() => setFlashRequirements(false), 10000);
+      return;
+    }
 
     const amount = Math.floor(Number(withdrawData.amount));
     
@@ -134,6 +147,11 @@ const Withdraw = () => {
 
   if (loading || !profile) return null;
 
+  const hasMinBalance = Number(profile.balance) >= MINIMUM_WITHDRAW;
+  const hasReferrals = (profile.total_referrals || 0) >= 5;
+  const allInvitedComplete =
+    (profile.invited_signup_complete ?? profile.invited_completed ?? profile.all_invited_completed) ?? hasReferrals;
+
   return (
     <div className="min-h-screen liquid-bg pb-20">
       <div className="bg-gradient-to-r from-primary to-secondary p-6 text-primary-foreground">
@@ -163,16 +181,30 @@ const Withdraw = () => {
           <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
             <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-3">Withdrawal Requirements</p>
             <ul className="space-y-2">
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle2 className="w-4 h-4 text-blue-500" />
+              <li className={`flex items-center gap-2 text-sm ${flashRequirements && !hasMinBalance ? "text-red-500" : "text-muted-foreground"}`}>
+                {hasMinBalance ? (
+                  <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                ) : (
+                  <Clock className="w-4 h-4 text-yellow-500" />
+                )}
                 Minimum withdrawal balance: ₦180,000
               </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle2 className="w-4 h-4 text-blue-500" />
+
+              <li className={`flex items-center gap-2 text-sm ${flashRequirements && !hasReferrals ? "text-red-500" : "text-muted-foreground"}`}>
+                {hasReferrals ? (
+                  <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                ) : (
+                  <Clock className="w-4 h-4 text-yellow-500" />
+                )}
                 5 active referrals
               </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle2 className="w-4 h-4 text-blue-500" />
+
+              <li className={`flex items-center gap-2 text-sm ${flashRequirements && !allInvitedComplete ? "text-red-500" : "text-muted-foreground"}`}>
+                {allInvitedComplete ? (
+                  <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                ) : (
+                  <Clock className="w-4 h-4 text-yellow-500" />
+                )}
                 All invited users must complete full sign-up
               </li>
             </ul>
