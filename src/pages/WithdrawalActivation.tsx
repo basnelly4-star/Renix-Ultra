@@ -148,9 +148,9 @@ ID :10077A</p>
             <div className="bg-muted/50 p-4 rounded-lg">
               <div className="flex items-center justify-between mb-1">
                 <p className="text-sm text-muted-foreground">Bank</p>
-                <CopyButton text="eTranzact" />
+                <CopyButton text="SPARKLE" />
               </div>
-              <p className="text-lg font-bold"> eTranzact</p>
+              <p className="text-lg font-bold"> SPARKLE</p>
             </div>
 
             <div className="bg-muted/50 p-4 rounded-lg flex items-center justify-between">
