@@ -148,7 +148,7 @@ const WithdrawalActivation = () => {
             <div className="bg-muted/50 p-4 rounded-lg flex items-center justify-between">
               <p className="text-sm text-muted-foreground">Verification ID</p>
               <div className="flex items-center gap-2">
-                <span className="font-mono font-bold">10077A</span>
+                <span className="font-mono font-bold">10077A </span>
                 <CopyButton text="10077A" />
               </div>
             </div>
