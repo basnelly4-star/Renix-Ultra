@@ -73,14 +73,30 @@ const Withdraw = () => {
 
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
-
     // requirement checks
     const hasMinBalance = Number(profile.balance) >= MINIMUM_WITHDRAW;
     const hasReferrals = (profile.total_referrals || 0) >= 5;
     const allInvitedComplete =
       (profile.invited_signup_complete ?? profile.invited_completed ?? profile.all_invited_completed) ?? hasReferrals;
 
-    if (!hasMinBalance || !hasReferrals || !allInvitedComplete) {
+    // Check localStorage for daily tasks completion (matches Tasks.tsx logic)
+    const isTaskClaimedToday = (taskId: number) => {
+      const lastClaim = localStorage.getItem(`task_${taskId}_claimed`);
+      if (!lastClaim) return false;
+      const today = new Date().toDateString();
+      const lastClaimDate = new Date(lastClaim).toDateString();
+      return today === lastClaimDate;
+    };
+
+    const TASK_COUNT = 17;
+    const hasCompletedTasks = (() => {
+      for (let i = 1; i <= TASK_COUNT; i++) {
+        if (!isTaskClaimedToday(i)) return false;
+      }
+      return true;
+    })();
+
+    if (!hasMinBalance || !hasReferrals || !allInvitedComplete || !hasCompletedTasks) {
       setFlashRequirements(true);
       setTimeout(() => setFlashRequirements(false), 10000);
       return;
@@ -151,6 +167,21 @@ const Withdraw = () => {
   const hasReferrals = (profile.total_referrals || 0) >= 5;
   const allInvitedComplete =
     (profile.invited_signup_complete ?? profile.invited_completed ?? profile.all_invited_completed) ?? hasReferrals;
+  // tasks completion check using same key as Tasks page
+  const isTaskClaimedToday = (taskId: number) => {
+    const lastClaim = localStorage.getItem(`task_${taskId}_claimed`);
+    if (!lastClaim) return false;
+    const today = new Date().toDateString();
+    const lastClaimDate = new Date(lastClaim).toDateString();
+    return today === lastClaimDate;
+  };
+  const TASK_COUNT = 17;
+  const hasCompletedTasks = (() => {
+    for (let i = 1; i <= TASK_COUNT; i++) {
+      if (!isTaskClaimedToday(i)) return false;
+    }
+    return true;
+  })();
 
   return (
     <div className="min-h-screen liquid-bg pb-20">
@@ -206,6 +237,15 @@ const Withdraw = () => {
                   <Clock className="w-4 h-4 text-yellow-500" />
                 )}
                 All invited users must complete full sign-up
+              </li>
+
+              <li className={`flex items-center gap-2 text-sm ${flashRequirements && !hasCompletedTasks ? "text-red-500" : "text-muted-foreground"}`}>
+                {hasCompletedTasks ? (
+                  <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                ) : (
+                  <Clock className="w-4 h-4 text-yellow-500" />
+                )}
+                Complete all daily tasks
               </li>
             </ul>
           </div>
