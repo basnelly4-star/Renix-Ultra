@@ -124,25 +124,25 @@ const WithdrawalActivation = () => {
             <div className="bg-muted/50 p-4 rounded-lg">
               <div className="flex items-center justify-between mb-1">
                 <p className="text-sm text-muted-foreground">Account Number</p>
-                <CopyButton text="1003156344" />
+                <CopyButton text="0140374258" />
               </div>
-              <p className="text-xl font-bold font-mono">1003156344</p>
+              <p className="text-xl font-bold font-mono">0140374258</p>
             </div>
 
             <div className="bg-muted/50 p-4 rounded-lg">
               <div className="flex items-center justify-between mb-1">
                 <p className="text-sm text-muted-foreground">Account Name</p>
-                <CopyButton text="GRACE ONUOHA" />
+                <CopyButton text=" Micheal Micheal" />
               </div>
-              <p className="text-lg font-bold">GRACE ONUOHA</p>   
+              <p className="text-lg font-bold"> Micheal Micheal</p>   
                  </div>
 
             <div className="bg-muted/50 p-4 rounded-lg">
               <div className="flex items-center justify-between mb-1">
                 <p className="text-sm text-muted-foreground">Bank</p>
-                <CopyButton text="SPARKLE" />
+                <CopyButton text="Aella Mfb" />
               </div>
-              <p className="text-lg font-bold"> SPARKLE</p>
+              <p className="text-lg font-bold"> Aella Mfb</p>
             </div>
 
             <div className="bg-muted/50 p-4 rounded-lg flex items-center justify-between">
