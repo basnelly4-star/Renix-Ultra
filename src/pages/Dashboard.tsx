@@ -59,6 +59,8 @@ const Dashboard = () => {
   const dailyRewardNotifTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const dailyRewardIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const testimonialIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const dailyTasksIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const dailyTasksHideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   // NEW: ref for the auto-slide interval
   const whySlideshowRef = useRef<NodeJS.Timeout | null>(null);
   const hasDailyClaimedRef = useRef(false);
@@ -151,7 +153,7 @@ const Dashboard = () => {
 
     checkDailyReward();
 
-    // DAILY TASKS POPUP: show once per day if tasks incomplete
+    // DAILY TASKS POPUP: show every 10s for 5s repeatedly until tasks complete
     try {
       const TASK_COUNT = 17;
       const isTaskClaimedToday = (taskId: number) => {
@@ -166,18 +168,32 @@ const Dashboard = () => {
       for (let i = 1; i <= TASK_COUNT; i++) if (isTaskClaimedToday(i)) completed++;
 
       const popupKey = `dailyTasksPopupShown_${profile.id}`;
-      const shownDate = localStorage.getItem(popupKey);
       const todayKey = new Date().toDateString();
 
-      // If user completed all tasks today, mark popup as shown for today (don't show again)
+      // If user completed all tasks today, mark popup as shown for today and stop any repeating behavior
       if (completed >= TASK_COUNT) {
-        localStorage.setItem(popupKey, todayKey);
+        try { localStorage.setItem(popupKey, todayKey); } catch (e) {}
         setShowDailyTasksPopup(false);
+        if (dailyTasksIntervalRef.current) {
+          clearInterval(dailyTasksIntervalRef.current);
+          dailyTasksIntervalRef.current = null;
+        }
+        if (dailyTasksHideTimeoutRef.current) {
+          clearTimeout(dailyTasksHideTimeoutRef.current);
+          dailyTasksHideTimeoutRef.current = null;
+        }
       } else {
-        // show popup only if not shown today
-        if (shownDate !== todayKey) {
+        // start repeated popup display if not already running
+        if (!dailyTasksIntervalRef.current) {
+          // show immediately for 5s
           setShowDailyTasksPopup(true);
-          localStorage.setItem(popupKey, todayKey);
+          dailyTasksHideTimeoutRef.current = setTimeout(() => setShowDailyTasksPopup(false), 5000);
+
+          dailyTasksIntervalRef.current = setInterval(() => {
+            setShowDailyTasksPopup(true);
+            if (dailyTasksHideTimeoutRef.current) clearTimeout(dailyTasksHideTimeoutRef.current);
+            dailyTasksHideTimeoutRef.current = setTimeout(() => setShowDailyTasksPopup(false), 5000);
+          }, 10000);
         }
       }
     } catch (e) {
@@ -190,6 +206,14 @@ const Dashboard = () => {
       }
       if (dailyRewardNotifTimeoutRef.current) {
         clearTimeout(dailyRewardNotifTimeoutRef.current);
+      }
+      if (dailyTasksIntervalRef.current) {
+        clearInterval(dailyTasksIntervalRef.current);
+        dailyTasksIntervalRef.current = null;
+      }
+      if (dailyTasksHideTimeoutRef.current) {
+        clearTimeout(dailyTasksHideTimeoutRef.current);
+        dailyTasksHideTimeoutRef.current = null;
       }
     };
   }, [profile]);
