@@ -660,12 +660,12 @@ const Dashboard = () => {
             </button>
             <button
               type="button"
-              onClick={() => navigate("/history")}
+              onClick={() => navigate("/loan")}
               className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <History className="w-5 h-5 text-blue-500" />
-              <span className="text-xs font-semibold">History</span>
+              <span className="text-xs font-semibold">Loan</span>
             </button>
             <button
               type="button"
