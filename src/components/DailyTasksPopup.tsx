@@ -37,7 +37,7 @@ const DailyTasksPopup: React.FC<Props> = ({ open, onOpenChange, tasksCompleted, 
             </p>
 
             <p className="text-sm text-muted-foreground text-center mb-4">
-              Keep going — complete your daily tasks to boost your balance. This popup will not affect the Tasks page configuration.
+              Keep going — complete your daily tasks to boost your balance. 
             </p>
 
             <div className="w-full grid grid-cols-2 gap-2">
