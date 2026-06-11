@@ -57,7 +57,6 @@ const Dashboard = () => {
   const dailyRewardNotifTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const dailyRewardIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const testimonialIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  // NEW: ref for the auto-slide interval
   const whySlideshowRef = useRef<NodeJS.Timeout | null>(null);
   const hasDailyClaimedRef = useRef(false);
 
@@ -195,7 +194,7 @@ const Dashboard = () => {
     };
   }, [testimonials.length]);
 
-  // ── NEW: Why Earnix9ja auto-slideshow every 5 seconds ──────────────────────
+  // Why Earnix9ja auto-slideshow every 5 seconds
   useEffect(() => {
     const startSlideshow = () => {
       whySlideshowRef.current = setInterval(() => {
@@ -210,7 +209,6 @@ const Dashboard = () => {
     };
   }, []);
 
-  // Helper: reset the auto-slideshow timer when user manually clicks an arrow
   const resetWhySlideshow = () => {
     if (whySlideshowRef.current) clearInterval(whySlideshowRef.current);
     whySlideshowRef.current = setInterval(() => {
@@ -590,12 +588,18 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* ── Support Telegram Card ── */}
+        {/* Support Telegram Card */}
         <div className="px-4">
           <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20 p-3 gold-glow-card overflow-hidden">
-                <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 flex-1 min-w-0" style={{ minHeight: 36 }}>
-                <div className="flex-shrink-0" style={{ position: "relative", zIndex: 2 }}>
+            <div className="flex items-center justify-between gap-2">
+              <div
+                className="flex items-center gap-2 flex-1 min-w-0"
+                style={{ minHeight: 36 }}
+              >
+                <div
+                  className="flex-shrink-0"
+                  style={{ position: "relative", zIndex: 2 }}
+                >
                   <Send className="w-4 h-4 text-secondary mt-0.5" />
                 </div>
 
@@ -763,7 +767,6 @@ const Dashboard = () => {
             {!showTestimonials && (
               <div className="animate-fadeIn">
                 <div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-20">
-                  {/* ── UPDATED: glow-arrow-pulse class for glowing chevron ── */}
                   <button
                     onClick={() => {
                       setShowTestimonials(true);
@@ -800,7 +803,7 @@ const Dashboard = () => {
 
                   <div className="flex items-start gap-3 animate-slide-up-delay3">
                     <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40 gold-glow-icon">
-                      <TrendingUp className="w-5 h-5 text-black" />
+                      <TrendingUp className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-1">
@@ -813,14 +816,14 @@ const Dashboard = () => {
                   </div>
 
                   <div className="flex items-start gap-3 animate-slide-up-delay4">
-                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40 gold-glow-icon">
                       <Users className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-1">
                         100% Reliable
                       </h3>
-                      <p className="text-green-200 text-sm">
+                      <p className="text-yellow-100 text-sm">
                         24/7 support and guaranteed service uptime
                       </p>
                     </div>
@@ -839,7 +842,6 @@ const Dashboard = () => {
             {showTestimonials && (
               <div className="animate-fadeIn">
                 <div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-20">
-                  {/* ── UPDATED: glow-arrow-pulse class for glowing chevron ── */}
                   <button
                     onClick={() => {
                       setShowTestimonials(false);
@@ -1002,7 +1004,6 @@ const Dashboard = () => {
             animation: gold-border-pulse 3s ease-in-out infinite;
           }
 
-          /* ── 1. GLOWING ARROW PULSE ─────────────────────────────────────── */
           @keyframes arrowGlow {
             0%, 100% {
               box-shadow: 0 0 8px 2px rgba(234,179,8,0.6),
@@ -1021,7 +1022,6 @@ const Dashboard = () => {
             animation: arrowGlow 1.6s ease-in-out infinite !important;
           }
 
-          /* ── (existing styles kept below, unchanged) ─────────────────────── */
           .why-glow {
             position: relative;
             overflow: hidden;
