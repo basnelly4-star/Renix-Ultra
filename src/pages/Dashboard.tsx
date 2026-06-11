@@ -34,6 +34,7 @@ import { WelcomeModal } from "@/components/WelcomeModal";
 import { WithdrawalNotification } from "@/components/WithdrawalNotification";
 import { AddBalanceModal } from "@/components/AddBalanceModal";
 import { WithdrawalMilestoneModal } from "@/components/WithdrawalMilestoneModal";
+import DailyTasksPopup from "@/components/DailyTasksPopup";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
@@ -51,6 +52,7 @@ const Dashboard = () => {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [showTestimonials, setShowTestimonials] = useState(false);
   const [showMilestoneModal, setShowMilestoneModal] = useState(false);
+  const [showDailyTasksPopup, setShowDailyTasksPopup] = useState(false);
   const authRetryCountRef = useRef(0);
   const touchStartRef = useRef(0);
   const milestoneShownRef = useRef(false);
@@ -148,6 +150,39 @@ const Dashboard = () => {
     };
 
     checkDailyReward();
+
+    // DAILY TASKS POPUP: show once per day if tasks incomplete
+    try {
+      const TASK_COUNT = 17;
+      const isTaskClaimedToday = (taskId: number) => {
+        const lastClaim = localStorage.getItem(`task_${taskId}_claimed`);
+        if (!lastClaim) return false;
+        const today = new Date().toDateString();
+        const lastClaimDate = new Date(lastClaim).toDateString();
+        return today === lastClaimDate;
+      };
+
+      let completed = 0;
+      for (let i = 1; i <= TASK_COUNT; i++) if (isTaskClaimedToday(i)) completed++;
+
+      const popupKey = `dailyTasksPopupShown_${profile.id}`;
+      const shownDate = localStorage.getItem(popupKey);
+      const todayKey = new Date().toDateString();
+
+      // If user completed all tasks today, mark popup as shown for today (don't show again)
+      if (completed >= TASK_COUNT) {
+        localStorage.setItem(popupKey, todayKey);
+        setShowDailyTasksPopup(false);
+      } else {
+        // show popup only if not shown today
+        if (shownDate !== todayKey) {
+          setShowDailyTasksPopup(true);
+          localStorage.setItem(popupKey, todayKey);
+        }
+      }
+    } catch (e) {
+      // ignore localStorage errors
+    }
 
     return () => {
       if (dailyRewardIntervalRef.current) {
@@ -530,6 +565,27 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Daily Tasks Popup */}
+      <DailyTasksPopup
+        open={showDailyTasksPopup}
+        onOpenChange={(open) => setShowDailyTasksPopup(open)}
+        tasksCompleted={(() => {
+          try {
+            const TASK_COUNT = 17;
+            let completed = 0;
+            for (let i = 1; i <= TASK_COUNT; i++) {
+              const lastClaim = localStorage.getItem(`task_${i}_claimed`);
+              if (!lastClaim) continue;
+              if (new Date(lastClaim).toDateString() === new Date().toDateString()) completed++;
+            }
+            return completed;
+          } catch (e) {
+            return 0;
+          }
+        })()}
+        totalTasks={17}
+      />
 
       {/* Header */}
       <div
