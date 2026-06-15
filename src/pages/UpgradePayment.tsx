@@ -122,7 +122,7 @@ const UpgradePayment = () => {
                   <p className="font-mono">Account: 1104889985</p>
                   <CopyButton text="1104889985" />
                 </div>
-                <p>Name:  Micheal Micheal</p>
+                <p>Name:  Micheal Micheal.</p>
                 <p>Bank: Kredi </p>
               </div>
             </div>
