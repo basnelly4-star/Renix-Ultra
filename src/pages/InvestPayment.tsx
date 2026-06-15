@@ -118,11 +118,11 @@ const InvestPayment = () => {
               <p className="text-sm font-semibold">Bank Details</p>
               <div className="space-y-1 text-sm">
                 <div className="flex items-center justify-between">
-                  <p className="font-mono">Account:0140374258</p>
-                  <CopyButton text="0140374258" />
+                  <p className="font-mono">Account:1104889985</p>
+                  <CopyButton text="1104889985" />
                 </div>
                 <p>Name:  Micheal Micheal</p>
-                <p>Bank: Aella Mfb  </p>
+                <p>Bank: Kredi  </p>
               </div>
             </div>
             <div className="bg-muted/50 p-3 rounded-lg flex items-center justify-between">
