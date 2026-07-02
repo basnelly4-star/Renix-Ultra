@@ -9,23 +9,53 @@ type BeforeInstallPromptEvent = Event & {
   prompt(): Promise<void>;
 };
 
+const isStandaloneApp = () =>
+  window.matchMedia("(display-mode: standalone)").matches ||
+  ((window.navigator as Navigator & { standalone?: boolean }).standalone ?? false);
+
+const isMobileBrowser = () => {
+  const ua = navigator.userAgent || "";
+  return /android|iphone|ipad|ipod|mobile/i.test(ua);
+};
+
 const InstallPwaPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
+  const [hasInstalled, setHasInstalled] = useState(false);
 
   useEffect(() => {
+    if (isStandaloneApp()) {
+      setHasInstalled(true);
+      return;
+    }
+
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      const dismissed = localStorage.getItem("earnix9ja_pwa_prompt_dismissed");
-      const alreadyInstalled = window.matchMedia("(display-mode: standalone)").matches || (window.navigator as Navigator & { standalone?: boolean }).standalone;
-      if (!dismissed && !alreadyInstalled) {
+      if (!isStandaloneApp() && isMobileBrowser()) {
         setShowPrompt(true);
       }
     };
 
+    const appInstalled = () => {
+      setHasInstalled(true);
+      setShowPrompt(false);
+    };
+
     window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+    window.addEventListener("appinstalled", appInstalled);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+      window.removeEventListener("appinstalled", appInstalled);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isStandaloneApp()) {
+      setHasInstalled(true);
+      setShowPrompt(false);
+    }
   }, []);
 
   const installApp = async () => {
@@ -34,34 +64,53 @@ const InstallPwaPrompt = () => {
     const choice = await deferredPrompt.userChoice;
     if (choice.outcome === "accepted") {
       setShowPrompt(false);
+      setHasInstalled(true);
     }
   };
 
   const dismiss = () => {
-    localStorage.setItem("earnix9ja_pwa_prompt_dismissed", "true");
     setShowPrompt(false);
   };
 
-  if (!showPrompt) return null;
+  if (!showPrompt || hasInstalled) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-[100] sm:left-auto sm:right-4 sm:w-[360px]">
-      <Card className="border border-[#EAB308]/30 bg-[#111111]/95 backdrop-blur-xl p-4 shadow-[0_0_20px_rgba(234,179,8,0.25)]">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <img src="/earnix9ja-icon.svg" alt="Earnix9ja logo" className="h-10 w-10 rounded-xl border border-[#EAB308]/20 bg-[#111111]" />
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4 py-6">
+      <Card className="relative w-full max-w-md rounded-3xl border border-[#EAB308]/30 bg-[#0f0f0f]/95 p-6 shadow-[0_0_30px_rgba(234,179,8,0.3)] backdrop-blur-xl">
+        <button
+          onClick={dismiss}
+          className="absolute right-4 top-4 rounded-full border border-[#EAB308]/30 bg-[#111111] p-2 text-muted-foreground hover:text-white"
+          aria-label="Close install prompt"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-[#EAB308]/30 bg-[#111111] shadow-[0_0_20px_rgba(234,179,8,0.15)]">
+            <img src="/earnix9ja-icon.svg" alt="Earnix9ja icon" className="h-12 w-12" />
+          </div>
+
+          <div>
+            <p className="text-sm uppercase tracking-[0.25em] text-[#EAB308]">Earnix9ja App</p>
+            <h2 className="mt-2 text-2xl font-bold text-white">Install Earnix9ja</h2>
+          </div>
+
+          <p className="text-sm text-muted-foreground">
+            Download the app to receive notifications, stay updated instantly, and keep your earnings within reach.
+            If you already signed in on this browser, opening the app will keep you logged in automatically.
+          </p>
+
+          <div className="flex items-center gap-2 rounded-3xl bg-[#161616] px-4 py-3 text-left">
+            <Download className="h-5 w-5 text-secondary" />
             <div>
-              <p className="text-sm font-semibold text-white">Install Earnix9ja</p>
-              <p className="text-xs text-muted-foreground">Get the full app experience on your phone and earn faster.</p>
+              <p className="text-sm font-semibold text-white">Fast install for Android</p>
+              <p className="text-xs text-muted-foreground">Tap Download Now and add Earnix9ja to your home screen.</p>
             </div>
           </div>
-          <button onClick={dismiss} className="text-muted-foreground hover:text-white" aria-label="Dismiss install prompt">
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-        <div className="mt-3 flex gap-2">
-          <Button onClick={installApp} className="flex-1 bg-gradient-to-r from-primary to-secondary text-black">Install App</Button>
-          <Button variant="outline" onClick={dismiss} className="flex-1">Later</Button>
+
+          <Button onClick={installApp} className="w-full bg-gradient-to-r from-primary to-secondary text-black py-3 text-sm font-semibold">
+            Download Now
+          </Button>
         </div>
       </Card>
     </div>
