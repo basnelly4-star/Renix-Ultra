@@ -7,8 +7,8 @@ import { FloatingActionButton } from "@/components/FloatingActionButton";
 const UpgradePending = () => {
   const navigate = useNavigate();
 
-  const WHATSAPP_SUPPORT = "https://t.me/earnix9jachannel"; // Replace with actual number
-  const TELEGRAM_SUPPORT = "https://t.me/earnix9jachannel"; // Replace with actual username
+  const WHATSAPP_SUPPORT = "https://t.me/earnix9ja1"; // Replace with actual number
+  const TELEGRAM_SUPPORT = "https://t.me/earnix9ja1"; // Replace with actual username
 
   return (
     <div className="min-h-screen liquid-bg pb-20">

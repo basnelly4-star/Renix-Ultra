@@ -688,7 +688,7 @@ const Dashboard = () => {
               </div>
 
               <Button
-                onClick={() => window.open("https://t.me/earnix9jachannel")}
+                onClick={() => window.open("https://t.me/earnix9ja1")}
                 className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-xs px-3 py-1 h-auto flex-shrink-0 gold-glow-btn"
               >
                 Chat Us
