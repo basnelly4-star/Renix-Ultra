@@ -1,11 +1,13 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
+import { supabase } from "@/integrations/supabase/client";
 import History from "./pages/History";
 import Referrals from "./pages/Referrals";
 import Profile from "./pages/Profile";
@@ -30,11 +32,31 @@ import Invest from "./pages/Broadcast";
 import Testimonials from "./pages/Testimonials";
 import NotFound from "./pages/NotFound";
 import BottomNavigation from "./components/BottomNavigation";
+import InstallPwaPrompt from "./components/InstallPwaPrompt";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+const App = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && (window.location.pathname === "/" || window.location.pathname === "/auth")) {
+          navigate("/dashboard", { replace: true });
+        }
+      } catch (error) {
+        // no-op: allow auth page to handle session checks itself
+        console.warn("PWA session check failed", error);
+      }
+    };
+
+    checkSession();
+  }, [navigate]);
+
+  return (
+    <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -72,6 +94,7 @@ const App = () => (
           </Routes>
         </div>
         <BottomNavigation />
+        <InstallPwaPrompt />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

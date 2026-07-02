@@ -1,0 +1,23 @@
+{
+  "name": "Earnix9ja",
+  "short_name": "Earnix9ja",
+  "description": "Earnix9ja - Turn one click into thousands with referrals, tasks, rewards, and withdrawals.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#EAB308",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/earnix9ja-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
