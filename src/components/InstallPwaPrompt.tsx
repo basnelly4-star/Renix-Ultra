@@ -59,12 +59,27 @@ const InstallPwaPrompt = () => {
   }, []);
 
   const installApp = async () => {
-    if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
-    const choice = await deferredPrompt.userChoice;
-    if (choice.outcome === "accepted") {
+    if (!deferredPrompt) {
+      // Fallback instructions if browser cannot show the native install prompt.
+      window.alert(
+        "Your browser cannot trigger the direct install prompt right now. Please open the Chrome menu and choose 'Add to Home screen' to install Earnix9ja."
+      );
+      return;
+    }
+
+    try {
+      await deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
       setShowPrompt(false);
-      setHasInstalled(true);
+      if (choice.outcome === "accepted") {
+        setHasInstalled(true);
+      }
+    } catch (error) {
+      console.warn("PWA install prompt failed", error);
+      window.alert(
+        "Install did not start. Please use your browser menu and select 'Add to Home screen' to install the app."
+      );
+      setShowPrompt(false);
     }
   };
 
