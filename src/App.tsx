@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
@@ -37,14 +37,12 @@ import InstallPwaPrompt from "./components/InstallPwaPrompt";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const navigate = useNavigate();
-
   useEffect(() => {
     const checkSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (session && (window.location.pathname === "/" || window.location.pathname === "/auth")) {
-          navigate("/dashboard", { replace: true });
+          window.location.replace("/dashboard");
         }
       } catch (error) {
         // no-op: allow auth page to handle session checks itself
@@ -53,7 +51,7 @@ const App = () => {
     };
 
     checkSession();
-  }, [navigate]);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
