@@ -8,11 +8,11 @@ const Support = () => {
   const navigate = useNavigate();
 
   const openWhatsApp = () => {
-    window.location.href = "https://t.me/Earnix9jasupport";
+    window.location.href = "https://t.me/Earnix9jasupport1";
   };
 
   const openTelegram = () => {
-    window.location.href = "https://t.me/Earnix9jasupport";
+    window.location.href = "https://t.me/Earnix9jasupport1";
   };
 
   return (

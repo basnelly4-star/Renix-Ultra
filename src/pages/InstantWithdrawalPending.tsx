@@ -12,7 +12,7 @@ const InstantWithdrawalPending = () => {
   };
 
   const openTelegram = () => {
-    window.location.href = "https://t.me/Earnix9jasupport";
+    window.location.href = "https://t.me/Earnix9jasupport1";
   };
 
   return (
