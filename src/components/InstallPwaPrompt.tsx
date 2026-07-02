@@ -18,6 +18,11 @@ const isMobileBrowser = () => {
   return /android|iphone|ipad|ipod|mobile/i.test(ua);
 };
 
+const isIos = () => {
+  const ua = navigator.userAgent || "";
+  return /iphone|ipad|ipod/i.test(ua) && !/crios|fxios|opera mini/i.test(ua);
+};
+
 const InstallPwaPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
@@ -45,6 +50,10 @@ const InstallPwaPrompt = () => {
     window.addEventListener("beforeinstallprompt", handler);
     window.addEventListener("appinstalled", appInstalled);
 
+    if (isIos() && !isStandaloneApp()) {
+      setShowPrompt(true);
+    }
+
     return () => {
       window.removeEventListener("beforeinstallprompt", handler);
       window.removeEventListener("appinstalled", appInstalled);
@@ -59,28 +68,36 @@ const InstallPwaPrompt = () => {
   }, []);
 
   const installApp = async () => {
-    if (!deferredPrompt) {
-      // Fallback instructions if browser cannot show the native install prompt.
-      window.alert(
-        "Your browser cannot trigger the direct install prompt right now. Please open the Chrome menu and choose 'Add to Home screen' to install Earnix9ja."
-      );
+    if (deferredPrompt) {
+      try {
+        await deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        setShowPrompt(false);
+        if (choice.outcome === "accepted") {
+          setHasInstalled(true);
+        }
+      } catch (error) {
+        console.warn("PWA install prompt failed", error);
+        window.alert(
+          "Install did not start. Please use your browser menu and select 'Add to Home screen' to install the app."
+        );
+        setShowPrompt(false);
+      }
       return;
     }
 
-    try {
-      await deferredPrompt.prompt();
-      const choice = await deferredPrompt.userChoice;
-      setShowPrompt(false);
-      if (choice.outcome === "accepted") {
-        setHasInstalled(true);
-      }
-    } catch (error) {
-      console.warn("PWA install prompt failed", error);
+    if (isIos()) {
       window.alert(
-        "Install did not start. Please use your browser menu and select 'Add to Home screen' to install the app."
+        "Open Safari’s share menu and choose 'Add to Home Screen' to install Earnix9ja."
       );
       setShowPrompt(false);
+      return;
     }
+
+    window.alert(
+      "Your browser cannot start the install directly right now. Please open the browser menu and choose 'Add to Home screen' to install the app."
+    );
+    setShowPrompt(false);
   };
 
   const dismiss = () => {
@@ -113,6 +130,9 @@ const InstallPwaPrompt = () => {
           <p className="text-sm text-muted-foreground">
             Download the app to receive notifications, stay updated instantly, and keep your earnings within reach.
             If you already signed in on this browser, opening the app will keep you logged in automatically.
+          </p>
+          <p className="text-xs text-[#EAB308]">
+            If install does not start automatically, use your browser menu and choose "Add to Home screen".
           </p>
 
           <div className="flex items-center gap-2 rounded-3xl bg-[#161616] px-4 py-3 text-left">

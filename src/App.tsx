@@ -33,6 +33,7 @@ import Testimonials from "./pages/Testimonials";
 import NotFound from "./pages/NotFound";
 import BottomNavigation from "./components/BottomNavigation";
 import InstallPwaPrompt from "./components/InstallPwaPrompt";
+import ServiceWorkerUpdater from "./components/ServiceWorkerUpdater";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +94,7 @@ const App = () => {
         </div>
         <BottomNavigation />
         <InstallPwaPrompt />
+        <ServiceWorkerUpdater />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
