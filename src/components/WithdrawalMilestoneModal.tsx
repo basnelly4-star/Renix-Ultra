@@ -51,7 +51,7 @@ export const WithdrawalMilestoneModal = ({
           </div>
         </div>
 
-        {/* Aella Mfbs */}
+        {/* Kuda  Mfbs */}
         <div className="absolute -left-8 top-1/2 text-2xl animate-pulse">✨</div>
         <div className="absolute -right-8 top-1/3 text-xl animate-pulse animation-delay-500">✨</div>
         <div className="absolute top-0 left-1/2 text-xl animate-pulse animation-delay-1000">⭐</div>
