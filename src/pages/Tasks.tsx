@@ -145,9 +145,19 @@ const Tasks = () => {
     return today === lastClaimDate;
   };
 
+  // Track claimed tasks in state so UI updates immediately without refresh
+  const [claimedTodayMap, setClaimedTodayMap] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    const map: Record<number, boolean> = {};
+    for (const t of tasks) map[t.id] = isTaskClaimedToday(t.id);
+    setClaimedTodayMap(map);
+  }, []);
+
   // Mark task as claimed for today
   const markTaskAsClaimed = (taskId: number) => {
     localStorage.setItem(`task_${taskId}_claimed`, new Date().toISOString());
+    setClaimedTodayMap((prev) => ({ ...prev, [taskId]: true }));
   };
 
   const handleClaim = async (task: any) => {
@@ -157,8 +167,9 @@ const Tasks = () => {
       return;
     }
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    const user = userData?.user;
+    if (userError || !user) {
       toast.error("Please login first");
       return;
     }
@@ -195,13 +206,18 @@ const Tasks = () => {
       } else {
         // Mark as claimed for today
         markTaskAsClaimed(task.id);
-        
+
         // Show success message
         toast.success(`${task.reward} added to your balance!`);
-        
-        // Open link for Telegram/WhatsApp tasks (even if balance update worked)
+
+        // Open external link in a new tab so session stays intact
         if (task.link) {
-          window.location.href = task.link;
+          try {
+            window.open(task.link, "_blank", "noopener,noreferrer");
+          } catch (e) {
+            // fallback to same-tab if popup blocked
+            window.location.href = task.link;
+          }
         }
       }
     } catch (error) {
