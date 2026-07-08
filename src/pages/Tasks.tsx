@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
@@ -251,7 +252,7 @@ const Tasks = () => {
         </Card>
 
         {tasks.map((task) => {
-          const isClaimed = isTaskClaimedToday(task.id);
+          const isClaimed = claimedTodayMap[task.id] ?? false;
           
           return (
             <Card key={task.id} className="bg-card/80 backdrop-blur-lg border-border/50 p-4">
