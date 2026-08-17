@@ -16,14 +16,14 @@ const Tasks = () => {
       title: "Tap Sponsor Link",
       description: "Join our official Telegram channel for updates",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 2,
       title: "Join WhatsApp Group",
       description: "Join our WhatsApp community for instant updates",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 3,
@@ -31,21 +31,21 @@ const Tasks = () => {
       description:
         "Tap on our sponsorship ads to earn extra and get closer to your minimum withdrawal!",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 4,
       title: "Tap Sponsor Offer",
       description: "Join our official Telegram channel for updates",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 5,
       title: "Tap Sponsor Ad",
       description: "Join our official Telegram channel for updates",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 6,
@@ -67,7 +67,7 @@ const Tasks = () => {
       title: "Join WhatsApp Group",
       description: "Join our WhatsApp community for instant updates",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 9,
@@ -75,21 +75,21 @@ const Tasks = () => {
       description:
         "Tap on our sponsorship ads to earn extra and get closer to your minimum withdrawal!",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 10,
       title: "Tap Sponsor Ads",
       description: "Join our official Telegram channel for updates",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 11,
       title: "Tap Sponsor Opportunity",
       description: "Join our official Telegram channel for updates",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 12,
@@ -110,7 +110,7 @@ const Tasks = () => {
       title: "Join WhatsApp Group",
       description: "Join our WhatsApp community for instant updates",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 15,
@@ -118,21 +118,21 @@ const Tasks = () => {
       description:
         "Tap on our sponsorship ads to earn extra and get closer to your minimum withdrawal!",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 16,
       title: "Tap Sponsor Link Now",
       description: "Join our official Telegram channel for updates",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
     {
       id: 17,
       title: "Tap Sponsor Deal",
       description: "Join our official Telegram channel for updates",
       reward: "₦5,000",
-      link: "https://otieu.com/4/10573002",
+      link: "https://omg10.com/4/11018116",
     },
   ];
 
