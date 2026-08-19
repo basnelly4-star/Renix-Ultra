@@ -232,21 +232,16 @@ const Auth = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  };;
 
   const handleGoogleAuth = async () => {
     setIsLoading(true);
 
     try {
-      const redirectTo = `${window.location.origin}/dashboard`;
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo,
-          queryParams: {
-            access_type: "offline",
-            prompt: "consent",
-          },
+          redirectTo: `${window.location.origin}/dashboard`,
         },
       });
 
@@ -255,7 +250,6 @@ const Auth = () => {
     } catch (error: any) {
       console.error("Google auth error:", error);
       toast.error(error.message || "Google sign-in failed. Please try again.");
-    } finally {
       setIsLoading(false);
     }
   };
