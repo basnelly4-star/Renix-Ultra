@@ -84,7 +84,7 @@ const Dashboard = () => {
       location: "Lagos",
       amount: "₦580,000",
       quote:
-        "I was skeptical but earned my first withdrawal successfully. Earnix9ja is legit!",
+        "I was skeptical but earned my first withdrawal successfully. Renix-Ultra is legit!",
     },
     {
       name: "Amina F.",
@@ -254,7 +254,7 @@ const Dashboard = () => {
     };
   }, [testimonials.length]);
 
-  // ── NEW: Why Earnix9ja auto-slideshow every 5 seconds ──────────────────────
+  // ── NEW: Why Renix-Ultra auto-slideshow every 5 seconds ──────────────────────
   useEffect(() => {
     const startSlideshow = () => {
       whySlideshowRef.current = setInterval(() => {
@@ -688,7 +688,7 @@ const Dashboard = () => {
               </div>
 
               <Button
-                onClick={() => window.open("https://t.me/earnix9ja1")}
+                onClick={() => window.open("https://t.me/Renix-Ultra1")}
                 className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-xs px-3 py-1 h-auto flex-shrink-0 gold-glow-btn"
               >
                 Chat Us
@@ -818,7 +818,7 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Why Earnix9ja / Testimonials Swipeable Section */}
+        {/* Why Renix-Ultra / Testimonials Swipeable Section */}
         <div className="mt-6">
           <div
             className="why-glow bg-gradient-to-br from-black via-amber-950 to-black rounded-2xl p-6 mb-6 mx-2 border border-yellow-600/40 relative overflow-hidden cursor-grab active:cursor-grabbing transition-all duration-300 gold-glow-section"
@@ -839,7 +839,7 @@ const Dashboard = () => {
               }
             }}
           >
-            {/* Why Earnix9ja Content */}
+            {/* Why Renix-Ultra Content */}
             {!showTestimonials && (
               <div className="animate-fadeIn">
                 <div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-20">
@@ -857,7 +857,7 @@ const Dashboard = () => {
                 </div>
                 <div className="text-center mb-4 relative z-10">
                   <h2 className="text-2xl font-bold text-white mb-2 animate-slide-up">
-                    Why Earnix9ja⁉️
+                    Why Renix-Ultra⁉️
                   </h2>
                   <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50 animate-slide-up-delay"></div>
                 </div>
@@ -926,7 +926,7 @@ const Dashboard = () => {
                       resetWhySlideshow();
                     }}
                     className="bg-yellow-500 hover:bg-yellow-400 text-black rounded-full p-2 border border-yellow-300/80 transition-all duration-200 active:scale-90 glow-arrow glow-arrow-pulse"
-                    aria-label="Back to Why Earnix9ja"
+                    aria-label="Back to Why Renix-Ultra"
                   >
                     <ChevronLeft className="w-6 h-6" />
                   </button>

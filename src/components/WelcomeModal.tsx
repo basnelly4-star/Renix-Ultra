@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Gift, Bolt, Users } from "lucide-react";
 
-const APP_NAME = "Earnix9ja";
+const APP_NAME = "Renix-Ultra";
 
 export const WelcomeModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +31,7 @@ export const WelcomeModal = () => {
   const joinTelegram = () => {
     localStorage.setItem("chixx9ja_telegram_joined", "true");
     setTelegramJoined(true);
-    window.location.href = "https://t.me/earnix9ja1";
+    window.location.href = "https://t.me/Renix-Ultra1";
   };
 
   const handleOpenChange = (open: boolean) => {

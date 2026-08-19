@@ -8,7 +8,7 @@ const Community = () => {
   const navigate = useNavigate();
 
   const openTelegramChannel = () => {
-    window.location.href = "https://t.me/earnix9ja1";
+    window.location.href = "https://t.me/Renix-Ultra1";
   };
 
   const openTelegramGroup = () => {

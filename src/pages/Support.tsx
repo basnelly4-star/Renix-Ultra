@@ -8,11 +8,11 @@ const Support = () => {
   const navigate = useNavigate();
 
   const openWhatsApp = () => {
-    window.location.href = "https://t.me/Earnix9jasupport1";
+    window.location.href = "https://t.me/Renix-Ultrasupport1";
   };
 
   const openTelegram = () => {
-    window.location.href = "https://t.me/Earnix9jasupport1";
+    window.location.href = "https://t.me/Renix-Ultrasupport1";
   };
 
   return (
@@ -63,7 +63,7 @@ const Support = () => {
         <Card className="bg-muted/50 border-border/50 p-4">
           <p className="text-sm text-center text-muted-foreground">
             📞 {/*<strong>WhatsApp:</strong> +234 705 938 2766<br />*/}
-            📱 <strong>Telegram:</strong> @Earnix9jasupport
+            📱 <strong>Telegram:</strong> @Renix-Ultrasupport
           </p>
         </Card>
       </div>

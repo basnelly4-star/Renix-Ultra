@@ -8,11 +8,11 @@ const WithdrawalActivationPending = () => {
   const navigate = useNavigate();
 
   const openWhatsApp = () => {
-    window.location.href = "https://t.me/Earnix9jasupport1";
+    window.location.href = "https://t.me/Renix-Ultrasupport1";
   };
 
   const openTelegram = () => {
-    window.location.href = "https://t.me/Earnix9jasupport1";
+    window.location.href = "https://t.me/Renix-Ultrasupport1";
   };
 
   return (

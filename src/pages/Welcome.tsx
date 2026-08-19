@@ -20,7 +20,7 @@ const Welcome = () => {
       <div className="max-w-2xl w-full text-center space-y-8 animate-slide-up">
         <div className="space-y-4">
           <h1 className="text-5xl md:text-6xl font-bold gradient-text animate-float">
-            Welcome to Earnix9ja!
+            Welcome to Renix-Ultra!
           </h1>
           <p className="text-2xl text-foreground">
             Hi, {user.fullName || "Friend"} 👋

@@ -179,7 +179,7 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
                 {supportMessage}
               </div>
               <button
-                onClick={() => window.location.href = "https://t.me/Earnix9jasupport1"}
+                onClick={() => window.location.href = "https://t.me/Renix-Ultrasupport1"}
                 className={`w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer z-10 ${showPasteLabel ? "tg-icon-pushed" : ""}`}
                 style={{ WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto' }}
                 aria-label="Telegram Support"

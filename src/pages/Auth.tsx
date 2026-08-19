@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Chrome } from "lucide-react";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { recoverFromInvalidRefreshToken, supabase } from "@/integrations/supabase/client";
 
@@ -171,7 +171,7 @@ const Auth = () => {
       }
 
       localStorage.removeItem("referralCode");
-      toast.success("Welcome to Earnix9ja! You got ₦50,000 bonus!");
+      toast.success("Welcome to Renix-Ultra! You got ₦50,000 bonus!");
       navigate("/dashboard", { replace: true });
     } catch (error: any) {
       console.error(error);
@@ -234,12 +234,38 @@ const Auth = () => {
     }
   };
 
+  const handleGoogleAuth = async () => {
+    setIsLoading(true);
+
+    try {
+      const redirectTo = `${window.location.origin}/dashboard`;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo,
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
+      });
+
+      if (error) throw error;
+      toast.success("Redirecting to Google...");
+    } catch (error: any) {
+      console.error("Google auth error:", error);
+      toast.error(error.message || "Google sign-in failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
     <div className="min-h-screen liquid-bg flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-card/95 backdrop-blur-lg border-border/50 animate-slide-up">
         <CardHeader className="text-center">
-          <CardTitle className="text-4xl font-bold gradient-text mb-2">Earnix9ja</CardTitle>
+          <CardTitle className="text-4xl font-bold gradient-text mb-2">Renix-Ultra</CardTitle>
           <CardDescription className="text-muted-foreground">
             Turn one click into thousands!
           </CardDescription>
@@ -252,6 +278,28 @@ const Auth = () => {
             </TabsList>
 
             <TabsContent value="signup">
+              <div className="mb-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleGoogleAuth}
+                  disabled={isLoading}
+                  className="w-full flex items-center justify-center gap-2 border-border bg-background/60 hover:bg-background"
+                >
+                  <Chrome className="h-4 w-4" />
+                  Continue with Google
+                </Button>
+              </div>
+
+              <div className="relative mb-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                  <span className="bg-card px-2">or sign up with email</span>
+                </div>
+              </div>
+
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Full Name</Label>
@@ -317,6 +365,28 @@ const Auth = () => {
             </TabsContent>
 
             <TabsContent value="login">
+              <div className="mb-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleGoogleAuth}
+                  disabled={isLoading}
+                  className="w-full flex items-center justify-center gap-2 border-border bg-background/60 hover:bg-background"
+                >
+                  <Chrome className="h-4 w-4" />
+                  Continue with Google
+                </Button>
+              </div>
+
+              <div className="relative mb-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                  <span className="bg-card px-2">or login with email</span>
+                </div>
+              </div>
+
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="login-email">Email</Label>

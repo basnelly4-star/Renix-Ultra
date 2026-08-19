@@ -1,7 +1,7 @@
 {
-  "name": "Earnix9ja",
-  "short_name": "Earnix9ja",
-  "description": "Earnix9ja - Turn one click into thousands with referrals, tasks, rewards, and withdrawals.",
+  "name": "Renix-Ultra",
+  "short_name": "Renix-Ultra",
+  "description": "Renix-Ultra - Turn one click into thousands with referrals, tasks, rewards, and withdrawals.",
   "start_url": "/?source=pwa",
   "display": "standalone",
   "background_color": "#0a0a0a",
@@ -10,13 +10,13 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/earnix9ja-icon.svg",
+      "src": "/Renix-Ultra-icon.svg",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/earnix9ja-icon.svg",
+      "src": "/Renix-Ultra-icon.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"

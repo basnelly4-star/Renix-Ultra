@@ -12,7 +12,7 @@ const GatewayPending = () => {
   };
 
   const openTelegram = () => {
-    window.location.href = "t.me/Earnix9jasupport";
+    window.location.href = "t.me/Renix-Ultrasupport";
   };
 
   return (

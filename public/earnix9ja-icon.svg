@@ -13,5 +13,5 @@
   <circle cx="256" cy="256" r="210" fill="url(#glow)"/>
   <circle cx="256" cy="256" r="176" fill="#111111" stroke="url(#goldGradient)" stroke-width="24"/>
   <text x="50%" y="56%" text-anchor="middle" fill="url(#goldGradient)" font-family="Inter, system-ui, sans-serif" font-size="220" font-weight="900" letter-spacing="-8">E</text>
-  <text x="50%" y="82%" text-anchor="middle" fill="#F9D55C" font-family="Inter, system-ui, sans-serif" font-size="42" font-weight="700">Earnix9ja</text>
+  <text x="50%" y="82%" text-anchor="middle" fill="#F9D55C" font-family="Inter, system-ui, sans-serif" font-size="42" font-weight="700">Renix-Ultra</text>
 </svg>

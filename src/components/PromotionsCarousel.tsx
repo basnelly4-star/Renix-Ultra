@@ -16,8 +16,8 @@ export const PromotionsCarousel = () => {
   const promotions = [
     { id: 1, image: promo1, alt: "Refer & Earn - Invite friends and earn rewards" },
     { id: 2, image: promo2, alt: "Earn ₦15,000 per referral" },
-    { id: 3, image: promo3, alt: "Join Earnix9ja today" },
-    { id: 4, image: promo4, alt: "Refer & Earn - Join Earnix9ja" },
+    { id: 3, image: promo3, alt: "Join Renix-Ultra today" },
+    { id: 4, image: promo4, alt: "Refer & Earn - Join Renix-Ultra" },
     { id: 5, image: promo5, alt: "Refer & Earn - Big Announcement" },
   ];
 

@@ -1,5 +1,5 @@
-const CACHE_NAME = "earnix9ja-cache-v1";
-const APP_SHELL = ["/", "/index.html", "/manifest.webmanifest?v=20260317", "/favicon.ico", "/earnix9ja-icon.svg"];
+const CACHE_NAME = "Renix-Ultra-cache-v1";
+const APP_SHELL = ["/", "/index.html", "/manifest.webmanifest?v=20260317", "/favicon.ico", "/Renix-Ultra-icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
