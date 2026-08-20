@@ -1,7 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, Send } from "lucide-react";
-import { HistoryIcon, RewardsIcon, ProfileIcon, WithdrawIcon, CommunityIcon, TasksIcon, SupportIcon } from "@/assets/icons";
+import {
+  HistoryIcon,
+  RewardsIcon,
+  ProfileIcon,
+  WithdrawIcon,
+  CommunityIcon,
+  TasksIcon,
+  SupportIcon,
+} from "@/assets/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -11,7 +19,11 @@ type FABProps = {
   supportOnly?: boolean;
 };
 
-export const FloatingActionButton = ({ position = "right", messageIntervalMs = 20000, supportOnly = false }: FABProps) => {
+export const FloatingActionButton = ({
+  position = "right",
+  messageIntervalMs = 20000,
+  supportOnly = false,
+}: FABProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [telegramVisible, setTelegramVisible] = useState(true);
   const [supportMessage, setSupportMessage] = useState("Contact Support");
@@ -99,8 +111,8 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
           font-size: 0.75rem;
           font-weight: 700;
           color: #ffffff;
-          background: linear-gradient(90deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95));
-          box-shadow: 0 15px 30px rgba(59, 130, 246, 0.16);
+          background: linear-gradient(90deg, rgba(0, 229, 58, 0.95), rgba(0, 255, 85, 0.95));
+          box-shadow: 0 15px 30px rgba(0, 229, 58, 0.16);
           pointer-events: none;
         }
 
@@ -161,17 +173,22 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
         }
       `}</style>
       {!supportOnly && isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40" 
+        <div
+          className="fixed inset-0 bg-black/50 z-40"
           onClick={() => setIsOpen(false)}
-          style={{ pointerEvents: 'auto' }}
+          style={{ pointerEvents: "auto" }}
         />
       )}
 
-      <div className={`fixed bottom-6 ${position === "left" ? "left-6" : "right-6"} z-50`} ref={sidebarRef}>
+      <div
+        className={`fixed bottom-6 ${position === "left" ? "left-6" : "right-6"} z-50`}
+        ref={sidebarRef}
+      >
         {/* Telegram Support Circle - Absolute positioning above menu button */}
         {telegramVisible && (
-          <div className={`absolute -top-20 ${position === "left" ? "left-0" : "right-0"}`}>
+          <div
+            className={`absolute -top-20 ${position === "left" ? "left-0" : "right-0"}`}
+          >
             <div className="relative">
               <div
                 className={`tg-paste-label ${position === "left" ? "tg-paste-label--left" : ""} ${showPasteLabel ? "tg-paste-label--active" : ""}`}
@@ -180,27 +197,35 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
                 {supportMessage}
               </div>
               <button
-                onClick={() => window.location.href = "https://t.me/Renix-Ultrasupport1"}
-                className={`w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer z-10 ${showPasteLabel ? "tg-icon-pushed" : ""}`}
-                style={{ WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto' }}
+                onClick={() =>
+                  (window.location.href = "https://t.me/Renix-Ultrasupport1")
+                }
+                className={`w-14 h-14 rounded-full bg-[#00E53A] hover:bg-[#00FF55] shadow-lg flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer z-10 ${showPasteLabel ? "tg-icon-pushed" : ""}`}
+                style={{
+                  WebkitTapHighlightColor: "transparent",
+                  pointerEvents: "auto",
+                }}
                 aria-label="Telegram Support"
                 title="Telegram Support"
               >
-                <Send className="w-6 h-6 text-white" />
+                <Send className="w-6 h-6 text-[#04080a]" />
               </button>
             </div>
           </div>
         )}
 
-          {!supportOnly && isOpen && (
-          <Card className="absolute bottom-16 right-0 p-2 bg-card/95 backdrop-blur-lg border-border/50 shadow-lg animate-fade-in mb-2" style={{ pointerEvents: 'auto', zIndex: 60 }}>
+        {!supportOnly && isOpen && (
+          <Card
+            className="absolute bottom-16 right-0 p-2 bg-card/95 backdrop-blur-lg border-border/50 shadow-lg animate-fade-in mb-2"
+            style={{ pointerEvents: "auto", zIndex: 60 }}
+          >
             <div className="flex flex-col gap-2">
               {menuItems.map((item, index) => (
                 <button
                   key={index}
                   type="button"
-                  className="flex items-center justify-start gap-3 hover:bg-muted px-4 py-2 rounded-md transition-colors touch-manipulation cursor-pointer min-h-[44px]"
-                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                  className="flex items-center justify-start gap-3 hover:bg-[#00E53A]/10 px-4 py-2 rounded-md transition-colors touch-manipulation cursor-pointer min-h-[44px]"
+                  style={{ WebkitTapHighlightColor: "transparent" }}
                   onClick={() => {
                     navigate(item.path);
                     setIsOpen(false);
@@ -219,11 +244,19 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
             ref={menuButtonRef}
             type="button"
             onClick={toggleMenu}
-            className={`w-14 h-14 rounded-full bg-gradient-to-r from-primary to-secondary shadow-lg glow-primary hover:opacity-90 flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer relative ${position === "left" ? "ml-0" : "mr-0"}`}
-            style={{ WebkitTapHighlightColor: 'transparent', pointerEvents: 'auto', zIndex: 20 }}
+            className={`w-14 h-14 rounded-full bg-gradient-to-r from-[#00C836] to-[#00E53A] shadow-lg glow-primary hover:opacity-90 flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer relative ${position === "left" ? "ml-0" : "mr-0"}`}
+            style={{
+              WebkitTapHighlightColor: "transparent",
+              pointerEvents: "auto",
+              zIndex: 20,
+            }}
             aria-label={isOpen ? "Close menu" : "Open menu"}
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? (
+              <X className="w-6 h-6 text-[#04080a]" />
+            ) : (
+              <Menu className="w-6 h-6 text-[#04080a]" />
+            )}
           </button>
         )}
       </div>

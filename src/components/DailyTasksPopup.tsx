@@ -10,15 +10,20 @@ type Props = {
   totalTasks: number;
 };
 
-const DailyTasksPopup: React.FC<Props> = ({ open, onOpenChange, tasksCompleted, totalTasks }) => {
+const DailyTasksPopup: React.FC<Props> = ({
+  open,
+  onOpenChange,
+  tasksCompleted,
+  totalTasks,
+}) => {
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-in fade-in">
       <div className="relative w-full max-w-xs sm:max-w-sm mx-auto">
-        <Card className="rounded-2xl border border-[#EAB308]/30 bg-[#0f0f0f] shadow-2xl p-5 overflow-hidden gold-glow-card">
+        <Card className="rounded-2xl border border-[#00E53A]/30 bg-[#0f0f0f] shadow-2xl p-5 overflow-hidden gold-glow-card">
           <button
-            className="absolute top-3 right-3 text-[#EAB308] hover:text-[#fbbf24] text-lg font-bold z-10"
+            className="absolute top-3 right-3 text-[#00FF55] hover:text-[#66FF88] text-lg font-bold z-10"
             onClick={() => onOpenChange(false)}
             aria-label="Close"
           >
@@ -26,18 +31,23 @@ const DailyTasksPopup: React.FC<Props> = ({ open, onOpenChange, tasksCompleted, 
           </button>
 
           <div className="flex flex-col items-center px-2 pt-2 pb-1">
-            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#181200] border-2 border-[#EAB308] mb-4 gold-glow-icon">
-              <Gift className="w-8 h-8 text-[#EAB308]" />
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#00E53A]/10 border-2 border-[#00E53A] mb-4 gold-glow-icon">
+              <Gift className="w-8 h-8 text-[#00FF55]" />
             </div>
 
-            <h2 className="text-xl font-bold text-white mb-2 text-center">Daily Tasks Progress</h2>
+            <h2 className="text-xl font-bold text-white mb-2 text-center">
+              Daily Tasks Progress
+            </h2>
 
-            <p className="text-sm text-[#e7c95c] text-center mb-3">
-              You have completed <span className="font-bold text-white">{tasksCompleted}</span> of <span className="font-bold text-white">{totalTasks}</span> daily tasks today.
+            <p className="text-sm text-[#00FF55]/80 text-center mb-3">
+              You have completed{" "}
+              <span className="font-bold text-white">{tasksCompleted}</span> of{" "}
+              <span className="font-bold text-white">{totalTasks}</span> daily
+              tasks today.
             </p>
 
             <p className="text-sm text-muted-foreground text-center mb-4">
-              Keep going — complete your daily tasks to boost your balance. 
+              Keep going — complete your daily tasks to boost your balance.
             </p>
 
             <div className="w-full grid grid-cols-2 gap-2">

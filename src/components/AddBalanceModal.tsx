@@ -30,7 +30,8 @@ export const AddBalanceModal = ({ open, onOpenChange, onSuccess }: any) => {
     e.target.value = "";
   };
 
-  const removeFile = (i: number) => setFiles(files.filter((_, idx) => idx !== i));
+  const removeFile = (i: number) =>
+    setFiles(files.filter((_, idx) => idx !== i));
 
   const submit = async () => {
     if (amountNum < 1000) return toast.error("Min ₦1,000");
@@ -38,7 +39,9 @@ export const AddBalanceModal = ({ open, onOpenChange, onSuccess }: any) => {
 
     setLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) throw new Error("Login required");
 
       const { data: topup } = await supabase
@@ -65,7 +68,7 @@ export const AddBalanceModal = ({ open, onOpenChange, onSuccess }: any) => {
             file_size: f.size,
             uploaded_by: session.user.id,
           });
-        })
+        }),
       );
 
       toast.success("Submitted! We go check");
@@ -81,71 +84,130 @@ export const AddBalanceModal = ({ open, onOpenChange, onSuccess }: any) => {
   return (
     <>
       {/* Dark background */}
-      <div className="fixed inset-0 bg-black/70 z-50" onClick={() => onOpenChange(false)} />
+      <div
+        className="fixed inset-0 bg-black/70 z-50"
+        onClick={() => onOpenChange(false)}
+      />
 
       {/* The actual pop-up modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-        <div className="bg-background rounded-2xl w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl">
-
+        <div className="bg-[#0b1118] rounded-2xl w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl border border-[#00E53A]/30">
           {/* Header */}
-          <div className="flex items-center justify-between p-5 border-b">
-            <h2 className="text-2xl font-bold">Add Balance</h2>
-            <button onClick={() => onOpenChange(false)}>
+          <div className="flex items-center justify-between p-5 border-b border-[#1e293b]">
+            <h2 className="text-2xl font-bold text-white">Add Balance</h2>
+            <button
+              onClick={() => onOpenChange(false)}
+              className="text-[#94A3B8] hover:text-white"
+            >
               <X className="w-6 h-6" />
             </button>
           </div>
 
           {/* SCROLLABLE CONTENT — THIS WORKS ON EVERY PHONE */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6" style={{ WebkitOverflowScrolling: "touch" }}>
+          <div
+            className="flex-1 overflow-y-auto p-6 space-y-6"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
             {/* Bank */}
-            <div className="bg-muted/50 p-5 rounded-xl border text-center">
-              <p className="font-bold text-lg mb-4">Send Money To:</p>
-              <p>Bank: <strong>{BANK_DETAILS.bankName}</strong></p>
-              <p>Name: <strong>{BANK_DETAILS.accountName}</strong></p>
-              <p>Account: <strong className="font-mono text-xl">{BANK_DETAILS.accountNumber}</strong></p>
+            <div className="bg-[#06090d] p-5 rounded-xl border border-[#00E53A]/20 text-center text-[#94A3B8]">
+              <p className="font-bold text-lg text-white mb-4">
+                Send Money To:
+              </p>
+              <p>
+                Bank:{" "}
+                <strong className="text-[#00FF55]">
+                  {BANK_DETAILS.bankName}
+                </strong>
+              </p>
+              <p>
+                Name:{" "}
+                <strong className="text-[#00FF55]">
+                  {BANK_DETAILS.accountName}
+                </strong>
+              </p>
+              <p>
+                Account:{" "}
+                <strong className="font-mono text-xl text-[#00FF55]">
+                  {BANK_DETAILS.accountNumber}
+                </strong>
+              </p>
             </div>
 
             <div>
-              <Label>Amount (₦)</Label>
-              <Input type="number" className="h-12 mt-2" placeholder="10000" value={amount} onChange={e => setAmount(e.target.value)} />
+              <Label className="text-[#CBD5E1]">Amount (₦)</Label>
+              <Input
+                type="number"
+                className="h-12 mt-2 bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
+                placeholder="10000"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
             </div>
 
             {amountNum >= 1000 && (
-              <div className="bg-primary/10 p-5 rounded-xl border text-center">
-                <p className="text-2xl font-bold">Total: ₦{total.toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground mt-2">(includes 2% fee)</p>
+              <div className="bg-[#00E53A]/10 p-5 rounded-xl border border-[#00E53A]/30 text-center">
+                <p className="text-2xl font-bold text-[#00FF55]">
+                  Total: ₦{total.toLocaleString()}
+                </p>
+                <p className="text-sm text-[#94A3B8] mt-2">(includes 2% fee)</p>
               </div>
             )}
 
             <div>
-              <Label>Upload Receipt (max 3)</Label>
-              <div className="border-2 border-dashed rounded-xl p-8 text-center mt-3">
-                <input type="file" id="file" multiple accept="image/*,.pdf" onChange={handleFile} className="hidden" />
+              <Label className="text-[#CBD5E1]">Upload Receipt (max 3)</Label>
+              <div className="border-2 border-dashed border-[#00E53A]/30 rounded-xl p-8 text-center mt-3 bg-[#06090d]">
+                <input
+                  type="file"
+                  id="file"
+                  multiple
+                  accept="image/*,.pdf"
+                  onChange={handleFile}
+                  className="hidden"
+                />
                 <label htmlFor="file" className="cursor-pointer">
-                  <Upload className="w-16 h-16 mx-auto mb-3 text-muted-foreground" />
-                  <p className="font-medium">Tap to upload</p>
+                  <Upload className="w-16 h-16 mx-auto mb-3 text-[#00FF55]" />
+                  <p className="font-medium text-[#94A3B8]">Tap to upload</p>
                 </label>
               </div>
 
               {files.map((f, i) => (
-                <div key={i} className="flex items-center gap-3 mt-3 bg-muted/50 p-3 rounded-lg">
-                  {f.type.includes("image") ? <img src={URL.createObjectURL(f)} className="w-12 h-12 rounded object-cover" /> : <FileText className="w-12 h-12" />}
-                  <div className="flex-1 truncate">{f.name}</div>
-                  <button onClick={() => removeFile(i)}><X /></button>
+                <div
+                  key={i}
+                  className="flex items-center gap-3 mt-3 bg-[#06090d] p-3 rounded-lg border border-[#1e293b]"
+                >
+                  {f.type.includes("image") ? (
+                    <img
+                      src={URL.createObjectURL(f)}
+                      className="w-12 h-12 rounded object-cover"
+                    />
+                  ) : (
+                    <FileText className="w-12 h-12 text-[#00FF55]" />
+                  )}
+                  <div className="flex-1 truncate text-white">{f.name}</div>
+                  <button
+                    onClick={() => removeFile(i)}
+                    className="text-[#94A3B8] hover:text-white"
+                  >
+                    <X />
+                  </button>
                 </div>
               ))}
             </div>
 
-            {/* This red box proves scrolling works */}
-            <div className="h-64 bg-yellow-500 rounded-xl flex items-center justify-center text-white text-3xl font-bold">
-              Your balance will be credited instantly 
-              once we confirm your payment
+            {/* This green box proves scrolling works */}
+            <div className="h-64 bg-[#00E53A]/20 rounded-xl flex items-center justify-center text-white text-3xl font-bold border border-[#00E53A]/30">
+              Your balance will be credited instantly once we confirm your
+              payment
             </div>
           </div>
 
           {/* Submit Button */}
-          <div className="p-6 border-t">
-            <Button onClick={submit} disabled={loading || amountNum < 1000 || !files.length} className="w-full h-14 text-lg font-bold">
+          <div className="p-6 border-t border-[#1e293b]">
+            <Button
+              onClick={submit}
+              disabled={loading || amountNum < 1000 || !files.length}
+              className="w-full h-14 text-lg font-bold bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] shadow-[0_0_25px_rgba(0,229,58,0.3)] disabled:opacity-50"
+            >
               {loading ? "Submitting..." : "I've Paid & Uploaded Receipt"}
             </Button>
           </div>

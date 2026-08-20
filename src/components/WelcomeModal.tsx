@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Gift, Bolt, Users } from "lucide-react";
 
@@ -61,21 +66,25 @@ export const WelcomeModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent 
-        hideClose 
+      <DialogContent
+        hideClose
         className="sm:max-w-md"
         onEscapeKeyDown={handleEscapeKeyDown}
         onInteractOutside={handleInteractOutside}
       >
         <DialogTitle className="sr-only">Welcome to {APP_NAME}</DialogTitle>
-        <DialogDescription className="sr-only">Complete onboarding steps to get your welcome bonus</DialogDescription>
-        {/* Gradient header similar to PayGo */}
-        <div className="relative rounded-t-lg overflow-hidden bg-gradient-to-r from-purple-500 to-pink-500 p-4">
+        <DialogDescription className="sr-only">
+          Complete onboarding steps to get your welcome bonus
+        </DialogDescription>
+        {/* Gradient header - now green */}
+        <div className="relative rounded-t-lg overflow-hidden bg-gradient-to-r from-[#00C836] to-[#00E53A] p-4">
           <div className="flex items-start justify-between">
             <div>
               <p className="text-sm text-white/90">Step {step} of 2</p>
               <div className="mt-2">
-                <h3 className="text-white text-lg font-bold">Welcome to {APP_NAME}, Friend!</h3>
+                <h3 className="text-white text-lg font-bold">
+                  Welcome to {APP_NAME}, Friend!
+                </h3>
               </div>
             </div>
             {/* X button removed to prevent skipping the onboarding step */}
@@ -83,8 +92,12 @@ export const WelcomeModal = () => {
 
           {/* pill progress */}
           <div className="mt-3 flex items-center gap-2">
-            <div className={`h-2 flex-1 rounded-full ${step >= 1 ? "bg-white/90" : "bg-white/30"}`} />
-            <div className={`h-2 flex-1 rounded-full ${step >= 2 ? "bg-white/90" : "bg-white/30"}`} />
+            <div
+              className={`h-2 flex-1 rounded-full ${step >= 1 ? "bg-white/90" : "bg-white/30"}`}
+            />
+            <div
+              className={`h-2 flex-1 rounded-full ${step >= 2 ? "bg-white/90" : "bg-white/30"}`}
+            />
           </div>
         </div>
 
@@ -93,62 +106,91 @@ export const WelcomeModal = () => {
           {step === 1 ? (
             <div className="text-center space-y-4">
               <div className="mx-auto w-20 h-20 rounded-full bg-white/10 flex items-center justify-center">
-                <Gift className="w-8 h-8 text-purple-400" />
+                <Gift className="w-8 h-8 text-[#00FF55]" />
               </div>
 
               <h4 className="text-xl font-semibold">Welcome to {APP_NAME}!</h4>
 
               <p className="text-sm text-muted-foreground mx-3">
-                As a new user you'll receive a welcome bonus of <span className="font-bold">₦50,000</span>.
-                This bonus is credited after you complete the required steps (joining our Telegram is one of them).
+                As a new user you'll receive a welcome bonus of{" "}
+                <span className="font-bold">₦50,000</span>. This bonus is
+                credited after you complete the required steps (joining our
+                Telegram is one of them).
               </p>
 
               <div className="space-y-2">
-                <button onClick={joinTelegram} className="w-full bg-gradient-to-r from-purple-500 to-pink-400 text-white font-semibold py-3 rounded-lg">Join Telegram Channel</button>
+                <button
+                  onClick={joinTelegram}
+                  className="w-full bg-gradient-to-r from-[#00E53A] to-[#00FF55] hover:from-[#00C836] hover:to-[#00E53A] text-black font-semibold py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(0,229,58,0.3)] active:scale-[0.98]"
+                >
+                  Join Telegram Channel
+                </button>
                 {telegramJoined && (
-                  <button onClick={() => setStep(2)} className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold py-3 rounded-lg">Amazing! Continue →</button>
+                  <button
+                    onClick={() => setStep(2)}
+                    className="w-full bg-gradient-to-r from-[#00E53A] to-[#00FF55] hover:from-[#00C836] hover:to-[#00E53A] text-black font-semibold py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(0,229,58,0.3)] active:scale-[0.98]"
+                  >
+                    Amazing! Continue →
+                  </button>
                 )}
               </div>
             </div>
           ) : (
             <div className="text-center space-y-4">
               <div className="mx-auto w-20 h-20 rounded-full bg-white/10 flex items-center justify-center">
-                <Bolt className="w-8 h-8 text-yellow-400" />
+                <Bolt className="w-8 h-8 text-[#00FF55]" />
               </div>
 
               <h4 className="text-xl font-semibold">Start Earning More!</h4>
 
               <p className="text-sm text-muted-foreground mx-3">
-                Earn by referrals, daily tasks, special promotions and by claiming earnings every few minutes.
+                Earn by referrals, daily tasks, special promotions and by
+                claiming earnings every few minutes.
               </p>
 
               <div className="space-y-2 text-left">
                 <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <Users className="w-5 h-5 text-primary" />
+                  <Users className="w-5 h-5 text-[#00FF55]" />
                   <div>
                     <p className="font-semibold">Referrals</p>
-                    <p className="text-xs text-muted-foreground">Earn ₦12,000 per referral</p>
+                    <p className="text-xs text-muted-foreground">
+                      Earn ₦12,000 per referral
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
                   <div className="ml-0">
                     <p className="font-semibold">Daily Tasks</p>
-                    <p className="text-xs text-muted-foreground">Complete tasks to earn instant rewards</p>
+                    <p className="text-xs text-muted-foreground">
+                      Complete tasks to earn instant rewards
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
                   <div className="ml-0">
                     <p className="font-semibold">Special Promotions</p>
-                    <p className="text-xs text-muted-foreground">Participate in limited-time offers</p>
+                    <p className="text-xs text-muted-foreground">
+                      Participate in limited-time offers
+                    </p>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <button onClick={close} className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold py-3 rounded-lg">Let's Get Started →</button>
-                <button onClick={() => setStep(1)} className="w-full bg-muted hover:bg-muted/80 text-foreground font-medium py-2 rounded-lg">← Back</button>
+                <button
+                  onClick={close}
+                  className="w-full bg-gradient-to-r from-[#00E53A] to-[#00FF55] hover:from-[#00C836] hover:to-[#00E53A] text-black font-semibold py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(0,229,58,0.3)] active:scale-[0.98]"
+                >
+                  Let's Get Started →
+                </button>
+                <button
+                  onClick={() => setStep(1)}
+                  className="w-full bg-muted hover:bg-muted/80 text-foreground font-medium py-2 rounded-lg"
+                >
+                  ← Back
+                </button>
               </div>
             </div>
           )}

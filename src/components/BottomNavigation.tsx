@@ -1,5 +1,11 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { HomeIcon, WithdrawIcon, HistoryIcon, RewardsIcon, ProfileIcon } from "@/assets/icons";
+import {
+  HomeIcon,
+  WithdrawIcon,
+  HistoryIcon,
+  RewardsIcon,
+  ProfileIcon,
+} from "@/assets/icons";
 
 const navItems = [
   { label: "Home", to: "/dashboard", Icon: HomeIcon },
@@ -27,7 +33,7 @@ const BottomNavigation = () => {
             className={({ isActive }) =>
               `inline-flex min-w-[56px] flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-3 py-2 text-[11px] font-medium transition duration-200 ${
                 isActive
-                  ? "bg-white/10 text-[var(--gold-main)] shadow-[0_0_0_1px_rgba(234,179,8,0.15)]"
+                  ? "bg-white/10 text-[#00FF55] shadow-[0_0_0_1px_rgba(0,229,58,0.15)]"
                   : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
               }`
             }
