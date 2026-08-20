@@ -212,13 +212,14 @@ const Withdraw = () => {
   if (loading || !profile) return null;
 
   const hasMinBalance = Number(profile.balance) >= MINIMUM_WITHDRAW;
-  const minBalanceProgress = hasMinBalance
-    ? Math.min(100, Math.round((Number(profile.balance) / MINIMUM_WITHDRAW) * 100))
-    : 0;
-  const minBalanceText = `₦${Math.min(Number(profile.balance), MINIMUM_WITHDRAW).toLocaleString()} / ₦${MINIMUM_WITHDRAW.toLocaleString()}`;
+  const minBalanceProgress = Math.min(
+    100,
+    Math.round((Number(profile.balance) / MINIMUM_WITHDRAW) * 100),
+  );
+  const minBalanceText = `₦${Number(profile.balance).toLocaleString()} / ₦${MINIMUM_WITHDRAW.toLocaleString()}`;
   const referralsCount = profile.total_referrals || 0;
   const hasReferrals = referralsCount >= 5;
-  const referralsProgress = hasReferrals ? Math.min(100, Math.round((referralsCount / 5) * 100)) : 0;
+  const referralsProgress = Math.min(100, Math.round((referralsCount / 5) * 100));
 
   // tasks completion check using same key as Tasks page
   const isTaskClaimedToday = (taskId: number) => {
@@ -238,14 +239,9 @@ const Withdraw = () => {
   })();
 
   const hasCompletedTasks = tasksCompletedCount === TASK_COUNT;
-  const tasksProgress = hasCompletedTasks ? Math.round((tasksCompletedCount / TASK_COUNT) * 100) : 0;
-  const withdrawalProgress = [
-    hasMinBalance,
-    hasReferrals,
-    hasCompletedTasks,
-  ].filter(Boolean).length;
+  const tasksProgress = Math.min(100, Math.round((tasksCompletedCount / TASK_COUNT) * 100));
   const overallWithdrawalProgress =
-    (withdrawalProgress / 3) * 100;
+    (minBalanceProgress + referralsProgress + tasksProgress) / 3;
 
   return (
     <div className="min-h-screen bg-[#06090d] pb-20">
