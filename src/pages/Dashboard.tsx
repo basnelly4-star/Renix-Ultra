@@ -61,7 +61,6 @@ const Dashboard = () => {
   const testimonialIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const dailyTasksIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const dailyTasksHideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  // NEW: ref for the auto-slide interval
   const whySlideshowRef = useRef<NodeJS.Timeout | null>(null);
   const hasDailyClaimedRef = useRef(false);
 
@@ -165,14 +164,16 @@ const Dashboard = () => {
       };
 
       let completed = 0;
-      for (let i = 1; i <= TASK_COUNT; i++) if (isTaskClaimedToday(i)) completed++;
+      for (let i = 1; i <= TASK_COUNT; i++)
+        if (isTaskClaimedToday(i)) completed++;
 
       const popupKey = `dailyTasksPopupShown_${profile.id}`;
       const todayKey = new Date().toDateString();
 
-      // If user completed all tasks today, mark popup as shown for today and stop any repeating behavior
       if (completed >= TASK_COUNT) {
-        try { localStorage.setItem(popupKey, todayKey); } catch (e) {}
+        try {
+          localStorage.setItem(popupKey, todayKey);
+        } catch (e) {}
         setShowDailyTasksPopup(false);
         if (dailyTasksIntervalRef.current) {
           clearInterval(dailyTasksIntervalRef.current);
@@ -183,16 +184,21 @@ const Dashboard = () => {
           dailyTasksHideTimeoutRef.current = null;
         }
       } else {
-        // start repeated popup display if not already running
         if (!dailyTasksIntervalRef.current) {
-          // show immediately for 5s
           setShowDailyTasksPopup(true);
-          dailyTasksHideTimeoutRef.current = setTimeout(() => setShowDailyTasksPopup(false), 5000);
+          dailyTasksHideTimeoutRef.current = setTimeout(
+            () => setShowDailyTasksPopup(false),
+            5000,
+          );
 
           dailyTasksIntervalRef.current = setInterval(() => {
             setShowDailyTasksPopup(true);
-            if (dailyTasksHideTimeoutRef.current) clearTimeout(dailyTasksHideTimeoutRef.current);
-            dailyTasksHideTimeoutRef.current = setTimeout(() => setShowDailyTasksPopup(false), 5000);
+            if (dailyTasksHideTimeoutRef.current)
+              clearTimeout(dailyTasksHideTimeoutRef.current);
+            dailyTasksHideTimeoutRef.current = setTimeout(
+              () => setShowDailyTasksPopup(false),
+              5000,
+            );
           }, 10000);
         }
       }
@@ -254,7 +260,7 @@ const Dashboard = () => {
     };
   }, [testimonials.length]);
 
-  // ── NEW: Why Renix-Ultra auto-slideshow every 5 seconds ──────────────────────
+  // Why Renix-Ultra auto-slideshow every 5 seconds
   useEffect(() => {
     const startSlideshow = () => {
       whySlideshowRef.current = setInterval(() => {
@@ -269,7 +275,6 @@ const Dashboard = () => {
     };
   }, []);
 
-  // Helper: reset the auto-slideshow timer when user manually clicks an arrow
   const resetWhySlideshow = () => {
     if (whySlideshowRef.current) clearInterval(whySlideshowRef.current);
     whySlideshowRef.current = setInterval(() => {
@@ -528,7 +533,7 @@ const Dashboard = () => {
           <p className="text-sm text-muted-foreground">
             Please login again to continue.
           </p>
-          <Button onClick={() => navigate("/auth")} className="gold-glow-btn">
+          <Button onClick={() => navigate("/auth")} className="brand-glow-btn">
             Go to Login
           </Button>
         </Card>
@@ -548,24 +553,26 @@ const Dashboard = () => {
       {showDailyRewardNotif && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-in fade-in">
           <div className="relative w-full max-w-xs sm:max-w-sm mx-auto">
-            <Card className="rounded-2xl border border-[#EAB308]/30 bg-[#101112] shadow-2xl p-0 overflow-hidden gold-glow-card">
+            <Card className="rounded-2xl border border-brand-green/30 bg-[#0a0a00] shadow-2xl p-0 overflow-hidden brand-glow-card">
               <button
-                className="absolute top-3 right-3 text-[#EAB308] hover:text-[#fbbf24] text-lg font-bold z-10"
+                className="absolute top-3 right-3 text-brand-green hover:text-brand-green-light text-lg font-bold z-10"
                 onClick={() => setShowDailyRewardNotif(false)}
                 aria-label="Close"
               >
                 ×
               </button>
               <div className="flex flex-col items-center px-6 pt-7 pb-2">
-                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#181200] border-2 border-[#EAB308] mb-4 gold-glow-icon">
-                  <Gift className="w-8 h-8 text-[#EAB308]" />
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#0f1400] border-2 border-brand-green mb-4 brand-glow-icon">
+                  <Gift className="w-8 h-8 text-brand-green" />
                 </div>
                 <h2 className="text-xl font-bold text-white mb-2 text-center">
                   Don't Miss Your Daily Reward!
                 </h2>
-                <p className="text-sm text-[#e7c95c] text-center mb-4">
+                <p className="text-sm text-brand-green-light text-center mb-4">
                   Claim your{" "}
-                  <span className="font-bold text-[#EAB308]">daily bonus</span>{" "}
+                  <span className="font-bold text-brand-green">
+                    daily bonus
+                  </span>{" "}
                   now and keep your streak alive. Come back every day to earn
                   even more!
                 </p>
@@ -574,12 +581,12 @@ const Dashboard = () => {
                     setShowDailyRewardNotif(false);
                     navigate("/daily-rewards");
                   }}
-                  className="w-full rounded-full bg-gradient-to-r from-[#EAB308] to-[#FBBF24] text-black text-base font-bold py-3 mb-2 mt-1 gold-glow-btn hover:from-[#fbbf24] hover:to-[#EAB308]"
+                  className="w-full rounded-full bg-gradient-to-r from-brand-green-dark to-brand-green text-black text-base font-bold py-3 mb-2 mt-1 brand-glow-btn hover:from-brand-green hover:to-brand-green-light"
                 >
                   <Gift className="w-5 h-5 mr-2" /> Claim Daily Reward
                 </Button>
                 <button
-                  className="w-full text-xs text-[#b0b0b0] mt-1 mb-1 hover:underline"
+                  className="w-full text-xs text-[#9aa08a] mt-1 mb-1 hover:underline"
                   onClick={() => setShowDailyRewardNotif(false)}
                 >
                   Remind me later
@@ -601,7 +608,10 @@ const Dashboard = () => {
             for (let i = 1; i <= TASK_COUNT; i++) {
               const lastClaim = localStorage.getItem(`task_${i}_claimed`);
               if (!lastClaim) continue;
-              if (new Date(lastClaim).toDateString() === new Date().toDateString()) completed++;
+              if (
+                new Date(lastClaim).toDateString() === new Date().toDateString()
+              )
+                completed++;
             }
             return completed;
           } catch (e) {
@@ -613,11 +623,11 @@ const Dashboard = () => {
 
       {/* Header */}
       <div
-        className="bg-gradient-to-r from-primary to-secondary p-4 text-primary-foreground glow-primary"
+        className="bg-gradient-to-r from-brand-green-dark to-brand-green p-4 text-white glow-brand"
         style={{ pointerEvents: "auto", position: "relative", zIndex: 2 }}
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-background/20 backdrop-blur-lg flex items-center justify-center text-lg font-bold gold-glow-avatar">
+          <div className="w-10 h-10 rounded-full bg-background/20 backdrop-blur-lg flex items-center justify-center text-lg font-bold brand-glow-avatar">
             {profile.full_name?.charAt(0) || "U"}
           </div>
           <div>
@@ -633,15 +643,15 @@ const Dashboard = () => {
       >
         {/* Balance Card */}
         <div className="px-4">
-          <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-lg border-border/50 p-4 gold-glow-card animate-fade-in">
+          <Card className="bg-gradient-to-br from-[#0a0a00] to-[#0f1400] backdrop-blur-lg border-brand-green/30 p-4 brand-glow-card animate-fade-in">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">Your Balance</p>
+                <p className="text-sm text-[#9aa08a]">Your Balance</p>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setShowBalance(!showBalance)}
-                  className="hover:bg-muted h-8 w-8"
+                  className="hover:bg-muted h-8 w-8 text-brand-green"
                 >
                   {showBalance ? (
                     <Eye className="w-4 h-4" />
@@ -650,7 +660,7 @@ const Dashboard = () => {
                   )}
                 </Button>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold gradient-text">
+              <h2 className="text-3xl md:text-4xl font-bold brand-gradient-text">
                 {showBalance
                   ? `₦${Number(profile.balance || 0).toLocaleString()}.00`
                   : "****"}
@@ -658,7 +668,7 @@ const Dashboard = () => {
               <Button
                 onClick={handleClaim}
                 disabled={!canClaim || claiming}
-                className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-sm py-2 gold-glow-btn"
+                className="w-full bg-gradient-to-r from-brand-green-dark to-brand-green hover:opacity-90 text-sm py-2 brand-glow-btn"
               >
                 {claiming
                   ? "Claiming..."
@@ -670,18 +680,24 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* ── Support Telegram Card ── */}
+        {/* Support Telegram Card */}
         <div className="px-4">
-          <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20 p-3 gold-glow-card overflow-hidden">
-                <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 flex-1 min-w-0" style={{ minHeight: 36 }}>
-                <div className="flex-shrink-0" style={{ position: "relative", zIndex: 2 }}>
-                  <Send className="w-4 h-4 text-secondary mt-0.5" />
+          <Card className="bg-gradient-to-r from-brand-green/10 to-brand-green-dark/10 border-brand-green/20 p-3 brand-glow-card overflow-hidden">
+            <div className="flex items-center justify-between gap-2">
+              <div
+                className="flex items-center gap-2 flex-1 min-w-0"
+                style={{ minHeight: 36 }}
+              >
+                <div
+                  className="flex-shrink-0"
+                  style={{ position: "relative", zIndex: 2 }}
+                >
+                  <Send className="w-4 h-4 text-brand-green mt-0.5" />
                 </div>
 
                 <div className="text-xs min-w-0">
                   <p className="font-semibold text-foreground">Support</p>
-                  <p className="text-muted-foreground truncate">
+                  <p className="text-[#9aa08a] truncate">
                     We're here to help you
                   </p>
                 </div>
@@ -689,7 +705,7 @@ const Dashboard = () => {
 
               <Button
                 onClick={() => window.open("https://t.me/Renix-Ultra1")}
-                className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-xs px-3 py-1 h-auto flex-shrink-0 gold-glow-btn"
+                className="bg-gradient-to-r from-brand-green-dark to-brand-green hover:opacity-90 text-xs px-3 py-1 h-auto flex-shrink-0 brand-glow-btn"
               >
                 Chat Us
               </Button>
@@ -702,7 +718,7 @@ const Dashboard = () => {
           <button
             type="button"
             onClick={() => navigate("/tasks")}
-            className="w-full flex items-center justify-center gap-2 text-sm text-primary hover:underline py-2"
+            className="w-full flex items-center justify-center gap-2 text-sm text-brand-green hover:underline py-2"
           >
             View Daily Tasks <ArrowRight className="w-4 h-4" />
           </button>
@@ -714,55 +730,55 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => navigate("/referrals")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <Gift className="w-5 h-5 text-primary" />
+              <Gift className="w-5 h-5 text-brand-green" />
               <span className="text-xs font-semibold">Refer & Earn</span>
             </button>
             <button
               type="button"
               onClick={() => navigate("/withdraw")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <Banknote className="w-5 h-5 text-secondary" />
+              <Banknote className="w-5 h-5 text-brand-gold" />
               <span className="text-xs font-semibold">Withdraw</span>
             </button>
             <button
               type="button"
               onClick={() => navigate("/tasks")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <CheckCircle2 className="w-5 h-5 text-green-500" />
+              <CheckCircle2 className="w-5 h-5 text-brand-green-light" />
               <span className="text-xs font-semibold">Tasks</span>
             </button>
             <button
               type="button"
               onClick={() => navigate("/loan")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <History className="w-5 h-5 text-blue-500" />
+              <History className="w-5 h-5 text-brand-gold" />
               <span className="text-xs font-semibold">Loan</span>
             </button>
             <button
               type="button"
               onClick={() => navigate("/broadcast")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <TrendingUp className="w-5 h-5 text-accent" />
+              <TrendingUp className="w-5 h-5 text-brand-green" />
               <span className="text-xs font-semibold">Invest</span>
             </button>
             <button
               type="button"
               onClick={() => navigate("/support")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-card/80 hover:bg-card border-border/50 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] gold-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <HelpCircle className="w-5 h-5 text-[#EAB308]" />
+              <HelpCircle className="w-5 h-5 text-brand-gold-light" />
               <span className="text-xs font-semibold">Support</span>
             </button>
           </div>
@@ -770,26 +786,24 @@ const Dashboard = () => {
 
         {/* Referral Card */}
         <div className="px-4">
-          <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-4 gold-glow-card">
+          <Card className="bg-[#0a0a00]/80 backdrop-blur-lg border-brand-green/30 p-4 brand-glow-card">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <Gift className="w-4 h-4 text-primary" />
+                <Gift className="w-4 h-4 text-brand-green" />
                 <h3 className="text-sm font-semibold">Referral Program</h3>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-xs text-muted-foreground">
-                    Total Referrals
-                  </p>
-                  <p className="text-xl font-bold text-primary">
+                  <p className="text-xs text-[#9aa08a]">Total Referrals</p>
+                  <p className="text-xl font-bold text-brand-green">
                     {profile.total_referrals || 0}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-[#9aa08a]">
                     Total Referral Earnings
                   </p>
-                  <p className="text-xl font-bold gradient-text">
+                  <p className="text-xl font-bold brand-gradient-text">
                     ₦
                     {Number(
                       (profile.total_referrals || 0) * 12000,
@@ -797,8 +811,8 @@ const Dashboard = () => {
                   </p>
                 </div>
               </div>
-              <div className="bg-muted/50 p-3 rounded-lg gold-glow-inner">
-                <p className="text-xs text-muted-foreground mb-1.5">
+              <div className="bg-[#0f1400] p-3 rounded-lg brand-glow-inner">
+                <p className="text-xs text-[#9aa08a] mb-1.5">
                   Your Referral Link
                 </p>
                 <div className="flex items-center gap-2">
@@ -808,7 +822,7 @@ const Dashboard = () => {
                   <Button
                     size="sm"
                     onClick={copyReferralCode}
-                    className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 flex-shrink-0 h-7 w-7 p-0 gold-glow-btn"
+                    className="bg-gradient-to-r from-brand-green-dark to-brand-green hover:opacity-90 flex-shrink-0 h-7 w-7 p-0 brand-glow-btn"
                   >
                     <Copy className="w-3 h-3" />
                   </Button>
@@ -821,7 +835,7 @@ const Dashboard = () => {
         {/* Why Renix-Ultra / Testimonials Swipeable Section */}
         <div className="mt-6">
           <div
-            className="why-glow bg-gradient-to-br from-black via-amber-950 to-black rounded-2xl p-6 mb-6 mx-2 border border-yellow-600/40 relative overflow-hidden cursor-grab active:cursor-grabbing transition-all duration-300 gold-glow-section"
+            className="why-glow bg-gradient-to-br from-black via-brand-green-dark/30 to-black rounded-2xl p-6 mb-6 mx-2 border border-brand-green/40 relative overflow-hidden cursor-grab active:cursor-grabbing transition-all duration-300 brand-glow-section"
             onTouchStart={(e) => {
               touchStartRef.current = e.touches[0].clientX;
             }}
@@ -843,13 +857,12 @@ const Dashboard = () => {
             {!showTestimonials && (
               <div className="animate-fadeIn">
                 <div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-20">
-                  {/* ── UPDATED: glow-arrow-pulse class for glowing chevron ── */}
                   <button
                     onClick={() => {
                       setShowTestimonials(true);
                       resetWhySlideshow();
                     }}
-                    className="bg-yellow-500 hover:bg-yellow-400 text-black rounded-full p-2 border border-yellow-300/80 transition-all duration-200 active:scale-90 glow-arrow glow-arrow-pulse"
+                    className="bg-brand-green hover:bg-brand-green-light text-black rounded-full p-2 border border-brand-green/80 transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
                     aria-label="View testimonials"
                   >
                     <ChevronRight className="w-6 h-6" />
@@ -859,19 +872,19 @@ const Dashboard = () => {
                   <h2 className="text-2xl font-bold text-white mb-2 animate-slide-up">
                     Why Renix-Ultra⁉️
                   </h2>
-                  <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50 animate-slide-up-delay"></div>
+                  <div className="w-16 h-1 bg-gradient-to-r from-brand-green via-brand-green-light to-brand-green-dark mx-auto mb-4 shadow-lg shadow-brand-green/50 animate-slide-up-delay"></div>
                 </div>
 
                 <div className="space-y-3 mb-6 relative z-10">
                   <div className="flex items-start gap-3 animate-slide-up-delay2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40 gold-glow-icon">
-                      <Shield className="w-5 h-5 text-white" />
+                    <div className="w-10 h-10 bg-gradient-to-br from-brand-green to-brand-green-dark rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-green/40 brand-glow-icon">
+                      <Shield className="w-5 h-5 text-black" />
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-1">
                         100% Secure
                       </h3>
-                      <p className="text-yellow-100 text-sm">
+                      <p className="text-brand-green-light text-sm">
                         Bank-level encryption protects your transactions and
                         personal data
                       </p>
@@ -879,28 +892,28 @@ const Dashboard = () => {
                   </div>
 
                   <div className="flex items-start gap-3 animate-slide-up-delay3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40 gold-glow-icon">
+                    <div className="w-10 h-10 bg-gradient-to-br from-brand-green-light to-brand-green rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-green/40 brand-glow-icon">
                       <TrendingUp className="w-5 h-5 text-black" />
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-1">
                         Lightning Fast
                       </h3>
-                      <p className="text-yellow-100 text-sm">
+                      <p className="text-brand-green-light text-sm">
                         Instant withdrawals and seamless transactions in seconds
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3 animate-slide-up-delay4">
-                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Users className="w-5 h-5 text-white" />
+                    <div className="w-10 h-10 bg-brand-green rounded-full flex items-center justify-center flex-shrink-0">
+                      <Users className="w-5 h-5 text-black" />
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-1">
                         100% Reliable
                       </h3>
-                      <p className="text-green-200 text-sm">
+                      <p className="text-brand-green-light text-sm">
                         24/7 support and guaranteed service uptime
                       </p>
                     </div>
@@ -908,7 +921,7 @@ const Dashboard = () => {
                 </div>
 
                 <Link to="/referrals">
-                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(234,179,8,0.45)] hover:shadow-[0_0_40px_rgba(234,179,8,0.65)] glow-cta gold-glow-btn">
+                  <Button className="w-full bg-gradient-to-r from-brand-green to-brand-green-light hover:from-brand-green-dark hover:to-brand-green text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(140,200,0,0.45)] hover:shadow-[0_0_40px_rgba(140,200,0,0.65)] glow-cta brand-glow-btn">
                     Invite & Earn Now
                   </Button>
                 </Link>
@@ -919,13 +932,12 @@ const Dashboard = () => {
             {showTestimonials && (
               <div className="animate-fadeIn">
                 <div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-20">
-                  {/* ── UPDATED: glow-arrow-pulse class for glowing chevron ── */}
                   <button
                     onClick={() => {
                       setShowTestimonials(false);
                       resetWhySlideshow();
                     }}
-                    className="bg-yellow-500 hover:bg-yellow-400 text-black rounded-full p-2 border border-yellow-300/80 transition-all duration-200 active:scale-90 glow-arrow glow-arrow-pulse"
+                    className="bg-brand-green hover:bg-brand-green-light text-black rounded-full p-2 border border-brand-green/80 transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
                     aria-label="Back to Why Renix-Ultra"
                   >
                     <ChevronLeft className="w-6 h-6" />
@@ -935,13 +947,13 @@ const Dashboard = () => {
                   <h2 className="text-2xl font-bold text-white mb-2">
                     Member Success Stories
                   </h2>
-                  <div className="w-16 h-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 mx-auto mb-4 shadow-lg shadow-yellow-500/50"></div>
+                  <div className="w-16 h-1 bg-gradient-to-r from-brand-green via-brand-green-light to-brand-green-dark mx-auto mb-4 shadow-lg shadow-brand-green/50"></div>
                 </div>
 
                 {/* Testimonial Slide */}
-                <div className="relative z-10 bg-gradient-to-r from-yellow-900/20 to-yellow-800/10 rounded-xl p-4 mb-4 border border-yellow-600/30 gold-glow-inner">
+                <div className="relative z-10 bg-gradient-to-r from-brand-green/20 to-brand-green-dark/10 rounded-xl p-4 mb-4 border border-brand-green/30 brand-glow-inner">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-500/40 gold-glow-icon">
+                    <div className="w-12 h-12 bg-gradient-to-br from-brand-green to-brand-green-dark rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-green/40 brand-glow-icon">
                       <span className="text-sm font-bold text-black">
                         {testimonials[testimonialIndex].name.charAt(0)}
                       </span>
@@ -952,15 +964,15 @@ const Dashboard = () => {
                         <p className="text-white font-bold text-sm">
                           {testimonials[testimonialIndex].name}
                         </p>
-                        <CheckCircle2 className="w-4 h-4 text-yellow-400" />
+                        <CheckCircle2 className="w-4 h-4 text-brand-green" />
                       </div>
-                      <p className="text-yellow-100 text-xs mb-2">
+                      <p className="text-brand-green-light text-xs mb-2">
                         📍 {testimonials[testimonialIndex].location}
                       </p>
-                      <p className="text-yellow-300 font-bold italic text-sm mb-2">
+                      <p className="text-brand-green font-bold italic text-sm mb-2">
                         "{testimonials[testimonialIndex].quote}"
                       </p>
-                      <p className="text-yellow-400 font-bold text-sm">
+                      <p className="text-brand-gold-light font-bold text-sm">
                         Withdrawn: {testimonials[testimonialIndex].amount}
                       </p>
                     </div>
@@ -977,7 +989,7 @@ const Dashboard = () => {
                           testimonials.length,
                       )
                     }
-                    className="bg-yellow-600/50 hover:bg-yellow-500 text-yellow-300 hover:text-white rounded-full p-2 shadow-[0_0_25px_rgba(234,179,8,0.45)] hover:shadow-[0_0_35px_rgba(234,179,8,0.6)] transition-all duration-200 active:scale-90 glow-arrow glow-arrow-pulse"
+                    className="bg-brand-green/50 hover:bg-brand-green text-brand-green-light hover:text-black rounded-full p-2 shadow-[0_0_25px_rgba(140,200,0,0.45)] hover:shadow-[0_0_35px_rgba(140,200,0,0.6)] transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
                     aria-label="Previous testimonial"
                   >
                     <ChevronLeft className="w-5 h-5" />
@@ -988,8 +1000,8 @@ const Dashboard = () => {
                         key={index}
                         className={`h-2 rounded-full transition-all duration-300 ${
                           index === testimonialIndex
-                            ? "w-6 bg-yellow-400 shadow-lg shadow-yellow-500/50"
-                            : "w-2 bg-yellow-700/50"
+                            ? "w-6 bg-brand-green shadow-lg shadow-brand-green/50"
+                            : "w-2 bg-brand-green/30"
                         }`}
                       />
                     ))}
@@ -1000,7 +1012,7 @@ const Dashboard = () => {
                         (prev) => (prev + 1) % testimonials.length,
                       )
                     }
-                    className="bg-yellow-600/50 hover:bg-yellow-500 text-yellow-300 hover:text-white rounded-full p-2 shadow-[0_0_25px_rgba(234,179,8,0.45)] hover:shadow-[0_0_35px_rgba(234,179,8,0.6)] transition-all duration-200 active:scale-90 glow-arrow glow-arrow-pulse"
+                    className="bg-brand-green/50 hover:bg-brand-green text-brand-green-light hover:text-black rounded-full p-2 shadow-[0_0_25px_rgba(140,200,0,0.45)] hover:shadow-[0_0_35px_rgba(140,200,0,0.6)] transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
                     aria-label="Next testimonial"
                   >
                     <ChevronRight className="w-5 h-5" />
@@ -1008,7 +1020,7 @@ const Dashboard = () => {
                 </div>
 
                 <Link to="/testimonials" className="block mt-4">
-                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(234,179,8,0.45)] hover:shadow-[0_0_40px_rgba(234,179,8,0.65)] glow-cta gold-glow-btn">
+                  <Button className="w-full bg-gradient-to-r from-brand-green to-brand-green-light hover:from-brand-green-dark hover:to-brand-green text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(140,200,0,0.45)] hover:shadow-[0_0_40px_rgba(140,200,0,0.65)] glow-cta brand-glow-btn">
                     See More Success Stories
                   </Button>
                 </Link>
@@ -1019,6 +1031,21 @@ const Dashboard = () => {
 
         {/* Custom Styles */}
         <style>{`
+          /* ── Brand Colors (from extracted palette) ── */
+          :root {
+            --brand-green-dark: #3c7800;
+            --brand-green-mid: #6ca800;
+            --brand-green: #8cc800;
+            --brand-green-light: #aadc00;
+            --brand-green-flash: #dcf032;
+            --brand-gold-dark: #785400;
+            --brand-gold: #906c00;
+            --brand-gold-light: #b4e400;
+            --brand-highlight: #fafac8;
+            --brand-metal: #d2d2d2;
+            --brand-text-muted: #9aa08a;
+          }
+
           @keyframes bounce-slow {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-6px); }
@@ -1037,71 +1064,71 @@ const Dashboard = () => {
             100% { left: -120%; }
           }
 
-          /* ========== GOLD GLOW SYSTEM ========== */
-          @keyframes gold-pulse {
-            0%, 100% { box-shadow: 0 0 8px 2px rgba(234,179,8,0.45), 0 0 20px 4px rgba(234,179,8,0.2); }
-            50% { box-shadow: 0 0 16px 4px rgba(234,179,8,0.7), 0 0 36px 8px rgba(234,179,8,0.35); }
+          /* ── Glow System (brand green) ── */
+          @keyframes brand-pulse {
+            0%, 100% { box-shadow: 0 0 8px 2px rgba(140,200,0,0.45), 0 0 20px 4px rgba(140,200,0,0.2); }
+            50% { box-shadow: 0 0 16px 4px rgba(140,200,0,0.7), 0 0 36px 8px rgba(140,200,0,0.35); }
           }
 
-          @keyframes gold-border-pulse {
-            0%, 100% { box-shadow: 0 0 6px 1px rgba(234,179,8,0.2), inset 0 0 6px 0px rgba(234,179,8,0.05); }
-            50% { box-shadow: 0 0 14px 3px rgba(234,179,8,0.38), inset 0 0 10px 1px rgba(234,179,8,0.08); }
+          @keyframes brand-border-pulse {
+            0%, 100% { box-shadow: 0 0 6px 1px rgba(140,200,0,0.2), inset 0 0 6px 0px rgba(140,200,0,0.05); }
+            50% { box-shadow: 0 0 14px 3px rgba(140,200,0,0.38), inset 0 0 10px 1px rgba(140,200,0,0.08); }
           }
 
-          .gold-glow-btn {
-            box-shadow: 0 0 10px 2px rgba(234,179,8,0.5), 0 0 24px 4px rgba(234,179,8,0.25);
-            animation: gold-pulse 2.5s ease-in-out infinite;
+          .brand-glow-btn {
+            box-shadow: 0 0 10px 2px rgba(140,200,0,0.5), 0 0 24px 4px rgba(140,200,0,0.25);
+            animation: brand-pulse 2.5s ease-in-out infinite;
           }
-          .gold-glow-btn:hover { box-shadow: 0 0 18px 4px rgba(234,179,8,0.75), 0 0 40px 8px rgba(234,179,8,0.4); }
-          .gold-glow-btn:disabled { box-shadow: 0 0 5px 1px rgba(234,179,8,0.2); animation: none; }
+          .brand-glow-btn:hover { box-shadow: 0 0 18px 4px rgba(140,200,0,0.75), 0 0 40px 8px rgba(140,200,0,0.4); }
+          .brand-glow-btn:disabled { box-shadow: 0 0 5px 1px rgba(140,200,0,0.2); animation: none; }
 
-          .gold-glow-card {
-            box-shadow: 0 0 0 1px rgba(234,179,8,0.15), 0 0 12px 2px rgba(234,179,8,0.15);
-            animation: gold-border-pulse 3s ease-in-out infinite;
+          .brand-glow-card {
+            box-shadow: 0 0 0 1px rgba(140,200,0,0.15), 0 0 12px 2px rgba(140,200,0,0.15);
+            animation: brand-border-pulse 3s ease-in-out infinite;
           }
-          .gold-glow-action {
-            box-shadow: 0 0 8px 1px rgba(234,179,8,0.18);
-            animation: gold-border-pulse 3s ease-in-out infinite;
+          .brand-glow-action {
+            box-shadow: 0 0 8px 1px rgba(140,200,0,0.18);
+            animation: brand-border-pulse 3s ease-in-out infinite;
             transition: box-shadow 0.2s ease;
           }
-          .gold-glow-action:hover { box-shadow: 0 0 16px 3px rgba(234,179,8,0.4); }
-          .gold-glow-section {
-            box-shadow: 0 0 20px 4px rgba(234,179,8,0.22), 0 0 50px 10px rgba(234,179,8,0.1);
-            animation: gold-border-pulse 3.5s ease-in-out infinite;
+          .brand-glow-action:hover { box-shadow: 0 0 16px 3px rgba(140,200,0,0.4); }
+          .brand-glow-section {
+            box-shadow: 0 0 20px 4px rgba(140,200,0,0.22), 0 0 50px 10px rgba(140,200,0,0.1);
+            animation: brand-border-pulse 3.5s ease-in-out infinite;
           }
-          .gold-glow-icon {
-            box-shadow: 0 0 12px 3px rgba(234,179,8,0.45);
-            animation: gold-pulse 2.5s ease-in-out infinite;
+          .brand-glow-icon {
+            box-shadow: 0 0 12px 3px rgba(140,200,0,0.45);
+            animation: brand-pulse 2.5s ease-in-out infinite;
           }
-          .gold-glow-avatar {
-            box-shadow: 0 0 10px 2px rgba(234,179,8,0.4);
-            animation: gold-pulse 3s ease-in-out infinite;
+          .brand-glow-avatar {
+            box-shadow: 0 0 10px 2px rgba(140,200,0,0.4);
+            animation: brand-pulse 3s ease-in-out infinite;
           }
-          .gold-glow-inner {
-            box-shadow: 0 0 8px 1px rgba(234,179,8,0.2);
-            animation: gold-border-pulse 3s ease-in-out infinite;
+          .brand-glow-inner {
+            box-shadow: 0 0 8px 1px rgba(140,200,0,0.2);
+            animation: brand-border-pulse 3s ease-in-out infinite;
           }
 
-          /* ── 1. GLOWING ARROW PULSE ─────────────────────────────────────── */
+          /* ── Glowing Arrow Pulse (brand green) ── */
           @keyframes arrowGlow {
             0%, 100% {
-              box-shadow: 0 0 8px 2px rgba(234,179,8,0.6),
-                          0 0 20px 6px rgba(234,179,8,0.3),
-                          0 0 40px 10px rgba(234,179,8,0.12);
-              background-color: #EAB308;
+              box-shadow: 0 0 8px 2px rgba(140,200,0,0.6),
+                          0 0 20px 6px rgba(140,200,0,0.3),
+                          0 0 40px 10px rgba(140,200,0,0.12);
+              background-color: #8cc800;
             }
             50% {
-              box-shadow: 0 0 18px 5px rgba(234,179,8,0.95),
-                          0 0 40px 12px rgba(234,179,8,0.55),
-                          0 0 70px 18px rgba(234,179,8,0.22);
-              background-color: #fde047;
+              box-shadow: 0 0 18px 5px rgba(140,200,0,0.95),
+                          0 0 40px 12px rgba(140,200,0,0.55),
+                          0 0 70px 18px rgba(140,200,0,0.22);
+              background-color: #aadc00;
             }
           }
-          .glow-arrow-pulse {
+          .brand-arrow-pulse {
             animation: arrowGlow 1.6s ease-in-out infinite !important;
           }
 
-          /* ── (existing styles kept below, unchanged) ─────────────────────── */
+          /* ── Why section glow and shimmer ── */
           .why-glow {
             position: relative;
             overflow: hidden;
@@ -1111,7 +1138,7 @@ const Dashboard = () => {
             position: absolute;
             top: -25%; left: -25%;
             width: 150%; height: 150%;
-            background: radial-gradient(circle at 20% 20%, rgba(34,197,94,0.10), transparent 8%),
+            background: radial-gradient(circle at 20% 20%, rgba(140,200,0,0.10), transparent 8%),
                         radial-gradient(circle at 80% 80%, rgba(96,165,250,0.05), transparent 10%);
             filter: blur(22px);
             transform: translate3d(0,0,0);
@@ -1147,11 +1174,40 @@ const Dashboard = () => {
           }
           .animate-fadeIn { animation: fadeIn 0.3s ease-in-out; }
 
-          .glow-cta { box-shadow: 0 0 28px rgba(234,179,8,0.35); }
-          .glow-cta:hover { box-shadow: 0 0 40px rgba(234,179,8,0.55); }
+          .glow-cta { box-shadow: 0 0 28px rgba(140,200,0,0.35); }
+          .glow-cta:hover { box-shadow: 0 0 40px rgba(140,200,0,0.55); }
 
-          .glow-arrow { box-shadow: 0 0 26px rgba(234,179,8,0.55); }
-          .glow-arrow:hover { box-shadow: 0 0 36px rgba(234,179,8,0.75); }
+          .glow-arrow { box-shadow: 0 0 26px rgba(140,200,0,0.55); }
+          .glow-arrow:hover { box-shadow: 0 0 36px rgba(140,200,0,0.75); }
+
+          /* ── Gradient Text ── */
+          .brand-gradient-text {
+            background: linear-gradient(180deg, var(--brand-highlight), var(--brand-green-light) 40%, var(--brand-green) 70%, var(--brand-green-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+          }
+
+          /* ── Utility classes for Tailwind custom colors ── */
+          .text-brand-green { color: var(--brand-green); }
+          .text-brand-green-light { color: var(--brand-green-light); }
+          .text-brand-gold { color: var(--brand-gold); }
+          .text-brand-gold-light { color: var(--brand-gold-light); }
+          .border-brand-green { border-color: var(--brand-green); }
+          .border-brand-green\/30 { border-color: rgba(140,200,0,0.3); }
+          .border-brand-green\/40 { border-color: rgba(140,200,0,0.4); }
+          .border-brand-green\/80 { border-color: rgba(140,200,0,0.8); }
+          .bg-brand-green-dark { background-color: var(--brand-green-dark); }
+          .bg-brand-green { background-color: var(--brand-green); }
+          .bg-brand-green\/10 { background-color: rgba(140,200,0,0.1); }
+          .bg-brand-green\/20 { background-color: rgba(140,200,0,0.2); }
+          .bg-brand-green\/50 { background-color: rgba(140,200,0,0.5); }
+          .from-brand-green-dark { --tw-gradient-from: var(--brand-green-dark); }
+          .to-brand-green { --tw-gradient-to: var(--brand-green); }
+          .via-brand-green-dark\/30 { --tw-gradient-via: rgba(60,120,0,0.3); }
+          .shadow-brand-green\/50 { box-shadow: 0 0 15px rgba(140,200,0,0.5); }
+          .shadow-brand-green\/40 { box-shadow: 0 0 15px rgba(140,200,0,0.4); }
+          .glow-brand { box-shadow: 0 4px 20px rgba(140,200,0,0.3); }
         `}</style>
       </div>
 

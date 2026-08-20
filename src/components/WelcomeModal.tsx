@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Gift, Bolt, Users } from "lucide-react";
 
@@ -67,6 +67,8 @@ export const WelcomeModal = () => {
         onEscapeKeyDown={handleEscapeKeyDown}
         onInteractOutside={handleInteractOutside}
       >
+        <DialogTitle className="sr-only">Welcome to {APP_NAME}</DialogTitle>
+        <DialogDescription className="sr-only">Complete onboarding steps to get your welcome bonus</DialogDescription>
         {/* Gradient header similar to PayGo */}
         <div className="relative rounded-t-lg overflow-hidden bg-gradient-to-r from-purple-500 to-pink-500 p-4">
           <div className="flex items-start justify-between">
