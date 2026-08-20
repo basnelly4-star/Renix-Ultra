@@ -212,6 +212,10 @@ const Withdraw = () => {
   if (loading || !profile) return null;
 
   const hasMinBalance = Number(profile.balance) >= MINIMUM_WITHDRAW;
+  const minBalanceProgress = hasMinBalance
+    ? Math.min(100, Math.round((Number(profile.balance) / MINIMUM_WITHDRAW) * 100))
+    : 0;
+  const minBalanceText = `₦${Math.min(Number(profile.balance), MINIMUM_WITHDRAW).toLocaleString()} / ₦${MINIMUM_WITHDRAW.toLocaleString()}`;
   const referralsCount = profile.total_referrals || 0;
   const hasReferrals = referralsCount >= 5;
   const referralsProgress = hasReferrals ? Math.min(100, Math.round((referralsCount / 5) * 100)) : 0;
@@ -285,14 +289,24 @@ const Withdraw = () => {
             </div>
             <ul className="space-y-2">
               <li
-                className={`flex items-center gap-2 text-sm ${flashRequirements && !hasMinBalance ? "text-red-500" : "text-[#94A3B8]"}`}
+                className={`text-sm ${flashRequirements && !hasMinBalance ? "text-red-500" : "text-[#94A3B8]"}`}
               >
-                {hasMinBalance ? (
-                  <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
-                ) : (
-                  <Clock className="w-4 h-4 text-[#FFB800]" />
-                )}
-                Minimum withdrawal balance: ₦180,000
+                <div className="flex items-center gap-2">
+                  {hasMinBalance ? (
+                    <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
+                  ) : (
+                    <Clock className="w-4 h-4 text-[#FFB800]" />
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span>Minimum withdrawal balance: ₦180,000</span>
+                      <span className="text-xs text-[#94A3B8] whitespace-nowrap">{minBalanceText}</span>
+                    </div>
+                    <div className="mt-2">
+                      <Progress value={minBalanceProgress} className="h-2 bg-[#0b1118]" />
+                    </div>
+                  </div>
+                </div>
               </li>
 
               <li
