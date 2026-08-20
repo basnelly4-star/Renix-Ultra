@@ -429,37 +429,69 @@ const Auth = () => {
       .google-shimmer-button {
         position: relative;
         isolation: isolate;
-        box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 18px 34px rgba(15, 23, 42, 0.45);
+        border: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, #111827 0%, #0f172a 100%);
+        box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 18px 34px rgba(15, 23, 42, 0.45);
+        overflow: hidden;
       }
 
       .google-shimmer-button::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border-radius: 14px;
+        padding: 1px;
+        background: conic-gradient(
+          from 0deg,
+          rgba(34, 197, 94, 0.2),
+          rgba(134, 239, 172, 0.8),
+          rgba(59, 130, 246, 0.8),
+          rgba(34, 197, 94, 0.2),
+          rgba(134, 239, 172, 0.8),
+          rgba(59, 130, 246, 0.8),
+          rgba(34, 197, 94, 0.2)
+        );
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        animation: google-border-spin 3s linear infinite;
+        z-index: 0;
+      }
+
+      .google-shimmer-button::after {
         content: "";
         position: absolute;
         inset: 0;
         background: linear-gradient(
           120deg,
           transparent 0%,
-          rgba(255,255,255,0.15) 30%,
-          rgba(255,255,255,0.6) 50%,
-          rgba(255,255,255,0.15) 70%,
+          rgba(255,255,255,0.12) 28%,
+          rgba(255,255,255,0.5) 45%,
+          rgba(255,255,255,0.1) 60%,
           transparent 100%
         );
         transform: translateX(-140%);
-        transition: transform 0.9s ease;
-        z-index: 0;
-      }
-
-      .google-shimmer-button:hover::before {
-        transform: translateX(140%);
+        animation: google-sheen 2.6s ease-in-out infinite;
+        z-index: 1;
       }
 
       .google-shimmer-button__shine {
         position: absolute;
         inset: 1px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, rgba(52, 211, 153, 0.22), rgba(59, 130, 246, 0.08), rgba(255,255,255,0.02));
-        filter: blur(12px);
-        opacity: 0.95;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(52, 211, 153, 0.18), rgba(59, 130, 246, 0.08), rgba(255,255,255,0.02));
+        z-index: 0;
+      }
+
+      @keyframes google-border-spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      @keyframes google-sheen {
+        0% { transform: translateX(-160%); }
+        55% { transform: translateX(160%); }
+        100% { transform: translateX(160%); }
       }
     `}</style>
   </>
