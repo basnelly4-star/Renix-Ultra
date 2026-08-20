@@ -472,11 +472,23 @@ const Dashboard = () => {
   const handleClaim = async () => {
     if (!canClaim || claiming) return;
 
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError || !session?.user?.id) {
+      navigate("/auth", { replace: true });
+      return;
+    }
+
+    const userId = session.user.id;
+
     setClaiming(true);
     try {
       const { error: claimError } = await supabase
         .from("claims")
-        .insert({ user_id: user.id, amount: 1000 });
+        .insert({ user_id: userId, amount: 1000 });
 
       if (claimError) throw claimError;
 
@@ -484,12 +496,12 @@ const Dashboard = () => {
       const { error: updateError } = await supabase
         .from("profiles")
         .update({ balance: newBalance })
-        .eq("id", user.id);
+        .eq("id", userId);
 
       if (updateError) throw updateError;
 
       await supabase.from("transactions").insert({
-        user_id: user.id,
+        user_id: userId,
         type: "credit",
         amount: 1000,
         description: "Mini claim bonus",
@@ -499,7 +511,7 @@ const Dashboard = () => {
       toast.success("₦1,000 claimed successfully!");
       setLastClaimTime(new Date());
       setCanClaim(false);
-      await loadProfile(user.id);
+      await loadProfile(userId);
 
       if (dailyRewardIntervalRef.current) {
         clearInterval(dailyRewardIntervalRef.current);
