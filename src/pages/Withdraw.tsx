@@ -112,11 +112,6 @@ const Withdraw = () => {
     // requirement checks
     const hasMinBalance = Number(profile.balance) >= MINIMUM_WITHDRAW;
     const hasReferrals = (profile.total_referrals || 0) >= 5;
-    const allInvitedComplete =
-      profile.invited_signup_complete ??
-      profile.invited_completed ??
-      profile.all_invited_completed ??
-      hasReferrals;
 
     // Check localStorage for daily tasks completion (matches Tasks.tsx logic)
     const isTaskClaimedToday = (taskId: number) => {
@@ -127,14 +122,18 @@ const Withdraw = () => {
       return today === lastClaimDate;
     };
 
-    
+    const TASK_COUNT = 17;
+    const tasksCompletedCount = (() => {
+      let c = 0;
+      for (let i = 1; i <= TASK_COUNT; i++) {
+        if (isTaskClaimedToday(i)) c += 1;
+      }
+      return c;
+    })();
 
-    if (
-      !hasMinBalance ||
-      !hasReferrals ||
-      !allInvitedComplete ||
-      !hasCompletedTasks
-    ) {
+    const hasCompletedTasks = tasksCompletedCount === TASK_COUNT;
+
+    if (!hasMinBalance || !hasReferrals || !hasCompletedTasks) {
       setFlashRequirements(true);
       setTimeout(() => setFlashRequirements(false), 10000);
       return;
@@ -215,13 +214,8 @@ const Withdraw = () => {
   const hasMinBalance = Number(profile.balance) >= MINIMUM_WITHDRAW;
   const referralsCount = profile.total_referrals || 0;
   const hasReferrals = referralsCount >= 5;
-  const referralsProgress = Math.min(100, Math.round((referralsCount / 5) * 100));
+  const referralsProgress = hasReferrals ? Math.min(100, Math.round((referralsCount / 5) * 100)) : 0;
 
-  const allInvitedComplete =
-    profile.invited_signup_complete ??
-    profile.invited_completed ??
-    profile.all_invited_completed ??
-    hasReferrals;
   // tasks completion check using same key as Tasks page
   const isTaskClaimedToday = (taskId: number) => {
     const lastClaim = localStorage.getItem(`task_${taskId}_claimed`);
@@ -230,8 +224,6 @@ const Withdraw = () => {
     const lastClaimDate = new Date(lastClaim).toDateString();
     return today === lastClaimDate;
   };
-  // TASK_COUNT, tasksCompletedCount, hasCompletedTasks and tasksProgress
-  // are computed here to keep UI and checks consistent
   const TASK_COUNT = 17;
   const tasksCompletedCount = (() => {
     let c = 0;
@@ -242,7 +234,14 @@ const Withdraw = () => {
   })();
 
   const hasCompletedTasks = tasksCompletedCount === TASK_COUNT;
-  const tasksProgress = Math.round((tasksCompletedCount / TASK_COUNT) * 100);
+  const tasksProgress = hasCompletedTasks ? Math.round((tasksCompletedCount / TASK_COUNT) * 100) : 0;
+  const withdrawalProgress = [
+    hasMinBalance,
+    hasReferrals,
+    hasCompletedTasks,
+  ].filter(Boolean).length;
+  const overallWithdrawalProgress =
+    (withdrawalProgress / 3) * 100;
 
   return (
     <div className="min-h-screen bg-[#06090d] pb-20">
@@ -277,6 +276,13 @@ const Withdraw = () => {
             <p className="text-sm font-semibold text-[#00FF55] mb-3">
               Withdrawal Requirements
             </p>
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2 text-xs text-[#94A3B8]">
+                <span>Overall progress</span>
+                <span>{Math.round(overallWithdrawalProgress)}%</span>
+              </div>
+              <Progress value={overallWithdrawalProgress} className="h-2 bg-[#0b1118]" />
+            </div>
             <ul className="space-y-2">
               <li
                 className={`flex items-center gap-2 text-sm ${flashRequirements && !hasMinBalance ? "text-red-500" : "text-[#94A3B8]"}`}
@@ -304,21 +310,10 @@ const Withdraw = () => {
                       <span className="text-xs text-[#94A3B8]">{referralsCount}/5</span>
                     </div>
                     <div className="mt-2">
-                      <Progress value={referralsProgress} />
+                      <Progress value={referralsProgress} className="h-2 bg-[#0b1118]" />
                     </div>
                   </div>
                 </div>
-              </li>
-
-              <li
-                className={`flex items-center gap-2 text-sm ${flashRequirements && !allInvitedComplete ? "text-red-500" : "text-[#94A3B8]"}`}
-              >
-                {allInvitedComplete ? (
-                  <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
-                ) : (
-                  <Clock className="w-4 h-4 text-[#FFB800]" />
-                )}
-                All invited users must complete full sign-up
               </li>
 
               <li
@@ -336,7 +331,7 @@ const Withdraw = () => {
                       <span className="text-xs text-[#94A3B8]">{tasksCompletedCount}/{TASK_COUNT}</span>
                     </div>
                     <div className="mt-2">
-                      <Progress value={tasksProgress} />
+                      <Progress value={tasksProgress} className="h-2 bg-[#0b1118]" />
                     </div>
                   </div>
                 </div>
