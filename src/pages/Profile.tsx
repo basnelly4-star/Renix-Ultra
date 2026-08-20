@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, User, Mail, Calendar, Gift } from "lucide-react";
+import { ArrowLeft, Mail, Calendar } from "lucide-react";
+import { ProfileIcon, RewardsIcon } from "@/assets/icons";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
@@ -76,7 +77,7 @@ const Profile = () => {
             </div>
 
             <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-              <Gift className="w-5 h-5 text-secondary" />
+              <RewardsIcon className="w-5 h-5 text-secondary" />
               <div>
                 <p className="text-sm text-muted-foreground">Referral Code</p>
                 <p className="font-medium">{profile.referral_code}</p>
@@ -84,7 +85,7 @@ const Profile = () => {
             </div>
 
             <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-              <User className="w-5 h-5 text-primary" />
+              <ProfileIcon className="w-5 h-5 text-primary" />
               <div>
                 <p className="text-sm text-muted-foreground">Total Referrals</p>
                 <p className="font-medium">{profile.total_referrals || 0}</p>

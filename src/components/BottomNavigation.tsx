@@ -1,12 +1,12 @@
-import { CreditCard, Gift, Home, PieChart, User } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
+import { HomeIcon, WithdrawIcon, HistoryIcon, RewardsIcon, ProfileIcon } from "@/assets/icons";
 
 const navItems = [
-  { label: "Home", to: "/dashboard", Icon: Home },
-  { label: "Loan", to: "/loan", Icon: CreditCard },
-  { label: "Finance", to: "/history", Icon: PieChart },
-  { label: "Reward", to: "/daily-rewards", Icon: Gift },
-  { label: "Me", to: "/profile", Icon: User },
+  { label: "Home", to: "/dashboard", Icon: HomeIcon },
+  { label: "Loan", to: "/loan", Icon: WithdrawIcon },
+  { label: "Finance", to: "/history", Icon: HistoryIcon },
+  { label: "Reward", to: "/daily-rewards", Icon: RewardsIcon },
+  { label: "Me", to: "/profile", Icon: ProfileIcon },
 ];
 
 const BottomNavigation = () => {

@@ -1,0 +1,15 @@
+export { HomeIcon } from "./HomeIcon";
+export { RewardsIcon } from "./RewardsIcon";
+export { ReferIcon } from "./ReferIcon";
+export { WithdrawIcon } from "./WithdrawIcon";
+export { TasksIcon } from "./TasksIcon";
+export { SupportIcon } from "./SupportIcon";
+export { SettingsIcon } from "./SettingsIcon";
+export { EliteIcon } from "./EliteIcon";
+export { LogoutIcon } from "./LogoutIcon";
+export { ProfileIcon } from "./ProfileIcon";
+export { HistoryIcon } from "./HistoryIcon";
+export { CommunityIcon } from "./CommunityIcon";
+export { KYCIcon } from "./KYCIcon";
+export { SecurityIcon } from "./SecurityIcon";
+export { LiveChatIcon } from "./LiveChatIcon";

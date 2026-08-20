@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, History, Gift, User, DollarSign, MessageCircle, Radio, CheckCircle2, Users, Send } from "lucide-react";
+import { Menu, X, Send } from "lucide-react";
+import { HistoryIcon, RewardsIcon, ProfileIcon, WithdrawIcon, CommunityIcon, TasksIcon, SupportIcon } from "@/assets/icons";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -24,13 +25,13 @@ export const FloatingActionButton = ({ position = "right", messageIntervalMs = 2
   const supportMessages = ["Support", "Contact Support", "Need Help"];
 
   const menuItems = [
-    { icon: CheckCircle2, label: "Tasks", path: "/tasks" },
-    { icon: History, label: "History", path: "/history" },
-    { icon: Gift, label: "Referrals", path: "/referrals" },
-    { icon: User, label: "Profile", path: "/profile" },
-    { icon: DollarSign, label: "Withdraw", path: "/withdraw" },
-    { icon: Users, label: "Community", path: "/community" },
-    { icon: MessageCircle, label: "Support", path: "/support" },
+    { icon: TasksIcon, label: "Tasks", path: "/tasks" },
+    { icon: HistoryIcon, label: "History", path: "/history" },
+    { icon: RewardsIcon, label: "Referrals", path: "/referrals" },
+    { icon: ProfileIcon, label: "Profile", path: "/profile" },
+    { icon: WithdrawIcon, label: "Withdraw", path: "/withdraw" },
+    { icon: CommunityIcon, label: "Community", path: "/community" },
+    { icon: SupportIcon, label: "Support", path: "/support" },
   ];
 
   const toggleMenu = () => {

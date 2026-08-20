@@ -6,30 +6,21 @@ import {
   Eye,
   EyeOff,
   Copy,
-  Gift,
   Banknote,
   CheckCircle2,
-  History,
-  Disc3,
-  Radio,
-  Shield,
-  TrendingUp,
-  Users,
-  Home,
-  Gamepad2,
-  User,
-  Send,
-  HelpCircle,
   ChevronLeft,
   ChevronRight,
+  ArrowRight,
+  Send,
+  Users,
 } from "lucide-react";
+import { RewardsIcon, WithdrawIcon, HistoryIcon, CommunityIcon, ProfileIcon, TasksIcon, SupportIcon, SecurityIcon } from "@/assets/icons";
 import { toast } from "sonner";
 import {
   recoverFromInvalidRefreshToken,
   supabase,
 } from "@/integrations/supabase/client";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
-import { ArrowRight } from "lucide-react";
 import { WelcomeModal } from "@/components/WelcomeModal";
 import { WithdrawalNotification } from "@/components/WithdrawalNotification";
 import { AddBalanceModal } from "@/components/AddBalanceModal";
@@ -563,7 +554,7 @@ const Dashboard = () => {
               </button>
               <div className="flex flex-col items-center px-6 pt-7 pb-2">
                 <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#0f1400] border-2 border-brand-green mb-4 brand-glow-icon">
-                  <Gift className="w-8 h-8 text-brand-green" />
+                  <RewardsIcon className="w-8 h-8 text-brand-green" />
                 </div>
                 <h2 className="text-xl font-bold text-white mb-2 text-center">
                   Don't Miss Your Daily Reward!
@@ -583,7 +574,7 @@ const Dashboard = () => {
                   }}
                   className="w-full rounded-full bg-gradient-to-r from-brand-green-dark to-brand-green text-black text-base font-bold py-3 mb-2 mt-1 brand-glow-btn hover:from-brand-green hover:to-brand-green-light"
                 >
-                  <Gift className="w-5 h-5 mr-2" /> Claim Daily Reward
+                  <RewardsIcon className="w-5 h-5 mr-2" /> Claim Daily Reward
                 </Button>
                 <button
                   className="w-full text-xs text-[#9aa08a] mt-1 mb-1 hover:underline"
@@ -733,7 +724,7 @@ const Dashboard = () => {
               className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <Gift className="w-5 h-5 text-brand-green" />
+              <RewardsIcon className="w-5 h-5 text-brand-green" />
               <span className="text-xs font-semibold">Refer & Earn</span>
             </button>
             <button
@@ -742,7 +733,7 @@ const Dashboard = () => {
               className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <Banknote className="w-5 h-5 text-brand-gold" />
+              <WithdrawIcon className="w-5 h-5 text-brand-gold" />
               <span className="text-xs font-semibold">Withdraw</span>
             </button>
             <button
@@ -751,7 +742,7 @@ const Dashboard = () => {
               className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <CheckCircle2 className="w-5 h-5 text-brand-green-light" />
+              <TasksIcon className="w-5 h-5 text-brand-green-light" />
               <span className="text-xs font-semibold">Tasks</span>
             </button>
             <button
@@ -760,7 +751,7 @@ const Dashboard = () => {
               className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <History className="w-5 h-5 text-brand-gold" />
+              <HistoryIcon className="w-5 h-5 text-brand-gold" />
               <span className="text-xs font-semibold">Loan</span>
             </button>
             <button
@@ -769,7 +760,7 @@ const Dashboard = () => {
               className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <TrendingUp className="w-5 h-5 text-brand-green" />
+              <CommunityIcon className="w-5 h-5 text-brand-green" />
               <span className="text-xs font-semibold">Invest</span>
             </button>
             <button
@@ -778,7 +769,7 @@ const Dashboard = () => {
               className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <HelpCircle className="w-5 h-5 text-brand-gold-light" />
+              <SupportIcon className="w-5 h-5 text-brand-gold-light" />
               <span className="text-xs font-semibold">Support</span>
             </button>
           </div>
@@ -789,7 +780,7 @@ const Dashboard = () => {
           <Card className="bg-[#0a0a00]/80 backdrop-blur-lg border-brand-green/30 p-4 brand-glow-card">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <Gift className="w-4 h-4 text-brand-green" />
+                <RewardsIcon className="w-4 h-4 text-brand-green" />
                 <h3 className="text-sm font-semibold">Referral Program</h3>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -878,7 +869,7 @@ const Dashboard = () => {
                 <div className="space-y-3 mb-6 relative z-10">
                   <div className="flex items-start gap-3 animate-slide-up-delay2">
                     <div className="w-10 h-10 bg-gradient-to-br from-brand-green to-brand-green-dark rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-green/40 brand-glow-icon">
-                      <Shield className="w-5 h-5 text-black" />
+                      <SecurityIcon className="w-5 h-5 text-black" />
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-1">
@@ -893,7 +884,7 @@ const Dashboard = () => {
 
                   <div className="flex items-start gap-3 animate-slide-up-delay3">
                     <div className="w-10 h-10 bg-gradient-to-br from-brand-green-light to-brand-green rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-green/40 brand-glow-icon">
-                      <TrendingUp className="w-5 h-5 text-black" />
+                      <CommunityIcon className="w-5 h-5 text-black" />
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-1">
