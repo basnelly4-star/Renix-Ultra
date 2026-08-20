@@ -1,15 +1,28 @@
-export { HomeIcon } from "./HomeIcon";
-export { RewardsIcon } from "./RewardsIcon";
-export { ReferIcon } from "./ReferIcon";
-export { WithdrawIcon } from "./WithdrawIcon";
-export { TasksIcon } from "./TasksIcon";
-export { SupportIcon } from "./SupportIcon";
-export { SettingsIcon } from "./SettingsIcon";
-export { EliteIcon } from "./EliteIcon";
-export { LogoutIcon } from "./LogoutIcon";
+export {
+  HomeIcon,
+  DailyTasksIcon as TasksIcon,
+  RewardsIcon,
+  ReferEarnIcon as ReferIcon,
+  WithdrawIcon,
+  SupportIcon,
+  SettingsIcon,
+  UltraEliteIcon as EliteIcon,
+  LogoutIcon,
+  KycVerificationIcon as KYCIcon,
+  SecurityIcon,
+  LiveChatIcon,
+  IconBadge,
+  AppIcon,
+  AppIconGrid,
+  RENIX_SHARED_TOKENS,
+  RENIX_PRESS_INTERACTION,
+  RENIX_ICON_META,
+  getIconMeta,
+  type AppIconMeta,
+  type IconColors,
+} from "./RenixIcons";
+
+// Legacy icons retained for non-Renix screens.
 export { ProfileIcon } from "./ProfileIcon";
 export { HistoryIcon } from "./HistoryIcon";
 export { CommunityIcon } from "./CommunityIcon";
-export { KYCIcon } from "./KYCIcon";
-export { SecurityIcon } from "./SecurityIcon";
-export { LiveChatIcon } from "./LiveChatIcon";
