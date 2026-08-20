@@ -1,43 +1,79 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Upload, Loader2, CheckCircle2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ArrowLeft, DollarSign, CheckCircle2, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
-import { CopyButton } from "@/components/CopyButton";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const WithdrawalActivation = () => {
+const Withdraw = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const withdrawalId = location.state?.withdrawalId;
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [flashRequirements, setFlashRequirements] = useState(false);
+  const [withdrawData, setWithdrawData] = useState({
+    amount: "",
+    accountName: "",
+    accountNumber: "",
+    bankName: "",
+  });
 
-  const [receipt, setReceipt] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const nigerianBanks = [
+    "Access Bank",
+    "Citibank",
+    "Ecobank",
+    "FCMB",
+    "Fidelity Bank",
+    "First Bank",
+    "GTBank",
+    "Heritage Bank",
+    "Keystone Bank",
+    "Kuda Bank",
+    "Opay",
+    "Palmpay",
+    "Polaris Bank",
+    "Providus Bank",
+    "Stanbic IBTC",
+    "Standard Chartered",
+    "Sterling Bank",
+    "SunTrust Bank",
+    "UBA",
+    "Union Bank",
+    "Unity Bank",
+    "Wema Bank",
+    "Zenith Bank",
+    "Moniepoint MFB",
+    "VFD MFB",
+  ].sort();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setReceipt(e.target.files[0]);
-    }
-  };
+  const MINIMUM_WITHDRAW = 180000;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    loadProfile();
+  }, []);
 
-    if (!receipt) {
-      toast.error("Please upload payment receipt");
-      return;
-    }
-
-    if (!withdrawalId) {
-      toast.error("Invalid withdrawal request");
-      return;
-    }
-
-    setUploading(true);
+  const loadProfile = async () => {
     try {
       const {
         data: { session },
@@ -47,38 +83,160 @@ const WithdrawalActivation = () => {
         return;
       }
 
-      // Upload receipt file to storage (placeholder - storing filename for now)
-      const receiptUrl = receipt.name;
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .maybeSingle();
 
-      // Update withdrawal record with activation payment details
-      const { error: updateError } = await supabase
-        .from("withdrawals")
-        .update({
-          status: "activation_payment_submitted",
-          activation_payment_amount: 6660,
-          activation_receipt_url: receiptUrl,
-          activation_submitted_at: new Date().toISOString(),
-        })
-        .eq("id", withdrawalId);
-
-      if (updateError) throw updateError;
-
-      // Also create a record in withdrawal_activation_payments for tracking
-      await supabase.from("withdrawal_activation_payments").insert({
-        user_id: session.user.id,
-        amount: 6660,
-        status: "pending",
-        receipt_url: receiptUrl,
-      });
-
-      toast.success("Payment submitted! Awaiting confirmation.");
-      navigate("/withdrawal-activation-pending", { state: { withdrawalId } });
+      if (error) throw error;
+      setProfile(data);
     } catch (error: any) {
-      toast.error("Failed to submit activation payment");
+      toast.error("Failed to load profile");
     } finally {
-      setUploading(false);
+      setLoading(false);
     }
   };
+
+  // =====  FIX: move task-checking logic into component scope =====
+  const isTaskClaimedToday = (taskId: number) => {
+    const lastClaim = localStorage.getItem(`task_${taskId}_claimed`);
+    if (!lastClaim) return false;
+    const today = new Date().toDateString();
+    const lastClaimDate = new Date(lastClaim).toDateString();
+    return today === lastClaimDate;
+  };
+
+  const TASK_COUNT = 17;
+  const tasksCompletedCount = (() => {
+    let c = 0;
+    for (let i = 1; i <= TASK_COUNT; i++) {
+      if (isTaskClaimedToday(i)) c += 1;
+    }
+    return c;
+  })();
+  const hasCompletedTasks = tasksCompletedCount === TASK_COUNT;
+  const tasksProgress = Math.round((tasksCompletedCount / TASK_COUNT) * 100);
+
+  // =====  end fix =====
+
+  const handleWithdrawWithoutReferral = () => {
+    setShowUpgradeModal(true);
+  };
+
+  const handleUpgradeConfirm = () => {
+    setShowUpgradeModal(false);
+    navigate("/upgrade");
+  };
+
+  const handleWithdraw = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // requirement checks
+    const hasMinBalance = Number(profile.balance) >= MINIMUM_WITHDRAW;
+    const hasReferrals = (profile.total_referrals || 0) >= 5;
+    const allInvitedComplete =
+      profile.invited_signup_complete ??
+      profile.invited_completed ??
+      profile.all_invited_completed ??
+      hasReferrals;
+
+    // (Uses the component‑level TASK_COUNT, tasksCompletedCount, hasCompletedTasks, etc.)
+    if (
+      !hasMinBalance ||
+      !hasReferrals ||
+      !allInvitedComplete ||
+      !hasCompletedTasks
+    ) {
+      setFlashRequirements(true);
+      setTimeout(() => setFlashRequirements(false), 10000);
+      return;
+    }
+
+    const amount = Math.floor(Number(withdrawData.amount));
+
+    // Validate whole numbers only (Naira)
+    if (
+      !Number.isInteger(Number(withdrawData.amount)) ||
+      withdrawData.amount.includes(".")
+    ) {
+      toast.error(
+        "Please enter whole numbers only (no decimals). Amount must be in Naira (₦).",
+      );
+      return;
+    }
+
+    if (amount < 1) {
+      toast.error("Amount must be at least ₦1");
+      return;
+    }
+
+    if (amount < MINIMUM_WITHDRAW) {
+      toast.error(
+        `Minimum withdrawal is ₦${MINIMUM_WITHDRAW.toLocaleString()}`,
+      );
+      return;
+    }
+
+    if (amount > profile.balance) {
+      toast.error("Insufficient balance");
+      return;
+    }
+
+    // Check referral requirement
+    if (profile.total_referrals < 5) {
+      toast.error("You need at least 5 active referrals to withdraw");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      // Create withdrawal record with awaiting_activation_payment status
+      const { data: withdrawal, error: withdrawalError } = await supabase
+        .from("withdrawals")
+        .insert({
+          user_id: session?.user.id,
+          amount,
+          account_name: withdrawData.accountName,
+          account_number: withdrawData.accountNumber,
+          bank_name: withdrawData.bankName,
+          type: "standard",
+          status: "awaiting_activation_payment",
+        })
+        .select()
+        .maybeSingle();
+
+      if (withdrawalError) throw withdrawalError;
+
+      // Redirect to payment activation page
+      navigate("/withdrawal-activation", {
+        state: { withdrawalId: withdrawal.id },
+      });
+    } catch (error: any) {
+      toast.error("Failed to submit withdrawal");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading || !profile) return null;
+
+  const hasMinBalance = Number(profile.balance) >= MINIMUM_WITHDRAW;
+  const referralsCount = profile.total_referrals || 0;
+  const hasReferrals = referralsCount >= 5;
+  const referralsProgress = Math.min(
+    100,
+    Math.round((referralsCount / 5) * 100),
+  );
+
+  const allInvitedComplete =
+    profile.invited_signup_complete ??
+    profile.invited_completed ??
+    profile.all_invited_completed ??
+    hasReferrals;
 
   return (
     <div className="min-h-screen bg-[#06090d] pb-20">
@@ -88,122 +246,255 @@ const WithdrawalActivation = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/withdraw")}
+            onClick={() => navigate("/dashboard")}
             className="text-[#04080a] hover:bg-black/20"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="text-2xl font-bold">Withdrawal Activation</h1>
+          <h1 className="text-2xl font-bold">Withdraw Funds</h1>
         </div>
       </div>
 
       <div className="p-6 space-y-6">
-        {/* Info Card */}
-        <Card className="bg-gradient-to-br from-[#00E53A]/10 to-[#00C836]/10 backdrop-blur-lg border border-[#00E53A]/30 p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
-          <div className="flex items-start gap-3 mb-4">
-            <div className="text-2xl">⚡</div>
-            <div className="flex-1">
-              <h2 className="text-xl font-bold text-[#00FF55] mb-2">
-                Account Authentication Charge
-              </h2>
-              <p className="text-sm text-[#94A3B8]">
-                To secure your account and comply with regulatory requirements,
-                a one-time verification fee is necessary. This fee facilitates
-                identity verification, prevents unauthorized access, and enables
-                seamless withdrawals.
+        <Card className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
+          <div className="flex items-center justify-between mb-6 p-4 bg-[#06090d] rounded-lg border border-[#00E53A]/20">
+            <div>
+              <p className="text-sm text-[#94A3B8]">Available Balance</p>
+              <p className="text-2xl font-bold text-[#00FF55]">
+                ₦{Number(profile.balance).toLocaleString()}
               </p>
             </div>
+            <DollarSign className="w-8 h-8 text-[#00E53A]" />
           </div>
-        </Card>
 
-        {/* Payment Details Card */}
-        <Card className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
-          <h3 className="text-xl font-bold mb-6 text-white">Payment Details</h3>
+          <div className="mb-6 p-4 bg-[#00E53A]/10 border border-[#00E53A]/30 rounded-lg">
+            <p className="text-sm font-semibold text-[#00FF55] mb-3">
+              Withdrawal Requirements
+            </p>
+            <ul className="space-y-2">
+              <li
+                className={`flex items-center gap-2 text-sm ${flashRequirements && !hasMinBalance ? "text-red-500" : "text-[#94A3B8]"}`}
+              >
+                {hasMinBalance ? (
+                  <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
+                ) : (
+                  <Clock className="w-4 h-4 text-[#FFB800]" />
+                )}
+                Minimum withdrawal balance: ₦180,000
+              </li>
 
-          <div className="space-y-4">
-            <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20">
-              <p className="text-sm text-[#94A3B8] mb-1">Amount</p>
-              <p className="text-2xl font-bold text-[#00FF55]">₦5,100</p>
-            </div>
+              <li
+                className={`text-sm ${flashRequirements && !hasReferrals ? "text-red-500" : "text-[#94A3B8]"}`}
+              >
+                <div className="flex items-center gap-2">
+                  {hasReferrals ? (
+                    <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
+                  ) : (
+                    <Clock className="w-4 h-4 text-[#FFB800]" />
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span>5 active referrals</span>
+                      <span className="text-xs text-[#94A3B8]">
+                        {referralsCount}/5
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      <Progress value={referralsProgress} />
+                    </div>
+                  </div>
+                </div>
+              </li>
 
-            <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20">
-              <div className="flex items-center justify-between mb-1">
-                <p className="text-sm text-[#94A3B8]">Account Number</p>
-                <CopyButton text="2089014213" />
-              </div>
-              <p className="text-xl font-bold font-mono text-white">
-                2089014213
-              </p>
-            </div>
+              <li
+                className={`flex items-center gap-2 text-sm ${flashRequirements && !allInvitedComplete ? "text-red-500" : "text-[#94A3B8]"}`}
+              >
+                {allInvitedComplete ? (
+                  <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
+                ) : (
+                  <Clock className="w-4 h-4 text-[#FFB800]" />
+                )}
+                All invited users must complete full sign-up
+              </li>
 
-            <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20">
-              <div className="flex items-center justify-between mb-1">
-                <p className="text-sm text-[#94A3B8]">Account Name</p>
-                <CopyButton text=" ESTHER STEPHEN" />
-              </div>
-              <p className="text-lg font-bold text-white">ESTHER STEPHEN</p>
-            </div>
-
-            <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20">
-              <div className="flex items-center justify-between mb-1">
-                <p className="text-sm text-[#94A3B8]">Bank</p>
-                <CopyButton text="KUDA" />
-              </div>
-              <p className="text-lg font-bold text-white">KUDA</p>
-            </div>
-
-            <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20 flex items-center justify-between">
-              <p className="text-sm text-[#94A3B8]">Verification ID</p>
-              <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-white">10077A</span>
-                <CopyButton text="10077A" />
-              </div>
-            </div>
+              <li
+                className={`text-sm ${flashRequirements && !hasCompletedTasks ? "text-red-500" : "text-[#94A3B8]"}`}
+              >
+                <div className="flex items-center gap-2">
+                  {hasCompletedTasks ? (
+                    <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
+                  ) : (
+                    <Clock className="w-4 h-4 text-[#FFB800]" />
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span>Complete all daily tasks</span>
+                      <span className="text-xs text-[#94A3B8]">
+                        {tasksCompletedCount}/{TASK_COUNT}
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      <Progress value={tasksProgress} />
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
           </div>
-        </Card>
 
-        {/* Upload Receipt Card */}
-        <Card className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
-          <h3 className="text-lg font-semibold mb-4 text-white">
-            Upload Payment Receipt
-          </h3>
+          {/* Withdraw Without Referral Button */}
+          <div className="mb-6">
+            <Button
+              onClick={handleWithdrawWithoutReferral}
+              className="w-full bg-gradient-to-r from-[#00E53A] to-[#00FF55] hover:from-[#00C836] hover:to-[#00E53A] text-[#04080a] font-bold shadow-[0_0_20px_rgba(0,229,58,0.3)] transition-all active:scale-[0.98]"
+            >
+              Withdraw Without Invitees
+            </Button>
+          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleWithdraw} className="space-y-4">
+            {profile.total_referrals < 5 && (
+              <div className="p-4 bg-[#FFB800]/10 border border-[#FFB800]/30 rounded-lg">
+                <p className="text-sm text-[#FFB800]">
+                  You have {profile.total_referrals} referrals. You need{" "}
+                  {5 - profile.total_referrals} more to withdraw.
+                </p>
+              </div>
+            )}
+
             <div className="space-y-2">
+              <Label htmlFor="amount" className="text-[#CBD5E1]">
+                Amount (₦) (Min: ₦{MINIMUM_WITHDRAW.toLocaleString()})
+              </Label>
               <Input
-                id="receipt"
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="bg-[#06090d] border-[#1e293b] text-white file:bg-[#00E53A] file:text-[#04080a] file:border-0 file:rounded-lg file:px-3 file:py-1 file:font-bold file:shadow-[0_0_10px_rgba(0,229,58,0.3)]"
+                id="amount"
+                type="number"
                 required
+                step="1"
+                min={MINIMUM_WITHDRAW}
+                max={Math.floor(profile.balance)}
+                value={withdrawData.amount}
+                onChange={(e) =>
+                  setWithdrawData({ ...withdrawData, amount: e.target.value })
+                }
+                placeholder="Enter amount (whole numbers only)"
+                className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
               />
-              {receipt && (
-                <p className="text-sm text-[#00FF55]">✓ {receipt.name}</p>
-              )}
+              <p className="text-xs text-[#94A3B8]">
+                Enter whole numbers only. No decimals allowed.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="accountName" className="text-[#CBD5E1]">
+                Account Name
+              </Label>
+              <Input
+                id="accountName"
+                type="text"
+                required
+                value={withdrawData.accountName}
+                onChange={(e) =>
+                  setWithdrawData({
+                    ...withdrawData,
+                    accountName: e.target.value,
+                  })
+                }
+                className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="accountNumber" className="text-[#CBD5E1]">
+                Account Number
+              </Label>
+              <Input
+                id="accountNumber"
+                type="text"
+                required
+                value={withdrawData.accountNumber}
+                onChange={(e) =>
+                  setWithdrawData({
+                    ...withdrawData,
+                    accountNumber: e.target.value,
+                  })
+                }
+                className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bankName" className="text-[#CBD5E1]">
+                Bank Name
+              </Label>
+              <Select
+                value={withdrawData.bankName}
+                onValueChange={(value) =>
+                  setWithdrawData({ ...withdrawData, bankName: value })
+                }
+                required
+              >
+                <SelectTrigger className="bg-[#06090d] border-[#1e293b] text-white focus:border-[#00E53A] focus:ring-[#00E53A]/20">
+                  <SelectValue placeholder="Select your bank" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#0b1118] border-[#1e293b] text-white">
+                  {nigerianBanks.map((bank) => (
+                    <SelectItem
+                      key={bank}
+                      value={bank}
+                      className="hover:bg-[#00E53A]/10 focus:bg-[#00E53A]/10"
+                    >
+                      {bank}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
-              disabled={uploading}
+              disabled={submitting}
             >
-              {uploading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                "Submit Payment"
-              )}
+              {submitting ? "Submitting..." : "Submit Withdrawal"}
             </Button>
           </form>
         </Card>
       </div>
+
+      {/* Upgrade Modal */}
+      <Dialog open={showUpgradeModal} onOpenChange={setShowUpgradeModal}>
+        <DialogContent className="sm:max-w-[425px] bg-[#0b1118] border border-[#00E53A]/30 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-white">
+              Upgrade Your Account
+            </DialogTitle>
+            <DialogDescription className="text-[#94A3B8]">
+              You need to upgrade your account before withdrawing without
+              referrals.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowUpgradeModal(false)}
+              className="border-[#00E53A]/30 text-[#00FF55] hover:bg-[#00E53A]/10"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpgradeConfirm}
+              className="bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-bold shadow-[0_0_20px_rgba(0,229,58,0.3)]"
+            >
+              Go to Upgrade
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <FloatingActionButton />
     </div>
   );
 };
 
-export default WithdrawalActivation;
+export default Withdraw;
