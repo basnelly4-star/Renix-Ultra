@@ -127,17 +127,7 @@ const Withdraw = () => {
       return today === lastClaimDate;
     };
 
-    const TASK_COUNT = 17;
-    const tasksCompletedCount = (() => {
-      let c = 0;
-      for (let i = 1; i <= TASK_COUNT; i++) {
-        if (isTaskClaimedToday(i)) c += 1;
-      }
-      return c;
-    })();
-
-    const hasCompletedTasks = tasksCompletedCount === TASK_COUNT;
-    const tasksProgress = Math.round((tasksCompletedCount / TASK_COUNT) * 100);
+    
 
     if (
       !hasMinBalance ||
@@ -241,7 +231,18 @@ const Withdraw = () => {
     return today === lastClaimDate;
   };
   // TASK_COUNT, tasksCompletedCount, hasCompletedTasks and tasksProgress
-  // are computed above to keep UI and checks consistent
+  // are computed here to keep UI and checks consistent
+  const TASK_COUNT = 17;
+  const tasksCompletedCount = (() => {
+    let c = 0;
+    for (let i = 1; i <= TASK_COUNT; i++) {
+      if (isTaskClaimedToday(i)) c += 1;
+    }
+    return c;
+  })();
+
+  const hasCompletedTasks = tasksCompletedCount === TASK_COUNT;
+  const tasksProgress = Math.round((tasksCompletedCount / TASK_COUNT) * 100);
 
   return (
     <div className="min-h-screen bg-[#06090d] pb-20">
