@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Download, X } from "lucide-react";
+
+const DISMISS_KEY = "renix-install-prompt-dismissed";
+const REAPPEAR_DELAY_MS = 5 * 60 * 1000;
 
 type BeforeInstallPromptEvent = Event & {
   readonly platforms: string[];
@@ -23,15 +26,68 @@ const isIos = () => {
   return /iphone|ipad|ipod/i.test(ua) && !/crios|fxios|opera mini/i.test(ua);
 };
 
+const getDismissUntil = (): number => {
+  if (typeof window === "undefined") return 0;
+
+  const value = Number(localStorage.getItem(DISMISS_KEY));
+  return Number.isFinite(value) ? value : 0;
+};
+
 const InstallPwaPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [hasInstalled, setHasInstalled] = useState(false);
+  const reopenTimeoutRef = useRef<number | null>(null);
+
+  const clearReopenTimer = () => {
+    if (reopenTimeoutRef.current !== null) {
+      window.clearTimeout(reopenTimeoutRef.current);
+      reopenTimeoutRef.current = null;
+    }
+  };
+
+  const scheduleReopen = () => {
+    clearReopenTimer();
+
+    if (typeof window === "undefined" || isStandaloneApp()) return;
+
+    const reopenAt = Date.now() + REAPPEAR_DELAY_MS;
+    localStorage.setItem(DISMISS_KEY, String(reopenAt));
+
+    reopenTimeoutRef.current = window.setTimeout(() => {
+      const dismissUntil = getDismissUntil();
+      const shouldReopen = dismissUntil <= Date.now();
+
+      if (shouldReopen && !isStandaloneApp()) {
+        localStorage.removeItem(DISMISS_KEY);
+        setShowPrompt(true);
+      }
+    }, REAPPEAR_DELAY_MS);
+  };
 
   useEffect(() => {
     if (isStandaloneApp()) {
       setHasInstalled(true);
+      setShowPrompt(false);
+      clearReopenTimer();
       return;
+    }
+
+    const dismissUntil = getDismissUntil();
+    const isTemporarilyDismissed = dismissUntil > Date.now();
+
+    if (isTemporarilyDismissed) {
+      setShowPrompt(false);
+      const remainingDelay = Math.max(dismissUntil - Date.now(), 0);
+      reopenTimeoutRef.current = window.setTimeout(() => {
+        localStorage.removeItem(DISMISS_KEY);
+        setShowPrompt(true);
+      }, remainingDelay);
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(DISMISS_KEY);
     }
 
     const handler = (e: Event) => {
@@ -45,6 +101,10 @@ const InstallPwaPrompt = () => {
     const appInstalled = () => {
       setHasInstalled(true);
       setShowPrompt(false);
+      clearReopenTimer();
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(DISMISS_KEY);
+      }
     };
 
     window.addEventListener("beforeinstallprompt", handler);
@@ -57,6 +117,7 @@ const InstallPwaPrompt = () => {
     return () => {
       window.removeEventListener("beforeinstallprompt", handler);
       window.removeEventListener("appinstalled", appInstalled);
+      clearReopenTimer();
     };
   }, []);
 
@@ -67,14 +128,23 @@ const InstallPwaPrompt = () => {
     }
   }, []);
 
+  const dismiss = () => {
+    setShowPrompt(false);
+    scheduleReopen();
+  };
+
   const installApp = async () => {
     if (deferredPrompt) {
       try {
         await deferredPrompt.prompt();
         const choice = await deferredPrompt.userChoice;
         setShowPrompt(false);
+        clearReopenTimer();
         if (choice.outcome === "accepted") {
           setHasInstalled(true);
+          if (typeof window !== "undefined") {
+            localStorage.removeItem(DISMISS_KEY);
+          }
         }
       } catch (error) {
         console.warn("PWA install prompt failed", error);
@@ -100,16 +170,18 @@ const InstallPwaPrompt = () => {
     setShowPrompt(false);
   };
 
-  const dismiss = () => {
-    setShowPrompt(false);
-  };
-
   if (!showPrompt || hasInstalled) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4 py-6">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4 py-6"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) dismiss();
+      }}
+    >
       <Card className="relative w-full max-w-md rounded-3xl border border-[#EAB308]/30 bg-[#0f0f0f]/95 p-6 shadow-[0_0_30px_rgba(234,179,8,0.3)] backdrop-blur-xl">
         <button
+          type="button"
           onClick={dismiss}
           className="absolute right-4 top-4 rounded-full border border-[#EAB308]/30 bg-[#111111] p-2 text-muted-foreground hover:text-white"
           aria-label="Close install prompt"
