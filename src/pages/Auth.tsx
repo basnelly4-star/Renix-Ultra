@@ -254,6 +254,21 @@ const Auth = () => {
     }
   };
 
+  const GoogleAuthButton = ({ label = "Continue with Google" }: { label?: string }) => (
+    <button
+      type="button"
+      onClick={handleGoogleAuth}
+      disabled={isLoading}
+      className="google-shimmer-button group relative w-full overflow-hidden rounded-xl border border-white/10 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.18),_transparent_38%),linear-gradient(135deg,#1a1a1a_0%,#111827_45%,#0f172a_100%)] px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(134,239,172,0.3)] disabled:cursor-not-allowed disabled:opacity-70"
+    >
+      <span className="google-shimmer-button__shine" aria-hidden="true" />
+      <span className="relative z-10 flex items-center justify-center gap-2">
+        <Chrome className="h-4 w-4" />
+        {label}
+      </span>
+    </button>
+  );
+
   return (
     <>
     <div className="min-h-screen liquid-bg flex items-center justify-center p-4">
@@ -273,16 +288,7 @@ const Auth = () => {
 
             <TabsContent value="signup">
               <div className="mb-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleGoogleAuth}
-                  disabled={isLoading}
-                  className="w-full flex items-center justify-center gap-2 border-border bg-background/60 hover:bg-background"
-                >
-                  <Chrome className="h-4 w-4" />
-                  Continue with Google
-                </Button>
+                <GoogleAuthButton label="Continue with Google" />
               </div>
 
               <div className="relative mb-4">
@@ -360,16 +366,7 @@ const Auth = () => {
 
             <TabsContent value="login">
               <div className="mb-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleGoogleAuth}
-                  disabled={isLoading}
-                  className="w-full flex items-center justify-center gap-2 border-border bg-background/60 hover:bg-background"
-                >
-                  <Chrome className="h-4 w-4" />
-                  Continue with Google
-                </Button>
+                <GoogleAuthButton label="Continue with Google" />
               </div>
 
               <div className="relative mb-4">
@@ -428,6 +425,43 @@ const Auth = () => {
       </Card>
     </div>
     <FloatingActionButton position="left" messageIntervalMs={10000} supportOnly />
+    <style>{`
+      .google-shimmer-button {
+        position: relative;
+        isolation: isolate;
+        box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 18px 34px rgba(15, 23, 42, 0.45);
+      }
+
+      .google-shimmer-button::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          120deg,
+          transparent 0%,
+          rgba(255,255,255,0.15) 30%,
+          rgba(255,255,255,0.6) 50%,
+          rgba(255,255,255,0.15) 70%,
+          transparent 100%
+        );
+        transform: translateX(-140%);
+        transition: transform 0.9s ease;
+        z-index: 0;
+      }
+
+      .google-shimmer-button:hover::before {
+        transform: translateX(140%);
+      }
+
+      .google-shimmer-button__shine {
+        position: absolute;
+        inset: 1px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(52, 211, 153, 0.22), rgba(59, 130, 246, 0.08), rgba(255,255,255,0.02));
+        filter: blur(12px);
+        opacity: 0.95;
+      }
+    `}</style>
   </>
   );
 };
