@@ -14,7 +14,16 @@ import {
   Send,
   Users,
 } from "lucide-react";
-import { RewardsIcon, WithdrawIcon, HistoryIcon, CommunityIcon, ProfileIcon, TasksIcon, SupportIcon, SecurityIcon } from "@/assets/icons";
+import {
+  RewardsIcon,
+  WithdrawIcon,
+  HistoryIcon,
+  CommunityIcon,
+  ProfileIcon,
+  TasksIcon,
+  SupportIcon,
+  SecurityIcon,
+} from "@/assets/icons";
 import { toast } from "sonner";
 import {
   recoverFromInvalidRefreshToken,
@@ -534,7 +543,7 @@ const Dashboard = () => {
 
   return (
     <div
-      className="min-h-screen liquid-bg pb-20"
+      className="min-h-screen brand-bg pb-20"
       style={{ position: "relative", zIndex: 1 }}
     >
       <WelcomeModal />
@@ -542,24 +551,24 @@ const Dashboard = () => {
 
       {/* Daily Reward Notification Popup */}
       {showDailyRewardNotif && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 animate-in fade-in">
           <div className="relative w-full max-w-xs sm:max-w-sm mx-auto">
-            <Card className="rounded-2xl border border-brand-green/30 bg-[#0a0a00] shadow-2xl p-0 overflow-hidden brand-glow-card">
+            <Card className="rounded-2xl border border-brand-green/40 bg-white shadow-2xl p-0 overflow-hidden brand-glow-card">
               <button
-                className="absolute top-3 right-3 text-brand-green hover:text-brand-green-light text-lg font-bold z-10"
+                className="absolute top-3 right-3 text-brand-green-dark hover:text-brand-green text-lg font-bold z-10"
                 onClick={() => setShowDailyRewardNotif(false)}
                 aria-label="Close"
               >
                 ×
               </button>
               <div className="flex flex-col items-center px-6 pt-7 pb-2">
-                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#0f1400] border-2 border-brand-green mb-4 brand-glow-icon">
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-brand-green/10 border-2 border-brand-green mb-4 brand-glow-icon">
                   <RewardsIcon className="w-8 h-8 text-brand-green" />
                 </div>
-                <h2 className="text-xl font-bold text-white mb-2 text-center">
+                <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
                   Don't Miss Your Daily Reward!
                 </h2>
-                <p className="text-sm text-brand-green-light text-center mb-4">
+                <p className="text-sm text-brand-green-dark text-center mb-4">
                   Claim your{" "}
                   <span className="font-bold text-brand-green">
                     daily bonus
@@ -572,12 +581,12 @@ const Dashboard = () => {
                     setShowDailyRewardNotif(false);
                     navigate("/daily-rewards");
                   }}
-                  className="w-full rounded-full bg-gradient-to-r from-brand-green-dark to-brand-green text-black text-base font-bold py-3 mb-2 mt-1 brand-glow-btn hover:from-brand-green hover:to-brand-green-light"
+                  className="w-full rounded-full bg-gradient-to-r from-brand-green-dark to-brand-green text-white text-base font-bold py-3 mb-2 mt-1 brand-glow-btn hover:from-brand-green hover:to-brand-green-light"
                 >
                   <RewardsIcon className="w-5 h-5 mr-2" /> Claim Daily Reward
                 </Button>
                 <button
-                  className="w-full text-xs text-[#9aa08a] mt-1 mb-1 hover:underline"
+                  className="w-full text-xs text-gray-500 mt-1 mb-1 hover:underline"
                   onClick={() => setShowDailyRewardNotif(false)}
                 >
                   Remind me later
@@ -618,7 +627,7 @@ const Dashboard = () => {
         style={{ pointerEvents: "auto", position: "relative", zIndex: 2 }}
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-background/20 backdrop-blur-lg flex items-center justify-center text-lg font-bold brand-glow-avatar">
+          <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center text-lg font-bold brand-glow-avatar">
             {profile.full_name?.charAt(0) || "U"}
           </div>
           <div>
@@ -634,10 +643,10 @@ const Dashboard = () => {
       >
         {/* Balance Card */}
         <div className="px-4">
-          <Card className="bg-gradient-to-br from-[#0a0a00] to-[#0f1400] backdrop-blur-lg border-brand-green/30 p-4 brand-glow-card animate-fade-in">
+          <Card className="bg-white/90 backdrop-blur-lg border-brand-green/30 p-4 brand-glow-card animate-fade-in shadow-lg">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-[#9aa08a]">Your Balance</p>
+                <p className="text-sm text-gray-600">Your Balance</p>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -659,7 +668,7 @@ const Dashboard = () => {
               <Button
                 onClick={handleClaim}
                 disabled={!canClaim || claiming}
-                className="w-full bg-gradient-to-r from-brand-green-dark to-brand-green hover:opacity-90 text-sm py-2 brand-glow-btn"
+                className="w-full bg-gradient-to-r from-brand-green-dark to-brand-green hover:opacity-90 text-white text-sm py-2 brand-glow-btn"
               >
                 {claiming
                   ? "Claiming..."
@@ -673,7 +682,7 @@ const Dashboard = () => {
 
         {/* Support Telegram Card */}
         <div className="px-4">
-          <Card className="bg-gradient-to-r from-brand-green/10 to-brand-green-dark/10 border-brand-green/20 p-3 brand-glow-card overflow-hidden">
+          <Card className="bg-white/80 border-brand-green/20 p-3 brand-glow-card overflow-hidden shadow-sm">
             <div className="flex items-center justify-between gap-2">
               <div
                 className="flex items-center gap-2 flex-1 min-w-0"
@@ -687,8 +696,8 @@ const Dashboard = () => {
                 </div>
 
                 <div className="text-xs min-w-0">
-                  <p className="font-semibold text-foreground">Support</p>
-                  <p className="text-[#9aa08a] truncate">
+                  <p className="font-semibold text-gray-800">Support</p>
+                  <p className="text-gray-500 truncate">
                     We're here to help you
                   </p>
                 </div>
@@ -696,7 +705,7 @@ const Dashboard = () => {
 
               <Button
                 onClick={() => window.open("https://t.me/Renix-Ultra1")}
-                className="bg-gradient-to-r from-brand-green-dark to-brand-green hover:opacity-90 text-xs px-3 py-1 h-auto flex-shrink-0 brand-glow-btn"
+                className="bg-gradient-to-r from-brand-green-dark to-brand-green hover:opacity-90 text-white text-xs px-3 py-1 h-auto flex-shrink-0 brand-glow-btn"
               >
                 Chat Us
               </Button>
@@ -721,77 +730,87 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => navigate("/referrals")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-white/80 hover:bg-white border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action shadow-sm"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <RewardsIcon className="w-5 h-5 text-brand-green" />
-              <span className="text-xs font-semibold">Refer & Earn</span>
+              <span className="text-xs font-semibold text-gray-800">
+                Refer & Earn
+              </span>
             </button>
             <button
               type="button"
               onClick={() => navigate("/withdraw")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-white/80 hover:bg-white border-brand-gold/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action shadow-sm"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <WithdrawIcon className="w-5 h-5 text-brand-gold" />
-              <span className="text-xs font-semibold">Withdraw</span>
+              <span className="text-xs font-semibold text-gray-800">
+                Withdraw
+              </span>
             </button>
             <button
               type="button"
               onClick={() => navigate("/tasks")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-white/80 hover:bg-white border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action shadow-sm"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <TasksIcon className="w-5 h-5 text-brand-green-light" />
-              <span className="text-xs font-semibold">Tasks</span>
+              <span className="text-xs font-semibold text-gray-800">Tasks</span>
             </button>
             <button
               type="button"
               onClick={() => navigate("/loan")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-white/80 hover:bg-white border-brand-gold/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action shadow-sm"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <HistoryIcon className="w-5 h-5 text-brand-gold" />
-              <span className="text-xs font-semibold">Loan</span>
+              <span className="text-xs font-semibold text-gray-800">Loan</span>
             </button>
             <button
               type="button"
               onClick={() => navigate("/broadcast")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-white/80 hover:bg-white border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action shadow-sm"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <CommunityIcon className="w-5 h-5 text-brand-green" />
-              <span className="text-xs font-semibold">Invest</span>
+              <span className="text-xs font-semibold text-gray-800">
+                Invest
+              </span>
             </button>
             <button
               type="button"
               onClick={() => navigate("/support")}
-              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-[#0a0a00]/80 hover:bg-[#0a0a00] border-brand-green/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action"
+              className="h-20 flex flex-col gap-1.5 items-center justify-center rounded-lg border bg-white/80 hover:bg-white border-brand-gold/30 transition-all active:scale-95 touch-manipulation cursor-pointer min-h-[44px] brand-glow-action shadow-sm"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <SupportIcon className="w-5 h-5 text-brand-gold-light" />
-              <span className="text-xs font-semibold">Support</span>
+              <span className="text-xs font-semibold text-gray-800">
+                Support
+              </span>
             </button>
           </div>
         </div>
 
         {/* Referral Card */}
         <div className="px-4">
-          <Card className="bg-[#0a0a00]/80 backdrop-blur-lg border-brand-green/30 p-4 brand-glow-card">
+          <Card className="bg-white/90 backdrop-blur-lg border-brand-green/30 p-4 brand-glow-card shadow-lg">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <RewardsIcon className="w-4 h-4 text-brand-green" />
-                <h3 className="text-sm font-semibold">Referral Program</h3>
+                <h3 className="text-sm font-semibold text-gray-800">
+                  Referral Program
+                </h3>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-xs text-[#9aa08a]">Total Referrals</p>
+                  <p className="text-xs text-gray-500">Total Referrals</p>
                   <p className="text-xl font-bold text-brand-green">
                     {profile.total_referrals || 0}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-[#9aa08a]">
+                  <p className="text-xs text-gray-500">
                     Total Referral Earnings
                   </p>
                   <p className="text-xl font-bold brand-gradient-text">
@@ -802,18 +821,18 @@ const Dashboard = () => {
                   </p>
                 </div>
               </div>
-              <div className="bg-[#0f1400] p-3 rounded-lg brand-glow-inner">
-                <p className="text-xs text-[#9aa08a] mb-1.5">
+              <div className="bg-brand-green/5 p-3 rounded-lg brand-glow-inner border border-brand-green/20">
+                <p className="text-xs text-gray-500 mb-1.5">
                   Your Referral Link
                 </p>
                 <div className="flex items-center gap-2">
-                  <code className="flex-1 text-[10px] font-bold text-foreground truncate">
+                  <code className="flex-1 text-[10px] font-bold text-gray-700 truncate">
                     {window.location.origin}/auth?ref={profile.referral_code}
                   </code>
                   <Button
                     size="sm"
                     onClick={copyReferralCode}
-                    className="bg-gradient-to-r from-brand-green-dark to-brand-green hover:opacity-90 flex-shrink-0 h-7 w-7 p-0 brand-glow-btn"
+                    className="bg-gradient-to-r from-brand-green-dark to-brand-green hover:opacity-90 text-white flex-shrink-0 h-7 w-7 p-0 brand-glow-btn"
                   >
                     <Copy className="w-3 h-3" />
                   </Button>
@@ -826,7 +845,7 @@ const Dashboard = () => {
         {/* Why Renix-Ultra / Testimonials Swipeable Section */}
         <div className="mt-6">
           <div
-            className="why-glow bg-gradient-to-br from-black via-brand-green-dark/30 to-black rounded-2xl p-6 mb-6 mx-2 border border-brand-green/40 relative overflow-hidden cursor-grab active:cursor-grabbing transition-all duration-300 brand-glow-section"
+            className="why-glow bg-gradient-to-br from-white via-brand-green/5 to-white rounded-2xl p-6 mb-6 mx-2 border border-brand-green/30 relative overflow-hidden cursor-grab active:cursor-grabbing transition-all duration-300 brand-glow-section shadow-lg"
             onTouchStart={(e) => {
               touchStartRef.current = e.touches[0].clientX;
             }}
@@ -853,14 +872,14 @@ const Dashboard = () => {
                       setShowTestimonials(true);
                       resetWhySlideshow();
                     }}
-                    className="bg-brand-green hover:bg-brand-green-light text-black rounded-full p-2 border border-brand-green/80 transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
+                    className="bg-brand-green hover:bg-brand-green-light text-white rounded-full p-2 border border-brand-green/80 transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
                     aria-label="View testimonials"
                   >
                     <ChevronRight className="w-6 h-6" />
                   </button>
                 </div>
                 <div className="text-center mb-4 relative z-10">
-                  <h2 className="text-2xl font-bold text-white mb-2 animate-slide-up">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2 animate-slide-up">
                     Why Renix-Ultra⁉️
                   </h2>
                   <div className="w-16 h-1 bg-gradient-to-r from-brand-green via-brand-green-light to-brand-green-dark mx-auto mb-4 shadow-lg shadow-brand-green/50 animate-slide-up-delay"></div>
@@ -869,13 +888,13 @@ const Dashboard = () => {
                 <div className="space-y-3 mb-6 relative z-10">
                   <div className="flex items-start gap-3 animate-slide-up-delay2">
                     <div className="w-10 h-10 bg-gradient-to-br from-brand-green to-brand-green-dark rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-green/40 brand-glow-icon">
-                      <SecurityIcon className="w-5 h-5 text-black" />
+                      <SecurityIcon className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-white font-semibold mb-1">
+                      <h3 className="text-gray-800 font-semibold mb-1">
                         100% Secure
                       </h3>
-                      <p className="text-brand-green-light text-sm">
+                      <p className="text-gray-600 text-sm">
                         Bank-level encryption protects your transactions and
                         personal data
                       </p>
@@ -884,13 +903,13 @@ const Dashboard = () => {
 
                   <div className="flex items-start gap-3 animate-slide-up-delay3">
                     <div className="w-10 h-10 bg-gradient-to-br from-brand-green-light to-brand-green rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-green/40 brand-glow-icon">
-                      <CommunityIcon className="w-5 h-5 text-black" />
+                      <CommunityIcon className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-white font-semibold mb-1">
+                      <h3 className="text-gray-800 font-semibold mb-1">
                         Lightning Fast
                       </h3>
-                      <p className="text-brand-green-light text-sm">
+                      <p className="text-gray-600 text-sm">
                         Instant withdrawals and seamless transactions in seconds
                       </p>
                     </div>
@@ -898,13 +917,13 @@ const Dashboard = () => {
 
                   <div className="flex items-start gap-3 animate-slide-up-delay4">
                     <div className="w-10 h-10 bg-brand-green rounded-full flex items-center justify-center flex-shrink-0">
-                      <Users className="w-5 h-5 text-black" />
+                      <Users className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-white font-semibold mb-1">
+                      <h3 className="text-gray-800 font-semibold mb-1">
                         100% Reliable
                       </h3>
-                      <p className="text-brand-green-light text-sm">
+                      <p className="text-gray-600 text-sm">
                         24/7 support and guaranteed service uptime
                       </p>
                     </div>
@@ -912,7 +931,7 @@ const Dashboard = () => {
                 </div>
 
                 <Link to="/referrals">
-                  <Button className="w-full bg-gradient-to-r from-brand-green to-brand-green-light hover:from-brand-green-dark hover:to-brand-green text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(140,200,0,0.45)] hover:shadow-[0_0_40px_rgba(140,200,0,0.65)] glow-cta brand-glow-btn">
+                  <Button className="w-full bg-gradient-to-r from-brand-green to-brand-green-light hover:from-brand-green-dark hover:to-brand-green text-white font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(140,200,0,0.45)] hover:shadow-[0_0_40px_rgba(140,200,0,0.65)] glow-cta brand-glow-btn">
                     Invite & Earn Now
                   </Button>
                 </Link>
@@ -928,42 +947,42 @@ const Dashboard = () => {
                       setShowTestimonials(false);
                       resetWhySlideshow();
                     }}
-                    className="bg-brand-green hover:bg-brand-green-light text-black rounded-full p-2 border border-brand-green/80 transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
+                    className="bg-brand-green hover:bg-brand-green-light text-white rounded-full p-2 border border-brand-green/80 transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
                     aria-label="Back to Why Renix-Ultra"
                   >
                     <ChevronLeft className="w-6 h-6" />
                   </button>
                 </div>
                 <div className="text-center mb-4 relative z-10">
-                  <h2 className="text-2xl font-bold text-white mb-2">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
                     Member Success Stories
                   </h2>
                   <div className="w-16 h-1 bg-gradient-to-r from-brand-green via-brand-green-light to-brand-green-dark mx-auto mb-4 shadow-lg shadow-brand-green/50"></div>
                 </div>
 
                 {/* Testimonial Slide */}
-                <div className="relative z-10 bg-gradient-to-r from-brand-green/20 to-brand-green-dark/10 rounded-xl p-4 mb-4 border border-brand-green/30 brand-glow-inner">
+                <div className="relative z-10 bg-gradient-to-r from-brand-green/10 to-brand-green-dark/5 rounded-xl p-4 mb-4 border border-brand-green/30 brand-glow-inner">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-brand-green to-brand-green-dark rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-green/40 brand-glow-icon">
-                      <span className="text-sm font-bold text-black">
+                      <span className="text-sm font-bold text-white">
                         {testimonials[testimonialIndex].name.charAt(0)}
                       </span>
                     </div>
 
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="text-white font-bold text-sm">
+                        <p className="text-gray-800 font-bold text-sm">
                           {testimonials[testimonialIndex].name}
                         </p>
                         <CheckCircle2 className="w-4 h-4 text-brand-green" />
                       </div>
-                      <p className="text-brand-green-light text-xs mb-2">
+                      <p className="text-gray-600 text-xs mb-2">
                         📍 {testimonials[testimonialIndex].location}
                       </p>
-                      <p className="text-brand-green font-bold italic text-sm mb-2">
+                      <p className="text-brand-green-dark font-bold italic text-sm mb-2">
                         "{testimonials[testimonialIndex].quote}"
                       </p>
-                      <p className="text-brand-gold-light font-bold text-sm">
+                      <p className="text-brand-gold font-bold text-sm">
                         Withdrawn: {testimonials[testimonialIndex].amount}
                       </p>
                     </div>
@@ -980,7 +999,7 @@ const Dashboard = () => {
                           testimonials.length,
                       )
                     }
-                    className="bg-brand-green/50 hover:bg-brand-green text-brand-green-light hover:text-black rounded-full p-2 shadow-[0_0_25px_rgba(140,200,0,0.45)] hover:shadow-[0_0_35px_rgba(140,200,0,0.6)] transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
+                    className="bg-brand-green/50 hover:bg-brand-green text-white hover:text-white rounded-full p-2 shadow-[0_0_25px_rgba(140,200,0,0.45)] hover:shadow-[0_0_35px_rgba(140,200,0,0.6)] transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
                     aria-label="Previous testimonial"
                   >
                     <ChevronLeft className="w-5 h-5" />
@@ -1003,7 +1022,7 @@ const Dashboard = () => {
                         (prev) => (prev + 1) % testimonials.length,
                       )
                     }
-                    className="bg-brand-green/50 hover:bg-brand-green text-brand-green-light hover:text-black rounded-full p-2 shadow-[0_0_25px_rgba(140,200,0,0.45)] hover:shadow-[0_0_35px_rgba(140,200,0,0.6)] transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
+                    className="bg-brand-green/50 hover:bg-brand-green text-white hover:text-white rounded-full p-2 shadow-[0_0_25px_rgba(140,200,0,0.45)] hover:shadow-[0_0_35px_rgba(140,200,0,0.6)] transition-all duration-200 active:scale-90 glow-arrow brand-arrow-pulse"
                     aria-label="Next testimonial"
                   >
                     <ChevronRight className="w-5 h-5" />
@@ -1011,7 +1030,7 @@ const Dashboard = () => {
                 </div>
 
                 <Link to="/testimonials" className="block mt-4">
-                  <Button className="w-full bg-gradient-to-r from-brand-green to-brand-green-light hover:from-brand-green-dark hover:to-brand-green text-black font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(140,200,0,0.45)] hover:shadow-[0_0_40px_rgba(140,200,0,0.65)] glow-cta brand-glow-btn">
+                  <Button className="w-full bg-gradient-to-r from-brand-green to-brand-green-light hover:from-brand-green-dark hover:to-brand-green text-white font-bold py-3 rounded-full text-lg shadow-[0_0_30px_rgba(140,200,0,0.45)] hover:shadow-[0_0_40px_rgba(140,200,0,0.65)] glow-cta brand-glow-btn">
                     See More Success Stories
                   </Button>
                 </Link>
@@ -1022,19 +1041,24 @@ const Dashboard = () => {
 
         {/* Custom Styles */}
         <style>{`
-          /* ── Brand Colors (from extracted palette) ── */
+          /* ── Brand Colors (lightened, no black) ── */
           :root {
-            --brand-green-dark: #3c7800;
-            --brand-green-mid: #6ca800;
-            --brand-green: #8cc800;
-            --brand-green-light: #aadc00;
-            --brand-green-flash: #dcf032;
+            --brand-green-dark: #3C7800;
+            --brand-green-mid: #6CA800;
+            --brand-green: #8CC800;
+            --brand-green-light: #AADC00;
+            --brand-green-flash: #DCF032;
             --brand-gold-dark: #785400;
-            --brand-gold: #906c00;
-            --brand-gold-light: #b4e400;
-            --brand-highlight: #fafac8;
-            --brand-metal: #d2d2d2;
-            --brand-text-muted: #9aa08a;
+            --brand-gold: #906C00;
+            --brand-gold-light: #B4E400;
+            --brand-highlight: #FAFAC8;
+            --brand-metal: #D2D2D2;
+            --brand-text-muted: #9AA08A;
+          }
+
+          /* ── Background (light cream) ── */
+          .brand-bg {
+            background: #fcfcf0;
           }
 
           @keyframes bounce-slow {
@@ -1106,13 +1130,13 @@ const Dashboard = () => {
               box-shadow: 0 0 8px 2px rgba(140,200,0,0.6),
                           0 0 20px 6px rgba(140,200,0,0.3),
                           0 0 40px 10px rgba(140,200,0,0.12);
-              background-color: #8cc800;
+              background-color: #8CC800;
             }
             50% {
               box-shadow: 0 0 18px 5px rgba(140,200,0,0.95),
                           0 0 40px 12px rgba(140,200,0,0.55),
                           0 0 70px 18px rgba(140,200,0,0.22);
-              background-color: #aadc00;
+              background-color: #AADC00;
             }
           }
           .brand-arrow-pulse {
@@ -1141,7 +1165,7 @@ const Dashboard = () => {
             position: absolute;
             top: -10%; left: -120%;
             width: 60%; height: 120%;
-            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
             transform: skewX(-20deg);
             filter: blur(6px);
             animation: shimmer 3.5s ease-in-out infinite;
@@ -1182,19 +1206,23 @@ const Dashboard = () => {
           /* ── Utility classes for Tailwind custom colors ── */
           .text-brand-green { color: var(--brand-green); }
           .text-brand-green-light { color: var(--brand-green-light); }
+          .text-brand-green-dark { color: var(--brand-green-dark); }
           .text-brand-gold { color: var(--brand-gold); }
           .text-brand-gold-light { color: var(--brand-gold-light); }
           .border-brand-green { border-color: var(--brand-green); }
           .border-brand-green\/30 { border-color: rgba(140,200,0,0.3); }
           .border-brand-green\/40 { border-color: rgba(140,200,0,0.4); }
           .border-brand-green\/80 { border-color: rgba(140,200,0,0.8); }
+          .border-brand-gold\/30 { border-color: rgba(144,108,0,0.3); }
           .bg-brand-green-dark { background-color: var(--brand-green-dark); }
           .bg-brand-green { background-color: var(--brand-green); }
           .bg-brand-green\/10 { background-color: rgba(140,200,0,0.1); }
           .bg-brand-green\/20 { background-color: rgba(140,200,0,0.2); }
           .bg-brand-green\/50 { background-color: rgba(140,200,0,0.5); }
+          .bg-brand-green\/5 { background-color: rgba(140,200,0,0.05); }
           .from-brand-green-dark { --tw-gradient-from: var(--brand-green-dark); }
           .to-brand-green { --tw-gradient-to: var(--brand-green); }
+          .to-brand-green-light { --tw-gradient-to: var(--brand-green-light); }
           .via-brand-green-dark\/30 { --tw-gradient-via: rgba(60,120,0,0.3); }
           .shadow-brand-green\/50 { box-shadow: 0 0 15px rgba(140,200,0,0.5); }
           .shadow-brand-green\/40 { box-shadow: 0 0 15px rgba(140,200,0,0.4); }
