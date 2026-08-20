@@ -48,8 +48,39 @@ const Auth = () => {
 
   // Redirect if already logged in
   useEffect(() => {
-    const checkSession = async () => {
+    const handleAuthRedirectAndSession = async () => {
       try {
+        // If this page is the OAuth redirect target, consume the session from the URL
+        const href = window.location.href;
+        if (href.includes("access_token") || href.includes("provider_token") || href.includes("code") || href.includes("error_description")) {
+          try {
+            const { data, error } = await supabase.auth.getSessionFromUrl();
+            if (!error && data?.session) {
+              // ensure profile exists for oauth users
+              const userId = data.session.user.id;
+              const email = data.session.user.email || "";
+              const fullName =
+                data.session.user.user_metadata?.fullName ||
+                data.session.user.user_metadata?.full_name ||
+                email.split("@")[0] ||
+                "User";
+
+              await supabase.from("profiles").upsert({
+                id: userId,
+                email,
+                full_name: fullName,
+                referral_code: Math.random().toString(36).substr(2, 6).toUpperCase(),
+              });
+
+              navigate("/dashboard", { replace: true });
+              return;
+            }
+          } catch (err) {
+            console.warn("OAuth session consumption failed", err);
+          }
+        }
+
+        // Fallback: normal session check
         const { data: { session }, error } = await supabase.auth.getSession();
         if (error) throw error;
 
@@ -74,7 +105,8 @@ const Auth = () => {
         }
       }
     };
-    checkSession();
+
+    handleAuthRedirectAndSession();
   }, [navigate]);
 
   const handleSignup = async (e: React.FormEvent) => {
