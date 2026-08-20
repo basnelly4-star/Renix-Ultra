@@ -16,6 +16,7 @@ import { ArrowLeft, DollarSign, CheckCircle2, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -127,12 +128,16 @@ const Withdraw = () => {
     };
 
     const TASK_COUNT = 17;
-    const hasCompletedTasks = (() => {
+    const tasksCompletedCount = (() => {
+      let c = 0;
       for (let i = 1; i <= TASK_COUNT; i++) {
-        if (!isTaskClaimedToday(i)) return false;
+        if (isTaskClaimedToday(i)) c += 1;
       }
-      return true;
+      return c;
     })();
+
+    const hasCompletedTasks = tasksCompletedCount === TASK_COUNT;
+    const tasksProgress = Math.round((tasksCompletedCount / TASK_COUNT) * 100);
 
     if (
       !hasMinBalance ||
@@ -218,7 +223,10 @@ const Withdraw = () => {
   if (loading || !profile) return null;
 
   const hasMinBalance = Number(profile.balance) >= MINIMUM_WITHDRAW;
-  const hasReferrals = (profile.total_referrals || 0) >= 5;
+  const referralsCount = profile.total_referrals || 0;
+  const hasReferrals = referralsCount >= 5;
+  const referralsProgress = Math.min(100, Math.round((referralsCount / 5) * 100));
+
   const allInvitedComplete =
     profile.invited_signup_complete ??
     profile.invited_completed ??
@@ -232,13 +240,8 @@ const Withdraw = () => {
     const lastClaimDate = new Date(lastClaim).toDateString();
     return today === lastClaimDate;
   };
-  const TASK_COUNT = 17;
-  const hasCompletedTasks = (() => {
-    for (let i = 1; i <= TASK_COUNT; i++) {
-      if (!isTaskClaimedToday(i)) return false;
-    }
-    return true;
-  })();
+  // TASK_COUNT, tasksCompletedCount, hasCompletedTasks and tasksProgress
+  // are computed above to keep UI and checks consistent
 
   return (
     <div className="min-h-screen bg-[#06090d] pb-20">
@@ -286,14 +289,24 @@ const Withdraw = () => {
               </li>
 
               <li
-                className={`flex items-center gap-2 text-sm ${flashRequirements && !hasReferrals ? "text-red-500" : "text-[#94A3B8]"}`}
+                className={`text-sm ${flashRequirements && !hasReferrals ? "text-red-500" : "text-[#94A3B8]"}`}
               >
-                {hasReferrals ? (
-                  <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
-                ) : (
-                  <Clock className="w-4 h-4 text-[#FFB800]" />
-                )}
-                5 active referrals
+                <div className="flex items-center gap-2">
+                  {hasReferrals ? (
+                    <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
+                  ) : (
+                    <Clock className="w-4 h-4 text-[#FFB800]" />
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span>5 active referrals</span>
+                      <span className="text-xs text-[#94A3B8]">{referralsCount}/5</span>
+                    </div>
+                    <div className="mt-2">
+                      <Progress value={referralsProgress} />
+                    </div>
+                  </div>
+                </div>
               </li>
 
               <li
@@ -308,14 +321,24 @@ const Withdraw = () => {
               </li>
 
               <li
-                className={`flex items-center gap-2 text-sm ${flashRequirements && !hasCompletedTasks ? "text-red-500" : "text-[#94A3B8]"}`}
+                className={`text-sm ${flashRequirements && !hasCompletedTasks ? "text-red-500" : "text-[#94A3B8]"}`}
               >
-                {hasCompletedTasks ? (
-                  <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
-                ) : (
-                  <Clock className="w-4 h-4 text-[#FFB800]" />
-                )}
-                Complete all daily tasks
+                <div className="flex items-center gap-2">
+                  {hasCompletedTasks ? (
+                    <CheckCircle2 className="w-4 h-4 text-[#00FF55]" />
+                  ) : (
+                    <Clock className="w-4 h-4 text-[#FFB800]" />
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span>Complete all daily tasks</span>
+                      <span className="text-xs text-[#94A3B8]">{tasksCompletedCount}/{TASK_COUNT}</span>
+                    </div>
+                    <div className="mt-2">
+                      <Progress value={tasksProgress} />
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>

@@ -6,6 +6,7 @@ import { ArrowLeft, Copy, Share2, Users, Gift, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
+import { Progress } from "@/components/ui/progress";
 
 const Referrals = () => {
   const navigate = useNavigate();
@@ -73,6 +74,9 @@ const Referrals = () => {
 
   if (loading || !profile) return null;
 
+  const referralsCount = profile.total_referrals || 0;
+  const referralsProgress = Math.min(100, Math.round((referralsCount / 5) * 100));
+
   return (
     <div className="min-h-screen bg-[#06090d] pb-20">
       {/* Header */}
@@ -98,8 +102,15 @@ const Referrals = () => {
               <Users className="w-8 h-8 mx-auto mb-2 text-[#00FF55]" />
               <p className="text-sm text-[#94A3B8]">Total Referrals</p>
               <p className="text-3xl font-bold text-[#00FF55]">
-                {profile.total_referrals || 0}
+                {referralsCount}
               </p>
+              <div className="mt-3">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-[#94A3B8]">Progress</span>
+                  <span className="text-xs text-[#94A3B8]">{referralsCount}/5</span>
+                </div>
+                <Progress value={referralsProgress} />
+              </div>
             </div>
             <div className="text-center">
               <TrendingUp className="w-8 h-8 mx-auto mb-2 text-[#00E53A]" />
