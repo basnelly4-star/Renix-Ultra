@@ -13,10 +13,30 @@ const Upgrade = () => {
   const [loading, setLoading] = useState(true);
 
   const upgradeTiers = [
-    { level: "Tier 2", amount: 15000, price: 15000, color: "from-gray-400 to-gray-600" },
-    { level: "Tier 3", amount: 25000, price: 25000, color: "from-yellow-400 to-yellow-600" },
-    { level: "Tier 4", amount: 35000, price: 35000, color: "from-blue-400 to-blue-600" },
-    { level: "Tier 5", amount: 40000, price: 40000, color: "from-purple-400 to-purple-600" },
+    {
+      level: "Tier 2",
+      amount: 15000,
+      price: 15000,
+      color: "from-[#00C836] to-[#00E53A]",
+    },
+    {
+      level: "Tier 3",
+      amount: 25000,
+      price: 25000,
+      color: "from-[#00E53A] to-[#00FF55]",
+    },
+    {
+      level: "Tier 4",
+      amount: 35000,
+      price: 35000,
+      color: "from-[#00FF55] to-[#66FF88]",
+    },
+    {
+      level: "Tier 5",
+      amount: 40000,
+      price: 40000,
+      color: "from-[#66FF88] to-[#00FF55]",
+    },
   ];
 
   useEffect(() => {
@@ -25,7 +45,9 @@ const Upgrade = () => {
 
   const loadProfile = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         navigate("/auth");
         return;
@@ -46,7 +68,7 @@ const Upgrade = () => {
     }
   };
 
-  const handleUpgrade = (tier: typeof upgradeTiers[0]) => {
+  const handleUpgrade = (tier: (typeof upgradeTiers)[0]) => {
     navigate("/upgrade-payment", { state: tier });
   };
 
@@ -55,14 +77,15 @@ const Upgrade = () => {
   if (loading || !profile) return null;
 
   return (
-    <div className="min-h-screen liquid-bg pb-20">
-      <div className="bg-gradient-to-r from-primary to-secondary p-6 text-primary-foreground">
+    <div className="min-h-screen bg-[#06090d] pb-20">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-6 text-[#04080a] shadow-[0_4px_20px_rgba(0,229,58,0.3)]">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate(-1)}
-            className="text-primary-foreground hover:bg-background/20"
+            className="text-[#04080a] hover:bg-black/20"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -72,12 +95,19 @@ const Upgrade = () => {
 
       <div className="p-6 space-y-6">
         {/* Upgrade Benefits */}
-        <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-lg border-border/50 p-6 glow-primary">
+        <Card className="bg-gradient-to-br from-[#0b1118] to-[#06090d] backdrop-blur-lg border border-[#00E53A]/30 p-6 shadow-[0_0_20px_rgba(0,229,58,0.1)]">
           <div className="text-center">
-            <p className="text-sm text-yellow-400/70 mb-4">UPGRADE</p>
-            <p className="text-sm text-muted-foreground mb-2">Unlock Premium Features</p>
-            <p className="text-xl font-bold gradient-text mb-3">Withdraw Without Referral Requirements</p>
-             <p className="text-xl font-bold gradient-text mb-3">Upgrade allows you to earn more on each referral than regular members </p>
+            <p className="text-sm text-[#00FF55]/70 mb-4">UPGRADE</p>
+            <p className="text-sm text-[#94A3B8] mb-2">
+              Unlock Premium Features
+            </p>
+            <p className="text-xl font-bold brand-gradient-text mb-3">
+              Withdraw Without Referral Requirements
+            </p>
+            <p className="text-xl font-bold brand-gradient-text mb-3">
+              Upgrade allows you to earn more on each referral than regular
+              members
+            </p>
           </div>
         </Card>
 
@@ -88,51 +118,68 @@ const Upgrade = () => {
               "Earn ₦15,000 per each referral",
               "Earn ₦25,000 per each referral",
               "Earn ₦35,000 per each referral",
-              "Earn ₦45,000 per each referral"
+              "Earn ₦45,000 per each referral",
             ];
             return (
-            <Card
-              key={tier.level}
-              className="bg-gradient-to-br from-card via-amber-950/20 to-card/80 backdrop-blur-lg border-yellow-600/30 p-6 hover:border-yellow-500/60 transition-all shadow-lg shadow-yellow-500/10"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className={`text-xl font-bold bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent`}>
-                    {tier.level}
-                  </h3>
-                  <p className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">₦{tier.amount.toLocaleString()}</p>
-                  <p className="text-xs text-yellow-400/70 mt-1">Upgrade cost</p>
+              <Card
+                key={tier.level}
+                className="bg-gradient-to-br from-[#0b1118] via-[#00E53A]/10 to-[#0b1118] backdrop-blur-lg border border-[#00E53A]/40 p-6 hover:border-[#00E53A]/70 transition-all shadow-lg shadow-[#00E53A]/10"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3
+                      className={`text-xl font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
+                    >
+                      {tier.level}
+                    </h3>
+                    <p
+                      className={`text-2xl font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
+                    >
+                      ₦{tier.amount.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-[#00E53A]/70 mt-1">
+                      Upgrade cost
+                    </p>
+                  </div>
+                  <TrendingUp className="w-8 h-8 text-[#00FF55] drop-shadow-[0_0_10px_rgba(0,255,85,0.4)]" />
                 </div>
-                <TrendingUp className="w-8 h-8 text-yellow-400 drop-shadow-lg drop-shadow-yellow-500/40" />
-              </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm">{earningsByTier[index]}</p>
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-start gap-2">
+                    <Check className="w-5 h-5 text-[#00FF55] flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-[#CBD5E1]">
+                      {earningsByTier[index]}
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-5 h-5 text-[#00FF55] flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-[#CBD5E1]">
+                      Lifetime upgrade benefit
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-5 h-5 text-[#00FF55] flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-[#CBD5E1]">
+                      Priority support & fast processing
+                    </p>
+                  </div>
                 </div>
-                <div className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm">Lifetime upgrade benefit</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm">Priority support & fast processing</p>
-                </div>
-              </div>
 
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-yellow-400/70">
-                  Upgrade Price: <span className="font-bold text-yellow-300">₦{tier.price.toLocaleString()}</span>
-                </p>
-                <Button
-                  onClick={() => handleUpgrade(tier)}
-                  className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-bold hover:from-yellow-300 hover:via-yellow-400 hover:to-yellow-500 shadow-lg shadow-yellow-500/40 hover:shadow-yellow-500/60 transition-all"
-                >
-                  Upgrade Now
-                </Button>
-              </div>
-            </Card>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-[#00E53A]/70">
+                    Upgrade Price:{" "}
+                    <span className="font-bold text-[#00FF55]">
+                      ₦{tier.price.toLocaleString()}
+                    </span>
+                  </p>
+                  <Button
+                    onClick={() => handleUpgrade(tier)}
+                    className={`bg-gradient-to-r ${tier.color} text-[#04080a] font-bold hover:from-[#00E53A] hover:to-[#00FF55] shadow-lg shadow-[#00E53A]/40 hover:shadow-[#00FF55]/60 transition-all active:scale-[0.98]`}
+                  >
+                    Upgrade Now
+                  </Button>
+                </div>
+              </Card>
             );
           })}
         </div>

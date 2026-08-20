@@ -39,7 +39,9 @@ const WithdrawalActivation = () => {
 
     setUploading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         navigate("/auth");
         return;
@@ -79,14 +81,15 @@ const WithdrawalActivation = () => {
   };
 
   return (
-    <div className="min-h-screen liquid-bg pb-20">
-      <div className="bg-gradient-to-r from-primary to-secondary p-6 text-primary-foreground">
+    <div className="min-h-screen bg-[#06090d] pb-20">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-6 text-[#04080a] shadow-[0_4px_20px_rgba(0,229,58,0.3)]">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/withdraw")}
-            className="text-primary-foreground hover:bg-background/20"
+            className="text-[#04080a] hover:bg-black/20"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -95,14 +98,15 @@ const WithdrawalActivation = () => {
       </div>
 
       <div className="p-6 space-y-6">
-        <Card className="bg-gradient-to-br from-blue-500/10 to-primary/10 backdrop-blur-lg border-blue-500/20 p-6">
+        {/* Info Card */}
+        <Card className="bg-gradient-to-br from-[#00E53A]/10 to-[#00C836]/10 backdrop-blur-lg border border-[#00E53A]/30 p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
           <div className="flex items-start gap-3 mb-4">
             <div className="text-2xl">⚡</div>
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-blue-500 mb-2">
+              <h2 className="text-xl font-bold text-[#00FF55] mb-2">
                 Account Authentication Charge
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[#94A3B8]">
                 To secure your account and comply with regulatory requirements,
                 a one-time verification fee is necessary. This fee facilitates
                 identity verification, prevents unauthorized access, and enables
@@ -112,51 +116,57 @@ const WithdrawalActivation = () => {
           </div>
         </Card>
 
-        <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-6">
-          <h3 className="text-xl font-bold mb-6">Payment Details</h3>
+        {/* Payment Details Card */}
+        <Card className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
+          <h3 className="text-xl font-bold mb-6 text-white">Payment Details</h3>
 
           <div className="space-y-4">
-            <div className="bg-muted/50 p-4 rounded-lg">
-              <p className="text-sm text-muted-foreground mb-1">Amount</p>
-              <p className="text-2xl font-bold">₦5,100</p>
+            <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20">
+              <p className="text-sm text-[#94A3B8] mb-1">Amount</p>
+              <p className="text-2xl font-bold text-[#00FF55]">₦5,100</p>
             </div>
 
-            <div className="bg-muted/50 p-4 rounded-lg">
+            <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20">
               <div className="flex items-center justify-between mb-1">
-                <p className="text-sm text-muted-foreground">Account Number</p>
+                <p className="text-sm text-[#94A3B8]">Account Number</p>
                 <CopyButton text="2089014213" />
               </div>
-              <p className="text-xl font-bold font-mono">2089014213</p>
+              <p className="text-xl font-bold font-mono text-white">
+                2089014213
+              </p>
             </div>
 
-            <div className="bg-muted/50 p-4 rounded-lg">
+            <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20">
               <div className="flex items-center justify-between mb-1">
-                <p className="text-sm text-muted-foreground">Account Name</p>
+                <p className="text-sm text-[#94A3B8]">Account Name</p>
                 <CopyButton text=" ESTHER STEPHEN" />
               </div>
-              <p className="text-lg font-bold"> ESTHER STEPHEN</p>   
-                 </div>
-
-            <div className="bg-muted/50 p-4 rounded-lg">
-              <div className="flex items-center justify-between mb-1">
-                <p className="text-sm text-muted-foreground">Bank</p>
-                <CopyButton text="KUDA" />
-              </div>
-              <p className="text-lg font-bold"> KUDA</p>
+              <p className="text-lg font-bold text-white">ESTHER STEPHEN</p>
             </div>
 
-            <div className="bg-muted/50 p-4 rounded-lg flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">Verification ID</p>
+            <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm text-[#94A3B8]">Bank</p>
+                <CopyButton text="KUDA" />
+              </div>
+              <p className="text-lg font-bold text-white">KUDA</p>
+            </div>
+
+            <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20 flex items-center justify-between">
+              <p className="text-sm text-[#94A3B8]">Verification ID</p>
               <div className="flex items-center gap-2">
-                <span className="font-mono font-bold">10077A </span>
+                <span className="font-mono font-bold text-white">10077A</span>
                 <CopyButton text="10077A" />
               </div>
             </div>
           </div>
         </Card>
 
-        <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-6">
-          <h3 className="text-lg font-semibold mb-4">Upload Payment Receipt</h3>
+        {/* Upload Receipt Card */}
+        <Card className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
+          <h3 className="text-lg font-semibold mb-4 text-white">
+            Upload Payment Receipt
+          </h3>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
@@ -165,17 +175,17 @@ const WithdrawalActivation = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                className="bg-background/50"
+                className="bg-[#06090d] border-[#1e293b] text-white file:bg-[#00E53A] file:text-[#04080a] file:border-0 file:rounded-lg file:px-3 file:py-1 file:font-bold file:shadow-[0_0_10px_rgba(0,229,58,0.3)]"
                 required
               />
               {receipt && (
-                <p className="text-sm text-green-500">✓ {receipt.name}</p>
+                <p className="text-sm text-[#00FF55]">✓ {receipt.name}</p>
               )}
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-primary to-secondary"
+              className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
               disabled={uploading}
             >
               {uploading ? (

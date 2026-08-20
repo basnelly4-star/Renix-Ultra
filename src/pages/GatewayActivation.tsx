@@ -39,7 +39,9 @@ const GatewayActivation = () => {
 
     setUploading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         navigate("/auth");
         return;
@@ -66,13 +68,14 @@ const GatewayActivation = () => {
 
   return (
     <div className="min-h-screen liquid-bg pb-20">
-      <div className="bg-gradient-to-r from-primary to-secondary p-6 text-primary-foreground">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-6 text-[#04080a] shadow-[0_4px_20px_rgba(0,229,58,0.3)]">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/withdraw")}
-            className="text-primary-foreground hover:bg-background/20"
+            className="text-[#04080a] hover:bg-black/20"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -81,74 +84,82 @@ const GatewayActivation = () => {
       </div>
 
       <div className="p-6 space-y-6">
-        <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-lg border-border/50 p-6">
+        {/* Submitted Card */}
+        <Card className="bg-gradient-to-br from-[#0b1118] to-[#06090d] backdrop-blur-lg border border-[#00E53A]/30 p-6 shadow-[0_0_20px_rgba(0,229,58,0.1)]">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <CheckCircle2 className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-full bg-[#00E53A]/10 flex items-center justify-center">
+              <CheckCircle2 className="w-6 h-6 text-[#00FF55]" />
             </div>
             <div>
-              <h2 className="text-xl font-bold">Withdrawal Submitted!</h2>
-              <p className="text-sm text-muted-foreground">
+              <h2 className="text-xl font-bold text-white">
+                Withdrawal Submitted!
+              </h2>
+              <p className="text-sm text-[#94A3B8]">
                 Complete activation to process
               </p>
             </div>
           </div>
-          <div className="bg-muted/50 p-4 rounded-lg">
-            <p className="text-sm text-muted-foreground mb-2">Activation Fee</p>
-            <p className="text-3xl font-bold text-primary">₦13,250</p>
+          <div className="bg-[#06090d] p-4 rounded-lg border border-[#00E53A]/20">
+            <p className="text-sm text-[#94A3B8] mb-2">Activation Fee</p>
+            <p className="text-3xl font-bold text-[#00FF55]">₦13,250</p>
           </div>
         </Card>
 
-        <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-6">
-          <h3 className="font-semibold mb-4">Payment Instructions</h3>
-          <div className="space-y-3 text-sm mb-6">
+        {/* Payment Instructions Card */}
+        <Card className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
+          <h3 className="font-semibold mb-4 text-white">
+            Payment Instructions
+          </h3>
+          <div className="space-y-3 text-sm mb-6 text-[#CBD5E1]">
             <p className="flex gap-2">
-              <span className="font-bold">1.</span>
+              <span className="font-bold text-[#00FF55]">1.</span>
               <span>Transfer ₦13,250 to the account details below</span>
             </p>
-            <div className="bg-muted/50 p-4 rounded-lg space-y-2">
-              <p className="text-sm font-semibold">Bank Details</p>
+            <div className="bg-[#06090d] p-4 rounded-lg space-y-2 border border-[#00E53A]/20">
+              <p className="text-sm font-semibold text-white">Bank Details</p>
               <div className="space-y-1 text-sm">
                 <div className="flex items-center justify-between">
-                  <p className="font-mono">Account:5256542408</p>
+                  <p className="font-mono text-white">Account:5256542408</p>
                   <CopyButton text="5256542408" />
                 </div>
-                <p>Name: Esther Stephan </p>
-                <p>Bank:Esther Stephan</p>
+                <p className="text-[#94A3B8]">Name: Esther Stephan</p>
+                <p className="text-[#94A3B8]">Bank: Esther Stephan</p>
               </div>
             </div>
             <p className="flex gap-2">
-              <span className="font-bold">2.</span>
+              <span className="font-bold text-[#00FF55]">2.</span>
               <span>Upload your payment receipt below</span>
             </p>
             <p className="flex gap-2">
-              <span className="font-bold">3.</span>
+              <span className="font-bold text-[#00FF55]">3.</span>
               <span>Wait for confirmation (usually within 24 hours)</span>
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="receipt">Upload Payment Receipt</Label>
+              <Label htmlFor="receipt" className="text-[#CBD5E1]">
+                Upload Payment Receipt
+              </Label>
               <div className="flex items-center gap-2">
                 <Input
                   id="receipt"
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="bg-background/50"
+                  className="bg-[#06090d] border-[#1e293b] text-white file:bg-[#00E53A] file:text-[#04080a] file:border-0 file:rounded-lg file:px-3 file:py-1 file:font-bold file:shadow-[0_0_10px_rgba(0,229,58,0.3)]"
                   required
                 />
-                <Upload className="w-5 h-5 text-muted-foreground" />
+                <Upload className="w-5 h-5 text-[#00FF55]" />
               </div>
               {receipt && (
-                <p className="text-sm text-green-500">✓ {receipt.name}</p>
+                <p className="text-sm text-[#00FF55]">✓ {receipt.name}</p>
               )}
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-primary to-secondary"
+              className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
               disabled={uploading}
             >
               {uploading ? (

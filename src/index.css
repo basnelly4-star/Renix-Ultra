@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Luxury Dark Gold Theme - Deep Black with Bright Yellow-Gold Accents */
+/* Luxury Dark Green Theme - Deep Black with Bright Neon-Green Accents */
 @layer base {
   :root {
     /* Primary Colors: Deep True Black Background */
@@ -17,20 +17,20 @@
     --popover: 0 0% 5%;                       /* Deep black popover */
     --popover-foreground: 0 0% 94%;           /* Light text */
 
-    /* Primary Color: Bright Shiny Yellow-Gold (Yellow-500 #EAB308) */
-    --primary: 47.9 97% 52%;                  /* Yellow-500 #EAB308 */
-    --primary-foreground: 0 0% 8%;            /* Dark text on gold */
+    /* Primary Color: Bright Neon-Green (#00E53A) */
+    --primary: 140 100% 45%;                  /* #00E53A */
+    --primary-foreground: 0 0% 8%;            /* Dark text on green */
 
-    /* Secondary Color: Brighter Yellow-Gold (Yellow-400 #FBBF24) */
-    --secondary: 45.4 97% 70%;                /* Yellow-400 #FBBF24 */
+    /* Secondary Color: Brighter Green (#00FF55) */
+    --secondary: 140 100% 50%;                /* #00FF55 */
     --secondary-foreground: 0 0% 8%;          /* Dark text */
 
     /* Muted Colors for subtle elements */
     --muted: 0 0% 30%;                        /* Charcoal gray */
     --muted-foreground: 0 0% 75%;             /* Light gray text */
 
-    /* Accent Color: Dark Yellow-Gold (Yellow-600 #CA8A04) */
-    --accent: 42.3 96% 44%;                   /* Yellow-600 #CA8A04 */
+    /* Accent Color: Darker Green (#00C836) */
+    --accent: 140 100% 40%;                   /* #00C836 */
     --accent-foreground: 0 0% 98%;            /* White text on accent */
 
     /* Destructive (for warnings/errors - muted red) */
@@ -38,38 +38,38 @@
     --destructive-foreground: 0 0% 98%;       /* White text */
 
     /* Border & Ring Colors */
-    --border: 47.9 97% 44% / 0.3;             /* Bright yellow border */
+    --border: 140 100% 45% / 0.3;             /* Bright green border */
     --input: 0 0% 12%;                        /* Dark input background */
-    --ring: 47.9 97% 52%;                     /* Yellow focus ring */
+    --ring: 140 100% 45%;                     /* Green focus ring */
     --radius: 0.875rem;                       /* Refined border radius */
 
-    /* Yellow-Gold Color Stops - Matching Why Renix-Ultra Card */
-    --gold-main: #EAB308;                     /* Yellow-500 - Primary bright gold */
-    --gold-secondary: #CA8A04;                /* Yellow-600 - Darker gold */
-    --gold-light: #FBBF24;                    /* Yellow-400 - Lighter shiny gold */
-    --gold-lighter: #FCDCB8;                  /* Yellow-200 - Very soft gold */
-    --gold-warm: #A16207;                     /* Yellow-700 - Warm undertone */
+    /* Green Color Stops - Matching Why Renix-Ultra Card */
+    --green-main: #00E53A;                    /* Primary bright green */
+    --green-secondary: #00C836;               /* Darker green */
+    --green-light: #00FF55;                   /* Lighter shiny green */
+    --green-lighter: #66FF88;                 /* Very soft green */
+    --green-warm: #00A828;                    /* Warm undertone */
 
-    /* Gradients - Bright shiny yellow feel */
-    --gradient-gold-button: linear-gradient(135deg, #FBBF24, #EAB308);
-    --gradient-gold-hover: linear-gradient(135deg, #FCD34D, #FBBF24);
+    /* Gradients - Bright shiny green feel */
+    --gradient-green-button: linear-gradient(135deg, #00FF55, #00E53A);
+    --gradient-green-hover: linear-gradient(135deg, #66FF88, #00FF55);
     --gradient-dark-subtle: linear-gradient(135deg, #0a0a0a, #111111);
     
-    /* Shadows - Shiny yellow glow */
-    --shadow-gold-glow: 0 0 20px rgba(250, 191, 36, 0.3);
-    --shadow-gold-hover: 0 0 30px rgba(250, 191, 36, 0.5);
+    /* Shadows - Shiny green glow */
+    --shadow-green-glow: 0 0 20px rgba(0, 229, 58, 0.3);
+    --shadow-green-hover: 0 0 30px rgba(0, 229, 58, 0.5);
     --shadow-elegant: 0 4px 12px rgba(0, 0, 0, 0.4);
     --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.3);
 
     /* Sidebar Colors */
     --sidebar-background: 0 0% 4%;
     --sidebar-foreground: 0 0% 93%;
-    --sidebar-primary: 47.9 97% 52%;
+    --sidebar-primary: 140 100% 45%;
     --sidebar-primary-foreground: 0 0% 8%;
-    --sidebar-accent: 42.3 96% 44%;
+    --sidebar-accent: 140 100% 40%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 47.9 97% 44% / 0.2;
-    --sidebar-ring: 47.9 97% 52%;
+    --sidebar-border: 140 100% 45% / 0.2;
+    --sidebar-ring: 140 100% 45%;
   }
 
   /* Smooth transitions for luxury feel */
@@ -99,7 +99,7 @@
 }
 
 @layer utilities {
-  /* ====== LUXURY DARK GOLD THEME UTILITIES ====== */
+  /* ====== LUXURY DARK GREEN THEME UTILITIES ====== */
 
   /* ===== BACKGROUND & BASE ELEMENTS ===== */
   body, html, #root {
@@ -112,26 +112,26 @@
     @apply bg-black;
     background-color: #0a0a0a;
     background-image: 
-      radial-gradient(circle at 20% 50%, rgba(250, 191, 36, 0.03) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(250, 191, 36, 0.02) 0%, transparent 50%);
+      radial-gradient(circle at 20% 50%, rgba(0, 229, 58, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(0, 229, 58, 0.02) 0%, transparent 50%);
   }
 
-  /* ===== GOLD BUTTONS & CTAs (Main Primary Action) ===== */
+  /* ===== GREEN BUTTONS & CTAs (Main Primary Action) ===== */
   .luxury-btn-gold,
   .gold-btn,
   .primary-btn {
     @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300;
-    background: linear-gradient(135deg, #FBBF24, #EAB308);
+    background: linear-gradient(135deg, #00FF55, #00E53A);
     color: #0a0a0a;
-    border: 1px solid #FCD34D;
+    border: 1px solid #66FF88;
     box-shadow: var(--shadow-elegant);
   }
 
   .luxury-btn-gold:hover,
   .gold-btn:hover,
   .primary-btn:hover {
-    background: linear-gradient(135deg, #FCD34D, #FBBF24);
-    box-shadow: var(--shadow-gold-hover);
+    background: linear-gradient(135deg, #66FF88, #00FF55);
+    box-shadow: var(--shadow-green-hover);
     transform: translateY(-2px);
   }
 
@@ -145,65 +145,65 @@
   .gold-btn:focus,
   .primary-btn:focus {
     outline: none;
-    box-shadow: var(--shadow-gold-hover), 0 0 0 3px rgba(250, 191, 36, 0.3);
+    box-shadow: var(--shadow-green-hover), 0 0 0 3px rgba(0, 229, 58, 0.3);
   }
 
-  /* ===== SECONDARY BUTTONS (Subtle Gold) ===== */
+  /* ===== SECONDARY BUTTONS (Subtle Green) ===== */
   .luxury-btn-outline,
   .outline-btn {
     @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300;
     background: transparent;
-    color: #EAB308;
-    border: 1.5px solid #EAB308;
+    color: #00E53A;
+    border: 1.5px solid #00E53A;
   }
 
   .luxury-btn-outline:hover,
   .outline-btn:hover {
-    background: rgba(250, 191, 36, 0.15);
-    color: #FCD34D;
-    border-color: #FCD34D;
-    box-shadow: var(--shadow-gold-glow);
+    background: rgba(0, 229, 58, 0.15);
+    color: #00FF55;
+    border-color: #00FF55;
+    box-shadow: var(--shadow-green-glow);
   }
 
-  /* ===== CARD STYLING WITH GOLD ACCENTS ===== */
+  /* ===== CARD STYLING WITH GREEN ACCENTS ===== */
   .luxury-card,
   .gold-card {
     @apply bg-neutral-900 rounded-lg p-6 transition-all duration-300;
     background-color: #111111;
-    border: 1px solid rgba(250, 191, 36, 0.25);
+    border: 1px solid rgba(0, 229, 58, 0.25);
     box-shadow: var(--shadow-soft);
   }
 
   .luxury-card:hover,
   .gold-card:hover {
-    border-color: rgba(250, 191, 36, 0.4);
-    box-shadow: var(--shadow-elegant), var(--shadow-gold-glow);
+    border-color: rgba(0, 229, 58, 0.4);
+    box-shadow: var(--shadow-elegant), var(--shadow-green-glow);
   }
 
-  /* Premium card with gold edge */
+  /* Premium card with green edge */
   .luxury-card-premium {
     @apply bg-neutral-950 rounded-lg p-6;
     background: linear-gradient(135deg, #111111, #0a0a0a);
-    border: 1px solid rgba(250, 191, 36, 0.3);
-    box-shadow: inset 0 0 0 1px rgba(250, 191, 36, 0.15), var(--shadow-elegant);
+    border: 1px solid rgba(0, 229, 58, 0.3);
+    box-shadow: inset 0 0 0 1px rgba(0, 229, 58, 0.15), var(--shadow-elegant);
   }
 
   /* ===== TEXT & TYPOGRAPHY ===== */
   .gold-text {
-    color: #EAB308;
+    color: #00E53A;
   }
 
   .gold-text-light {
-    color: #FBBF24;
+    color: #00FF55;
   }
 
   .gold-text-warm {
-    color: #FCD34D;
+    color: #66FF88;
   }
 
   /* Elegant gradient text */
   .luxury-gradient-text {
-    background: linear-gradient(135deg, #FBBF24, #FCD34D);
+    background: linear-gradient(135deg, #00FF55, #66FF88);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -211,32 +211,32 @@
 
   /* ===== BORDERS & DIVIDERS ===== */
   .gold-border {
-    border-color: rgba(250, 191, 36, 0.4);
+    border-color: rgba(0, 229, 58, 0.4);
   }
 
   .gold-border-subtle {
-    border-color: rgba(250, 191, 36, 0.2);
+    border-color: rgba(0, 229, 58, 0.2);
   }
 
   .gold-divider {
     @apply border-b border-b-2;
-    border-color: rgba(250, 191, 36, 0.25);
+    border-color: rgba(0, 229, 58, 0.25);
   }
 
   .gold-divider-accent {
     @apply border-b border-b-2;
-    border-image: linear-gradient(90deg, transparent, #EAB308, transparent) 1;
+    border-image: linear-gradient(90deg, transparent, #00E53A, transparent) 1;
   }
 
   /* ===== LINKS & INTERACTIVE ELEMENTS ===== */
   a, .link {
     @apply text-gold-500 transition-colors duration-300;
-    color: #EAB308;
+    color: #00E53A;
     position: relative;
   }
 
   a:hover, .link:hover {
-    color: #FCD34D;
+    color: #66FF88;
   }
 
   /* Elegant underline effect on links */
@@ -247,7 +247,7 @@
     left: 0;
     width: 0;
     height: 1px;
-    background-color: #EAB308;
+    background-color: #00E53A;
     transition: width 0.3s ease;
   }
 
@@ -259,38 +259,38 @@
   input, textarea, select {
     background-color: #0f0f0f;
     color: #e5e5e5;
-    border-color: rgba(250, 191, 36, 0.2);
+    border-color: rgba(0, 229, 58, 0.2);
     transition: all 0.3s ease;
-    border: 1px solid rgba(250, 191, 36, 0.2);
+    border: 1px solid rgba(0, 229, 58, 0.2);
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
   }
 
   input:focus, textarea:focus, select:focus {
     outline: none;
-    border-color: #EAB308;
-    box-shadow: 0 0 0 3px rgba(250, 191, 36, 0.15);
+    border-color: #00E53A;
+    box-shadow: 0 0 0 3px rgba(0, 229, 58, 0.15);
     background-color: #1a1a1a;
   }
 
   input::placeholder, textarea::placeholder {
-    color: rgba(250, 191, 36, 0.6);
+    color: rgba(0, 229, 58, 0.6);
   }
 
   /* ===== BADGES & TAGS ===== */
   .luxury-badge,
   .gold-badge {
     @apply inline-block px-3 py-1 rounded-full text-sm font-medium;
-    background-color: rgba(250, 191, 36, 0.2);
-    color: #EAB308;
-    border: 1px solid rgba(250, 191, 36, 0.4);
+    background-color: rgba(0, 229, 58, 0.2);
+    color: #00E53A;
+    border: 1px solid rgba(0, 229, 58, 0.4);
   }
 
   .luxury-badge-solid {
     @apply inline-block px-3 py-1 rounded-full text-sm font-medium;
-    background: linear-gradient(135deg, #FBBF24, #EAB308);
+    background: linear-gradient(135deg, #00FF55, #00E53A);
     color: #0a0a0a;
-    border: 1px solid #FCD34D;
+    border: 1px solid #66FF88;
   }
 
   /* ===== PROGRESS BARS ===== */
@@ -303,45 +303,45 @@
     content: '';
     display: block;
     height: 100%;
-    background: linear-gradient(90deg, #CA8A04, #EAB308, #FCD34D);
+    background: linear-gradient(90deg, #00C836, #00E53A, #66FF88);
     border-radius: 9999px;
-    box-shadow: var(--shadow-gold-glow);
+    box-shadow: var(--shadow-green-glow);
   }
 
   /* ===== GLASS-MORPHISM ELEMENTS ===== */
   .luxury-glass {
     @apply rounded-lg backdrop-blur-md;
     background: rgba(10, 10, 10, 0.4);
-    border: 1px solid rgba(250, 191, 36, 0.15);
+    border: 1px solid rgba(0, 229, 58, 0.15);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
   }
 
   .luxury-glass:hover {
     background: rgba(10, 10, 10, 0.5);
-    border-color: rgba(250, 191, 36, 0.3);
+    border-color: rgba(0, 229, 58, 0.3);
   }
 
   /* ===== GLOWING EFFECTS ===== */
   .gold-glow {
-    box-shadow: var(--shadow-gold-glow);
+    box-shadow: var(--shadow-green-glow);
   }
 
   .gold-glow-strong {
-    box-shadow: var(--shadow-gold-hover);
+    box-shadow: var(--shadow-green-hover);
   }
 
   .gold-text-glow {
-    color: #EAB308;
-    text-shadow: 0 0 10px rgba(250, 191, 36, 0.5);
+    color: #00E53A;
+    text-shadow: 0 0 10px rgba(0, 229, 58, 0.5);
   }
 
   /* ===== LUXURY ANIMATIONS ===== */
   @keyframes gold-pulse {
     0%, 100% {
-      box-shadow: 0 0 0 0 rgba(250, 191, 36, 0.7);
+      box-shadow: 0 0 0 0 rgba(0, 229, 58, 0.7);
     }
     50% {
-      box-shadow: 0 0 0 10px rgba(250, 191, 36, 0);
+      box-shadow: 0 0 0 10px rgba(0, 229, 58, 0);
     }
   }
 
@@ -372,8 +372,8 @@
   .luxury-section-accent {
     @apply py-12 px-6;
     background: #0f0f0f;
-    border-top: 1px solid rgba(250, 191, 36, 0.1);
-    border-bottom: 1px solid rgba(250, 191, 36, 0.1);
+    border-top: 1px solid rgba(0, 229, 58, 0.1);
+    border-bottom: 1px solid rgba(0, 229, 58, 0.1);
   }
 
   /* ===== TABLES & DATA DISPLAY ===== */
@@ -383,18 +383,18 @@
 
   .luxury-table th {
     @apply px-4 py-3 text-left font-semibold border-b-2;
-    color: #EAB308;
-    border-color: rgba(250, 191, 36, 0.3);
-    background-color: rgba(250, 191, 36, 0.05);
+    color: #00E53A;
+    border-color: rgba(0, 229, 58, 0.3);
+    background-color: rgba(0, 229, 58, 0.05);
   }
 
   .luxury-table td {
     @apply px-4 py-3 border-b;
-    border-color: rgba(250, 191, 36, 0.1);
+    border-color: rgba(0, 229, 58, 0.1);
   }
 
   .luxury-table tr:hover {
-    background-color: rgba(250, 191, 36, 0.03);
+    background-color: rgba(0, 229, 58, 0.03);
   }
 
   /* ===== MODAL & OVERLAY ===== */
@@ -407,7 +407,7 @@
   .luxury-modal-content {
     @apply bg-neutral-900 rounded-lg p-8 max-w-md w-full mx-4;
     background-color: #111111;
-    border: 1px solid rgba(250, 191, 36, 0.2);
+    border: 1px solid rgba(0, 229, 58, 0.2);
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
   }
 
@@ -438,7 +438,7 @@
   [type="text"], [type="email"], [type="password"],
   [type="number"], [type="tel"], [type="url"], [type="search"] {
     background-color: #0f0f0f;
-    border: 1px solid rgba(250, 191, 36, 0.2);
+    border: 1px solid rgba(0, 229, 58, 0.2);
     border-radius: 0.5rem;
     color: #e5e5e5;
     transition: all 0.3s ease;

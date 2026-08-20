@@ -22,7 +22,7 @@ const Invest = () => {
       investment: 10000,
       returns: 70000,
       duration: "24 hours",
-      color: "from-slate-400 to-slate-600",
+      color: "from-[#00C836] to-[#00E53A]",
       icon: <Zap className="w-5 h-5" />,
     },
     {
@@ -30,7 +30,7 @@ const Invest = () => {
       investment: 20000,
       returns: 150000,
       duration: "24 hours",
-      color: "from-yellow-400 to-yellow-600",
+      color: "from-[#FFB800] to-[#FFD94D]",
       icon: <TrendingUp className="w-5 h-5" />,
     },
     {
@@ -38,7 +38,7 @@ const Invest = () => {
       investment: 30000,
       returns: 200000,
       duration: "24 hours",
-      color: "from-cyan-300 to-cyan-600",
+      color: "from-[#00E53A] to-[#00FF55]",
       icon: <Zap className="w-5 h-5" />,
     },
     {
@@ -46,7 +46,7 @@ const Invest = () => {
       investment: 40000,
       returns: 300000,
       duration: "24 hours",
-      color: "from-indigo-400 to-indigo-600",
+      color: "from-[#00FF55] to-[#66FF88]",
       icon: <TrendingUp className="w-5 h-5" />,
     },
   ];
@@ -54,43 +54,47 @@ const Invest = () => {
   const handleInvestNow = (plan: InvestmentPlan) => {
     // Navigate to payment page with the exact amount for the chosen plan
     // Pass only serializable data (exclude JSX icon element)
-    navigate("/invest-payment", { 
+    navigate("/invest-payment", {
       state: {
         name: plan.name,
         investment: plan.investment,
         returns: plan.returns,
         duration: plan.duration,
-        color: plan.color
-      }
+        color: plan.color,
+      },
     });
   };
 
   return (
     <div className="min-h-screen liquid-bg pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-secondary p-4 text-primary-foreground glow-primary">
+      <div className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-4 text-[#04080a] shadow-[0_4px_20px_rgba(0,229,58,0.3)]">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/dashboard")}
-            className="hover:bg-background/20"
+            className="hover:bg-black/20 text-[#04080a]"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
             <h1 className="text-lg font-bold">Invest</h1>
-            <p className="text-xs opacity-90">Crowdfunding Investment Plans</p>
+            <p className="text-xs opacity-80">Crowdfunding Investment Plans</p>
           </div>
         </div>
       </div>
 
       <div className="p-4 space-y-4">
         {/* Info Card */}
-        <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20 p-4">
-          <h2 className="text-sm font-semibold text-foreground mb-2">How It Works</h2>
-          <p className="text-xs text-muted-foreground">
-            Choose an investment plan, invest the required amount, and earn returns in 24 hours. All returns are credited directly to your balance.
+        <Card className="bg-[#0b1118] border border-[#00E53A]/30 p-4 shadow-[0_0_20px_rgba(0,229,58,0.1)]">
+          <h2 className="text-sm font-semibold text-white mb-2">
+            How It Works
+          </h2>
+          <p className="text-xs text-[#94A3B8]">
+            Choose an investment plan, invest the required amount, and earn
+            returns in 24 hours. All returns are credited directly to your
+            balance.
           </p>
         </Card>
 
@@ -99,14 +103,14 @@ const Invest = () => {
           {plans.map((plan, index) => (
             <Card
               key={index}
-              className="bg-card/80 backdrop-blur-lg border-border/50 overflow-hidden hover:shadow-lg transition-shadow"
+              className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] overflow-hidden hover:shadow-[0_0_30px_rgba(0,229,58,0.15)] transition-all"
             >
               {/* Plan Header with Color Gradient */}
-              <div className={`bg-gradient-to-r ${plan.color} p-4 text-white`}>
+              <div
+                className={`bg-gradient-to-r ${plan.color} p-4 text-[#04080a]`}
+              >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-white/20 rounded-lg">
-                    {plan.icon}
-                  </div>
+                  <div className="p-2 bg-white/20 rounded-lg">{plan.icon}</div>
                   <h3 className="font-bold text-lg">{plan.name}</h3>
                 </div>
               </div>
@@ -114,29 +118,31 @@ const Invest = () => {
               {/* Plan Details */}
               <div className="p-4 space-y-3">
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-muted/50 rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground mb-1">Investment</p>
-                    <p className="text-lg font-bold text-foreground">
+                  <div className="bg-[#06090d] rounded-lg p-3 border border-[#1e293b]">
+                    <p className="text-xs text-[#94A3B8] mb-1">Investment</p>
+                    <p className="text-lg font-bold text-white">
                       ₦{plan.investment.toLocaleString()}
                     </p>
                   </div>
-                  <div className="bg-muted/50 rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground mb-1">Returns</p>
-                    <p className="text-lg font-bold bg-gradient-to-r from-lime-200 via-lime-300 to-white bg-clip-text text-transparent">
+                  <div className="bg-[#06090d] rounded-lg p-3 border border-[#1e293b]">
+                    <p className="text-xs text-[#94A3B8] mb-1">Returns</p>
+                    <p className="text-lg font-bold bg-gradient-to-r from-[#00FF55] to-[#66FF88] bg-clip-text text-transparent">
                       ₦{plan.returns.toLocaleString()}
                     </p>
                   </div>
                 </div>
 
                 {/* Duration & Profit */}
-                <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-lg p-3">
+                <div className="bg-gradient-to-r from-[#00E53A]/10 to-[#00C836]/10 border border-[#00E53A]/30 rounded-lg p-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-muted-foreground">Duration</span>
-                    <span className="text-sm font-semibold text-foreground">{plan.duration}</span>
+                    <span className="text-xs text-[#94A3B8]">Duration</span>
+                    <span className="text-sm font-semibold text-white">
+                      {plan.duration}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">Profit</span>
-                    <span className="text-sm font-bold text-green-500">
+                    <span className="text-xs text-[#94A3B8]">Profit</span>
+                    <span className="text-sm font-bold text-[#00FF55]">
                       +₦{(plan.returns - plan.investment).toLocaleString()}
                     </span>
                   </div>
@@ -146,7 +152,7 @@ const Invest = () => {
                 <Button
                   type="button"
                   onClick={() => handleInvestNow(plan)}
-                  className={`w-full bg-gradient-to-r ${plan.color} hover:opacity-90 text-white font-semibold py-2`}
+                  className={`w-full bg-gradient-to-r ${plan.color} hover:opacity-90 text-[#04080a] font-black py-2 shadow-[0_0_20px_rgba(0,229,58,0.3)] transition-all active:scale-[0.98]`}
                 >
                   Invest Now
                 </Button>
@@ -156,11 +162,11 @@ const Invest = () => {
         </div>
 
         {/* Footer Info */}
-        <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-4 text-center">
-          <p className="text-xs text-muted-foreground mb-2">
+        <Card className="bg-[#0b1118] backdrop-blur-lg border border-[#1e293b] p-4 text-center">
+          <p className="text-xs text-[#94A3B8] mb-2">
             💡 Tip: Choose a plan that matches your investment capacity
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-[#94A3B8]">
             All returns are guaranteed within 24 hours of investment.
           </p>
         </Card>

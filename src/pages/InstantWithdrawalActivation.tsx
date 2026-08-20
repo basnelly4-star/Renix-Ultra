@@ -23,7 +23,7 @@ const InstantWithdrawalActivation = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!receipt) {
       toast.error("Please upload payment receipt");
       return;
@@ -31,18 +31,22 @@ const InstantWithdrawalActivation = () => {
 
     setUploading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         navigate("/auth");
         return;
       }
 
       // Create activation payment record
-      const { error } = await supabase.from("instant_activation_payments").insert({
-        user_id: session.user.id,
-        amount: 12600,
-        status: "pending",
-      });
+      const { error } = await supabase
+        .from("instant_activation_payments")
+        .insert({
+          user_id: session.user.id,
+          amount: 12600,
+          status: "pending",
+        });
 
       if (error) throw error;
 
@@ -57,13 +61,14 @@ const InstantWithdrawalActivation = () => {
 
   return (
     <div className="min-h-screen liquid-bg pb-20">
-      <div className="bg-gradient-to-r from-primary to-secondary p-6 text-primary-foreground">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-6 text-[#04080a] shadow-[0_4px_20px_rgba(0,229,58,0.3)]">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/withdraw")}
-            className="text-primary-foreground hover:bg-background/20"
+            className="text-[#04080a] hover:bg-black/20"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -72,67 +77,68 @@ const InstantWithdrawalActivation = () => {
       </div>
 
       <div className="p-6 space-y-6">
-        <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-6">
-          <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <h3 className="font-semibold text-blue-600 dark:text-blue-400 mb-2">
+        <Card className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
+          {/* Info Box */}
+          <div className="mb-6 p-4 bg-[#00E53A]/10 border border-[#00E53A]/30 rounded-lg">
+            <h3 className="font-semibold text-[#00FF55] mb-2">
               ⚡ Instant Withdrawal Activation
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-[#94A3B8]">
               Pay a one-time activation fee of ₦12,600 to unlock instant
               withdrawals without referral requirements.
             </p>
           </div>
 
-          <div className="mb-6 p-6 bg-muted/50 rounded-lg space-y-4">
-            <h3 className="font-semibold text-lg mb-4">Payment Details</h3>
+          {/* Payment Details */}
+          <div className="mb-6 p-6 bg-[#06090d] rounded-lg space-y-4 border border-[#00E53A]/20">
+            <h3 className="font-semibold text-lg text-white mb-4">
+              Payment Details
+            </h3>
 
             <div className="space-y-3">
-              <div className="flex justify-between items-center p-3 bg-background/50 rounded">
-                <span className="text-sm text-muted-foreground">Amount</span>
-                <span className="font-semibold">₦12,600</span>
+              <div className="flex justify-between items-center p-3 bg-[#0b1118] rounded border border-[#1e293b]">
+                <span className="text-sm text-[#94A3B8]">Amount</span>
+                <span className="font-semibold text-white">₦12,600</span>
               </div>
 
-              <div className="flex justify-between items-center p-3 bg-background/50 rounded">
-                <span className="text-sm text-muted-foreground">
-                  Account Number
-                </span>
+              <div className="flex justify-between items-center p-3 bg-[#0b1118] rounded border border-[#1e293b]">
+                <span className="text-sm text-[#94A3B8]">Account Number</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold">2089014213</span>
+                  <span className="font-semibold text-white">2089014213</span>
                   <CopyButton text="2089014213" />
                 </div>
               </div>
 
-              <div className="flex justify-between items-center p-3 bg-background/50 rounded">
-                <span className="text-sm text-muted-foreground">
-                  Account Name
-                </span>
+              <div className="flex justify-between items-center p-3 bg-[#0b1118] rounded border border-[#1e293b]">
+                <span className="text-sm text-[#94A3B8]">Account Name</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold">Here's our receiving details 
+                  <span className="font-semibold text-white">
+                    Here's our receiving details 2089014213 KUDA ESTHER STEPHEN
+                    ID :10077A
+                  </span>
+                  <CopyButton
+                    text="Here's our receiving details 
 2089014213
 KUDA 
 ESTHER STEPHEN 
-ID :10077A</span>
-                  <CopyButton text="Here's our receiving details 
-2089014213
-KUDA 
-ESTHER STEPHEN 
-ID :10077A" />
+ID :10077A"
+                  />
                 </div>
               </div>
 
-              <div className="flex justify-between items-center p-3 bg-background/50 rounded">
-                <span className="text-sm text-muted-foreground">Bank</span>
+              <div className="flex justify-between items-center p-3 bg-[#0b1118] rounded border border-[#1e293b]">
+                <span className="text-sm text-[#94A3B8]">Bank</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold">KUDA</span>
+                  <span className="font-semibold text-white">KUDA</span>
                   <CopyButton text="KUDA" />
                 </div>
               </div>
-              <div className="flex justify-between items-center p-3 bg-background/50 rounded">
-                <span className="text-sm text-muted-foreground">
-                  Verification ID
-                </span>
+              <div className="flex justify-between items-center p-3 bg-[#0b1118] rounded border border-[#1e293b]">
+                <span className="text-sm text-[#94A3B8]">Verification ID</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold font-mono">10077A</span>
+                  <span className="font-semibold font-mono text-white">
+                    10077A
+                  </span>
                   <CopyButton text="10077A" />
                 </div>
               </div>
@@ -141,25 +147,25 @@ ID :10077A" />
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="receipt">Upload Payment Receipt</Label>
+              <Label htmlFor="receipt" className="text-[#CBD5E1]">
+                Upload Payment Receipt
+              </Label>
               <Input
                 id="receipt"
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
                 required
-                className="bg-background/50"
+                className="bg-[#06090d] border-[#1e293b] text-white file:bg-[#00E53A] file:text-[#04080a] file:border-0 file:rounded-lg file:px-3 file:py-1 file:font-bold file:shadow-[0_0_10px_rgba(0,229,58,0.3)]"
               />
               {receipt && (
-                <p className="text-sm text-green-600 dark:text-green-400">
-                  ✓ {receipt.name}
-                </p>
+                <p className="text-sm text-[#00FF55]">✓ {receipt.name}</p>
               )}
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-primary to-secondary"
+              className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
               disabled={uploading}
             >
               {uploading ? (

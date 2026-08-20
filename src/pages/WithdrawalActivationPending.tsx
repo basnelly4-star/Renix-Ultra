@@ -16,38 +16,49 @@ const WithdrawalActivationPending = () => {
   };
 
   return (
-    <div className="min-h-screen liquid-bg pb-20">
-      <div className="bg-gradient-to-r from-red-600 to-red-700 p-6 text-white">
+    <div className="min-h-screen bg-[#06090d] pb-20">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-6 text-[#04080a] shadow-[0_4px_20px_rgba(0,229,58,0.3)]">
         <h1 className="text-2xl font-bold text-center">Payment Failed</h1>
       </div>
 
       <div className="p-6 space-y-6">
-        <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-8 text-center">
+        <Card className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-8 text-center shadow-[0_0_20px_rgba(0,229,58,0.05)]">
+          {/* Failure Icon (kept red) */}
           <div className="flex justify-center mb-6">
             <div className="w-24 h-24 bg-red-500/20 rounded-full flex items-center justify-center border-2 border-red-500/40">
               <X className="w-12 h-12 text-red-500 stroke-[3]" />
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold mb-2 text-red-600">Payment Failed</h2>
-          <p className="text-sm text-muted-foreground mb-6">Your withdrawal activation payment could not be processed</p>
-          
-          <p className="text-muted-foreground mb-6">
-            We encountered an issue processing your withdrawal activation payment of ₦5,100. This could be due to insufficient funds, incorrect account details, or a network error.
+          <h2 className="text-2xl font-bold mb-2 text-red-500">
+            Payment Failed
+          </h2>
+          <p className="text-sm text-[#94A3B8] mb-6">
+            Your withdrawal activation payment could not be processed
           </p>
 
-          <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg mb-6">
-            <p className="text-sm text-red-600 dark:text-red-400">
-              ⚠️ Please contact our support team to resolve this issue and retry your payment.
+          <p className="text-[#94A3B8] mb-6">
+            We encountered an issue processing your withdrawal activation
+            payment of ₦5,100. This could be due to insufficient funds,
+            incorrect account details, or a network error.
+          </p>
+
+          <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg mb-6">
+            <p className="text-sm text-red-400">
+              ⚠️ Please contact our support team to resolve this issue and retry
+              your payment.
             </p>
           </div>
 
           <div className="space-y-3">
-            <p className="text-sm font-semibold mb-4">Contact Support for Assistance:</p>
-            
+            <p className="text-sm font-semibold text-white mb-4">
+              Contact Support for Assistance:
+            </p>
+
             <Button
               onClick={openTelegram}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 min-h-[44px]"
+              className="w-full bg-gradient-to-r from-[#00E53A] to-[#00FF55] hover:from-[#00C836] hover:to-[#00E53A] text-[#04080a] font-black rounded-xl shadow-[0_0_20px_rgba(0,229,58,0.3)] transition-all active:scale-[0.98] py-3 min-h-[44px]"
             >
               <MessageCircle className="w-5 h-5 mr-2" />
               Message Telegram Support
@@ -55,7 +66,7 @@ const WithdrawalActivationPending = () => {
 
             <Button
               onClick={openWhatsApp}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 min-h-[44px]"
+              className="w-full bg-gradient-to-r from-[#00FF55] to-[#66FF88] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black rounded-xl shadow-[0_0_20px_rgba(0,255,85,0.3)] transition-all active:scale-[0.98] py-3 min-h-[44px]"
             >
               <MessageCircle className="w-5 h-5 mr-2" />
               Message WhatsApp Support
@@ -64,7 +75,7 @@ const WithdrawalActivationPending = () => {
             <Button
               onClick={() => navigate("/withdraw")}
               variant="outline"
-              className="w-full mt-4 font-semibold py-3 min-h-[44px]"
+              className="w-full mt-4 font-semibold py-3 min-h-[44px] border-[#00E53A]/30 text-[#00FF55] hover:bg-[#00E53A]/10 transition-all"
             >
               Try Again
             </Button>
@@ -72,7 +83,7 @@ const WithdrawalActivationPending = () => {
             <Button
               onClick={() => navigate("/dashboard")}
               variant="ghost"
-              className="w-full mt-2 font-semibold"
+              className="w-full mt-2 font-semibold text-[#94A3B8] hover:text-white transition-all"
             >
               Back to Dashboard
             </Button>

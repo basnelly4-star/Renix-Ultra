@@ -39,7 +39,9 @@ const InvestPayment = () => {
 
     setUploading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         navigate("/auth");
         return;
@@ -67,13 +69,14 @@ const InvestPayment = () => {
 
   return (
     <div className="min-h-screen liquid-bg pb-20">
-      <div className="bg-gradient-to-r from-primary to-secondary p-6 text-primary-foreground">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-6 text-[#04080a] shadow-[0_4px_20px_rgba(0,229,58,0.3)]">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/broadcast")}
-            className="text-primary-foreground hover:bg-background/20"
+            className="text-[#04080a] hover:bg-black/20"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -82,7 +85,8 @@ const InvestPayment = () => {
       </div>
 
       <div className="p-6 space-y-6">
-        <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-lg border-border/50 p-6">
+        {/* Plan Summary Card */}
+        <Card className="bg-gradient-to-br from-[#0b1118] to-[#06090d] backdrop-blur-lg border border-[#00E53A]/30 p-6 shadow-[0_0_20px_rgba(0,229,58,0.1)]">
           <h2
             className={`text-2xl font-bold mb-4 bg-gradient-to-r ${plan.color} bg-clip-text text-transparent`}
           >
@@ -90,80 +94,85 @@ const InvestPayment = () => {
           </h2>
           <div className="space-y-2 mb-6">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Investment amount:</span>
-              <span className="font-bold">
+              <span className="text-[#94A3B8]">Investment amount:</span>
+              <span className="font-bold text-white">
                 ₦{plan.investment.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Expected returns:</span>
-              <span className="font-bold text-primary">
+              <span className="text-[#94A3B8]">Expected returns:</span>
+              <span className="font-bold text-[#00FF55]">
                 ₦{plan.returns.toLocaleString()}
               </span>
             </div>
           </div>
         </Card>
 
-        <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-6">
-          <h3 className="font-semibold mb-4">Payment Instructions</h3>
-          <div className="space-y-3 text-sm mb-6">
+        {/* Payment Instructions Card */}
+        <Card className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
+          <h3 className="font-semibold mb-4 text-white">
+            Payment Instructions
+          </h3>
+          <div className="space-y-3 text-sm mb-6 text-[#CBD5E1]">
             <p className="flex gap-2">
-              <span className="font-bold">1.</span>
+              <span className="font-bold text-[#00FF55]">1.</span>
               <span>
                 Transfer ₦{plan.investment.toLocaleString()} to the account
                 details below
               </span>
             </p>
-            <div className="bg-muted/50 p-4 rounded-lg space-y-2">
-              <p className="text-sm font-semibold">Bank Details</p>
+            <div className="bg-[#06090d] p-4 rounded-lg space-y-2 border border-[#00E53A]/20">
+              <p className="text-sm font-semibold text-white">Bank Details</p>
               <div className="space-y-1 text-sm">
                 <div className="flex items-center justify-between">
-                  <p className="font-mono">Account:2089014213</p>
+                  <p className="font-mono text-white">Account:2089014213</p>
                   <CopyButton text="2089014213" />
                 </div>
-                <p>Name:  ESTHER STEPHEN</p>
-                <p>Bank: KUDA  </p>
+                <p className="text-[#94A3B8]">Name: ESTHER STEPHEN</p>
+                <p className="text-[#94A3B8]">Bank: KUDA</p>
               </div>
             </div>
-            <div className="bg-muted/50 p-3 rounded-lg flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">Verification ID</p>
+            <div className="bg-[#06090d] p-3 rounded-lg flex items-center justify-between border border-[#00E53A]/20">
+              <p className="text-sm text-[#94A3B8]">Verification ID</p>
               <div className="flex items-center gap-2">
-                <span className="font-mono font-bold">10077A</span>
+                <span className="font-mono font-bold text-white">10077A</span>
                 <CopyButton text="10077A" />
               </div>
             </div>
             <p className="flex gap-2">
-              <span className="font-bold">2.</span>
+              <span className="font-bold text-[#00FF55]">2.</span>
               <span>Upload your payment receipt below</span>
             </p>
             <p className="flex gap-2">
-              <span className="font-bold">3.</span>
+              <span className="font-bold text-[#00FF55]">3.</span>
               <span>Wait for confirmation (usually within 24 hours)</span>
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="receipt">Upload Payment Receipt</Label>
+              <Label htmlFor="receipt" className="text-[#CBD5E1]">
+                Upload Payment Receipt
+              </Label>
               <div className="flex items-center gap-2">
                 <Input
                   id="receipt"
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="bg-background/50"
+                  className="bg-[#06090d] border-[#1e293b] text-white file:bg-[#00E53A] file:text-[#04080a] file:border-0 file:rounded-lg file:px-3 file:py-1 file:font-bold file:shadow-[0_0_10px_rgba(0,229,58,0.3)]"
                   required
                 />
-                <Upload className="w-5 h-5 text-muted-foreground" />
+                <Upload className="w-5 h-5 text-[#00FF55]" />
               </div>
               {receipt && (
-                <p className="text-sm text-green-500">✓ {receipt.name}</p>
+                <p className="text-sm text-[#00FF55]">✓ {receipt.name}</p>
               )}
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-primary to-secondary"
+              className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
               disabled={uploading}
             >
               {uploading ? (

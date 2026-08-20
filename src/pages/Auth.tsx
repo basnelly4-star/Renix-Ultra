@@ -259,7 +259,7 @@ const Auth = () => {
       type="button"
       onClick={handleGoogleAuth}
       disabled={isLoading}
-      className="google-shimmer-button group relative w-full overflow-hidden rounded-xl border border-white/10 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.18),_transparent_38%),linear-gradient(135deg,#1a1a1a_0%,#111827_45%,#0f172a_100%)] px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(134,239,172,0.3)] disabled:cursor-not-allowed disabled:opacity-70"
+      className="google-shimmer-button group relative w-full overflow-hidden rounded-xl border border-[#00E53A]/30 bg-[radial-gradient(circle_at_top,_rgba(0,229,58,0.15),_transparent_38%),linear-gradient(135deg,#0b1118_0%,#06090d_45%,#0b1118_100%)] px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(0,229,58,0.4)] disabled:cursor-not-allowed disabled:opacity-70"
     >
       <span className="google-shimmer-button__shine" aria-hidden="true" />
       <span className="relative z-10 flex items-center justify-center gap-2">
@@ -272,18 +272,30 @@ const Auth = () => {
   return (
     <>
     <div className="min-h-screen liquid-bg flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-card/95 backdrop-blur-lg border-border/50 animate-slide-up">
+      <Card className="w-full max-w-md bg-[#0b1118] backdrop-blur-lg border border-[#00E53A]/30 shadow-[0_0_30px_rgba(0,229,58,0.1)] animate-slide-up">
         <CardHeader className="text-center">
-          <CardTitle className="text-4xl font-bold gradient-text mb-2">Renix-Ultra</CardTitle>
-          <CardDescription className="text-muted-foreground">
+          <CardTitle className="text-4xl font-bold gradient-text mb-2 text-white">
+            Renix-Ultra
+          </CardTitle>
+          <CardDescription className="text-[#94A3B8]">
             Turn one click into thousands!
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signup" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-              <TabsTrigger value="login">Login</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 mb-6 bg-[#06090d] border border-[#1e293b] p-1 rounded-xl">
+              <TabsTrigger
+                value="signup"
+                className="data-[state=active]:bg-[#00E53A] data-[state=active]:text-[#04080a] data-[state=active]:shadow-[0_0_15px_rgba(0,229,58,0.4)] text-[#94A3B8] font-semibold rounded-lg transition-all"
+              >
+                Sign Up
+              </TabsTrigger>
+              <TabsTrigger
+                value="login"
+                className="data-[state=active]:bg-[#00E53A] data-[state=active]:text-[#04080a] data-[state=active]:shadow-[0_0_15px_rgba(0,229,58,0.4)] text-[#94A3B8] font-semibold rounded-lg transition-all"
+              >
+                Login
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="signup">
@@ -293,26 +305,27 @@ const Auth = () => {
 
               <div className="relative mb-4">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
+                  <span className="w-full border-t border-[#1e293b]" />
                 </div>
-                <div className="relative flex justify-center text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                  <span className="bg-card px-2">or sign up with email</span>
+                <div className="relative flex justify-center text-[11px] uppercase tracking-[0.2em] text-[#94A3B8]">
+                  <span className="bg-[#0b1118] px-2">or sign up with email</span>
                 </div>
               </div>
 
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name</Label>
+                  <Label htmlFor="fullName" className="text-[#CBD5E1]">Full Name</Label>
                   <Input
                     id="fullName"
                     placeholder="Enter your full name"
                     value={signupData.fullName}
                     onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
                     required
+                    className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="text-[#CBD5E1]">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -320,10 +333,11 @@ const Auth = () => {
                     value={signupData.email}
                     onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
                     required
+                    className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password" className="text-[#CBD5E1]">Password</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -332,11 +346,12 @@ const Auth = () => {
                       value={signupData.password}
                       onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
                       required
+                      className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
                     />
                     <button
                       type="button"
                       onClick={() => setShowSignupPassword((s) => !s)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8]"
                       aria-label={showSignupPassword ? "Hide password" : "Show password"}
                     >
                       {showSignupPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -344,7 +359,7 @@ const Auth = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="referralCode">Referral Code (Optional)</Label>
+                  <Label htmlFor="referralCode" className="text-[#CBD5E1]">Referral Code (Optional)</Label>
                   <Input
                     id="referralCode"
                     placeholder="Enter referral code"
@@ -352,11 +367,12 @@ const Auth = () => {
                     onChange={(e) => setSignupData({ ...signupData, referralCode: e.target.value })}
                     disabled={!!refParam}
                     readOnly={!!refParam}
+                    className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20 disabled:opacity-60"
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground font-semibold glow-primary"
+                  className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
                   disabled={isLoading}
                 >
                   {isLoading ? "Creating Account..." : "Sign Up & Get ₦50,000 Bonus"}
@@ -371,16 +387,16 @@ const Auth = () => {
 
               <div className="relative mb-4">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
+                  <span className="w-full border-t border-[#1e293b]" />
                 </div>
-                <div className="relative flex justify-center text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                  <span className="bg-card px-2">or login with email</span>
+                <div className="relative flex justify-center text-[11px] uppercase tracking-[0.2em] text-[#94A3B8]">
+                  <span className="bg-[#0b1118] px-2">or login with email</span>
                 </div>
               </div>
 
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">Email</Label>
+                  <Label htmlFor="login-email" className="text-[#CBD5E1]">Email</Label>
                   <Input
                     id="login-email"
                     type="email"
@@ -388,10 +404,11 @@ const Auth = () => {
                     value={loginData.email}
                     onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                     required
+                    className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="login-password">Password</Label>
+                  <Label htmlFor="login-password" className="text-[#CBD5E1]">Password</Label>
                   <div className="relative">
                     <Input
                       id="login-password"
@@ -400,11 +417,12 @@ const Auth = () => {
                       value={loginData.password}
                       onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                       required
+                      className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
                     />
                     <button
                       type="button"
                       onClick={() => setShowLoginPassword((s) => !s)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8]"
                       aria-label={showLoginPassword ? "Hide password" : "Show password"}
                     >
                       {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -413,7 +431,7 @@ const Auth = () => {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground font-semibold"
+                  className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
                   disabled={isLoading}
                 >
                   {isLoading ? "Logging in..." : "Login"}
@@ -426,12 +444,35 @@ const Auth = () => {
     </div>
     <FloatingActionButton position="left" messageIntervalMs={10000} supportOnly />
     <style>{`
+      /* ── Dark background (liquid-bg) ── */
+      .liquid-bg {
+        background-color: #06090d !important;
+      }
+
+      /* ── Slide‑up animation ── */
+      @keyframes slide-up {
+        from { transform: translateY(30px); opacity: 0; }
+        to   { transform: translateY(0); opacity: 1; }
+      }
+      .animate-slide-up {
+        animation: slide-up 0.6s ease-out;
+      }
+
+      /* ── Gradient text (green) ── */
+      .gradient-text {
+        background: linear-gradient(180deg, #f0fff0, #00FF55 40%, #00E53A 70%, #00C836);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      /* ── Google Shimmer Button (colors updated to green theme) ── */
       .google-shimmer-button {
         position: relative;
         isolation: isolate;
-        border: 1px solid rgba(255,255,255,0.08);
-        background: linear-gradient(135deg, #111827 0%, #0f172a 100%);
-        box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 18px 34px rgba(15, 23, 42, 0.45);
+        border: 1px solid rgba(0,229,58,0.30);
+        background: linear-gradient(135deg, #0b1118 0%, #06090d 100%);
+        box-shadow: 0 0 0 1px rgba(0,229,58,0.08), 0 18px 34px rgba(0,0,0,0.6);
         overflow: hidden;
       }
 
@@ -443,13 +484,12 @@ const Auth = () => {
         padding: 1px;
         background: conic-gradient(
           from 0deg,
-          rgba(34, 197, 94, 0.2),
-          rgba(134, 239, 172, 0.8),
-          rgba(59, 130, 246, 0.8),
-          rgba(34, 197, 94, 0.2),
-          rgba(134, 239, 172, 0.8),
-          rgba(59, 130, 246, 0.8),
-          rgba(34, 197, 94, 0.2)
+          rgba(0,229,58,0.2),
+          rgba(0,255,85,0.8),
+          rgba(0,229,58,0.8),
+          rgba(0,200,54,0.8),
+          rgba(0,255,85,0.8),
+          rgba(0,229,58,0.2)
         );
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
@@ -465,9 +505,9 @@ const Auth = () => {
         background: linear-gradient(
           120deg,
           transparent 0%,
-          rgba(255,255,255,0.12) 28%,
-          rgba(255,255,255,0.5) 45%,
-          rgba(255,255,255,0.1) 60%,
+          rgba(0,255,85,0.12) 28%,
+          rgba(0,255,85,0.5) 45%,
+          rgba(0,229,58,0.1) 60%,
           transparent 100%
         );
         transform: translateX(-140%);
@@ -479,7 +519,7 @@ const Auth = () => {
         position: absolute;
         inset: 1px;
         border-radius: 12px;
-        background: linear-gradient(135deg, rgba(52, 211, 153, 0.18), rgba(59, 130, 246, 0.08), rgba(255,255,255,0.02));
+        background: linear-gradient(135deg, rgba(0,229,58,0.18), rgba(0,200,54,0.08), rgba(255,255,255,0.02));
         z-index: 0;
       }
 

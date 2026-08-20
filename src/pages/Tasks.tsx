@@ -140,14 +140,16 @@ const Tasks = () => {
   const isTaskClaimedToday = (taskId: number) => {
     const lastClaim = localStorage.getItem(`task_${taskId}_claimed`);
     if (!lastClaim) return false;
-    
+
     const today = new Date().toDateString();
     const lastClaimDate = new Date(lastClaim).toDateString();
     return today === lastClaimDate;
   };
 
   // Track claimed tasks in state so UI updates immediately without refresh
-  const [claimedTodayMap, setClaimedTodayMap] = useState<Record<number, boolean>>({});
+  const [claimedTodayMap, setClaimedTodayMap] = useState<
+    Record<number, boolean>
+  >({});
 
   useEffect(() => {
     const map: Record<number, boolean> = {};
@@ -228,14 +230,15 @@ const Tasks = () => {
   };
 
   return (
-    <div className="min-h-screen liquid-bg pb-20">
-      <div className="bg-gradient-to-r from-primary to-secondary p-6 text-primary-foreground">
+    <div className="min-h-screen bg-[#06090d] pb-20">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-6 text-[#04080a] shadow-[0_4px_20px_rgba(0,229,58,0.3)]">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/dashboard")}
-            className="text-primary-foreground hover:bg-background/20"
+            className="text-[#04080a] hover:bg-black/20"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -244,27 +247,41 @@ const Tasks = () => {
       </div>
 
       <div className="p-6 space-y-4">
-        <Card className="bg-gradient-to-br from-card to-card/80 backdrop-blur-lg border-border/50 p-6">
-          <h2 className="text-xl font-bold mb-2">Earn Extra Rewards</h2>
-          <p className="text-sm text-muted-foreground">
-            Complete 17 daily tasks to earn bonus credits and boost your earnings
+        {/* Intro Card */}
+        <Card className="bg-gradient-to-br from-[#0b1118] to-[#06090d] backdrop-blur-lg border border-[#00E53A]/30 p-6 shadow-[0_0_20px_rgba(0,229,58,0.1)]">
+          <h2 className="text-xl font-bold text-white mb-2">
+            Earn Extra Rewards
+          </h2>
+          <p className="text-sm text-[#94A3B8]">
+            Complete 17 daily tasks to earn bonus credits and boost your
+            earnings
           </p>
         </Card>
 
+        {/* Task Cards */}
         {tasks.map((task) => {
           const isClaimed = claimedTodayMap[task.id] ?? false;
-          
+
           return (
-            <Card key={task.id} className="bg-card/80 backdrop-blur-lg border-border/50 p-4">
+            <Card
+              key={task.id}
+              className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-4 shadow-[0_0_20px_rgba(0,229,58,0.05)]"
+            >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <h3 className="font-semibold mb-1">{task.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-3">{task.description}</p>
+                  <h3 className="font-semibold text-white mb-1">
+                    {task.title}
+                  </h3>
+                  <p className="text-sm text-[#94A3B8] mb-3">
+                    {task.description}
+                  </p>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-primary">{task.reward}</span>
-                    <span className="text-xs text-muted-foreground">reward</span>
+                    <span className="text-sm font-bold text-[#00FF55]">
+                      {task.reward}
+                    </span>
+                    <span className="text-xs text-[#94A3B8]">reward</span>
                     {isClaimed && (
-                      <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full">
+                      <span className="text-xs bg-[#00E53A] text-[#04080a] px-2 py-1 rounded-full font-bold shadow-[0_0_10px_rgba(0,229,58,0.3)]">
                         Claimed Today
                       </span>
                     )}
@@ -275,9 +292,9 @@ const Tasks = () => {
                   onClick={() => handleClaim(task)}
                   disabled={isClaimed}
                   className={`px-6 py-3 font-bold ${
-                    isClaimed 
-                      ? "bg-gray-400 cursor-not-allowed" 
-                      : "bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+                    isClaimed
+                      ? "bg-[#1e293b] text-[#64748B] cursor-not-allowed"
+                      : "bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] shadow-[0_0_20px_rgba(0,229,58,0.3)] transition-all active:scale-[0.98]"
                   }`}
                 >
                   {isClaimed ? "Claimed" : "Claim Now"}
@@ -287,9 +304,11 @@ const Tasks = () => {
           );
         })}
 
-        <Card className="bg-muted/50 border-border/50 p-4">
-          <p className="text-sm text-center text-muted-foreground">
-            Tasks reset every day at midnight. Check back tomorrow for more rewards!
+        {/* Footer Info */}
+        <Card className="bg-[#0b1118] border border-[#00E53A]/20 p-4">
+          <p className="text-sm text-center text-[#94A3B8]">
+            Tasks reset every day at midnight. Check back tomorrow for more
+            rewards!
           </p>
         </Card>
       </div>

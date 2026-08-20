@@ -19,7 +19,9 @@ const Profile = () => {
 
   const loadProfile = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         navigate("/auth");
         return;
@@ -43,14 +45,15 @@ const Profile = () => {
   if (loading || !profile) return null;
 
   return (
-    <div className="min-h-screen liquid-bg pb-20">
-      <div className="bg-gradient-to-r from-primary to-secondary p-6 text-primary-foreground">
+    <div className="min-h-screen bg-[#06090d] pb-20">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-6 text-[#04080a] shadow-[0_4px_20px_rgba(0,229,58,0.3)]">
         <div className="flex items-center gap-4 mb-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/dashboard")}
-            className="text-primary-foreground hover:bg-background/20"
+            className="text-[#04080a] hover:bg-black/20"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -59,44 +62,52 @@ const Profile = () => {
       </div>
 
       <div className="p-6 space-y-6">
-        <Card className="bg-card/80 backdrop-blur-lg border-border/50 p-6">
+        <Card className="bg-[#0b1118]/80 backdrop-blur-lg border border-[#1e293b] p-6 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
           <div className="flex flex-col items-center gap-4 mb-6">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-3xl font-bold text-primary-foreground">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-r from-[#00C836] to-[#00E53A] flex items-center justify-center text-3xl font-bold text-[#04080a] shadow-[0_0_20px_rgba(0,229,58,0.3)]">
               {profile.full_name?.charAt(0) || "U"}
             </div>
-            <h2 className="text-2xl font-bold">{profile.full_name}</h2>
+            <h2 className="text-2xl font-bold text-white">
+              {profile.full_name}
+            </h2>
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-              <Mail className="w-5 h-5 text-primary" />
+            <div className="flex items-center gap-3 p-3 bg-[#06090d] rounded-lg border border-[#00E53A]/20">
+              <Mail className="w-5 h-5 text-[#00FF55]" />
               <div>
-                <p className="text-sm text-muted-foreground">Email</p>
-                <p className="font-medium">{profile.email}</p>
+                <p className="text-sm text-[#94A3B8]">Email</p>
+                <p className="font-medium text-white">{profile.email}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-              <RewardsIcon className="w-5 h-5 text-secondary" />
+            <div className="flex items-center gap-3 p-3 bg-[#06090d] rounded-lg border border-[#00E53A]/20">
+              <RewardsIcon className="w-5 h-5 text-[#00E53A]" />
               <div>
-                <p className="text-sm text-muted-foreground">Referral Code</p>
-                <p className="font-medium">{profile.referral_code}</p>
+                <p className="text-sm text-[#94A3B8]">Referral Code</p>
+                <p className="font-medium text-white">
+                  {profile.referral_code}
+                </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-              <ProfileIcon className="w-5 h-5 text-primary" />
+            <div className="flex items-center gap-3 p-3 bg-[#06090d] rounded-lg border border-[#00E53A]/20">
+              <ProfileIcon className="w-5 h-5 text-[#00FF55]" />
               <div>
-                <p className="text-sm text-muted-foreground">Total Referrals</p>
-                <p className="font-medium">{profile.total_referrals || 0}</p>
+                <p className="text-sm text-[#94A3B8]">Total Referrals</p>
+                <p className="font-medium text-white">
+                  {profile.total_referrals || 0}
+                </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-              <Calendar className="w-5 h-5 text-secondary" />
+            <div className="flex items-center gap-3 p-3 bg-[#06090d] rounded-lg border border-[#00E53A]/20">
+              <Calendar className="w-5 h-5 text-[#00E53A]" />
               <div>
-                <p className="text-sm text-muted-foreground">Member Since</p>
-                <p className="font-medium">{new Date(profile.created_at).toLocaleDateString()}</p>
+                <p className="text-sm text-[#94A3B8]">Member Since</p>
+                <p className="font-medium text-white">
+                  {new Date(profile.created_at).toLocaleDateString()}
+                </p>
               </div>
             </div>
           </div>
