@@ -15,4 +15,35 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Extract vendor libraries for better caching
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-ui": [
+            "@radix-ui/react-accordion",
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-popover",
+            "@radix-ui/react-select",
+            "@radix-ui/react-tooltip",
+            "recharts",
+          ],
+          "vendor-forms": ["react-hook-form", "zod", "@hookform/resolvers"],
+          "vendor-utils": ["@tanstack/react-query", "date-fns", "embla-carousel-react"],
+          // Critical pages stay in main bundle or get small chunks
+          // Secondary pages are lazy-loaded separately
+        },
+      },
+    },
+    // Optimize chunk size thresholds
+    chunkSizeWarningLimit: 1000, // Warn if chunk > 1MB
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+      },
+    },
+  },
 }));
