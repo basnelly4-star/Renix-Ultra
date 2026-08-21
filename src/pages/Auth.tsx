@@ -3,16 +3,27 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Eye, EyeOff, Chrome } from "lucide-react";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
-import { recoverFromInvalidRefreshToken, supabase } from "@/integrations/supabase/client";
+import {
+  recoverFromInvalidRefreshToken,
+  supabase,
+} from "@/integrations/supabase/client";
 
 const isRetryableAuthIssue = (error: unknown) => {
   const message = error instanceof Error ? error.message : String(error ?? "");
-  return /AuthRetryableFetchError|504|503|502|Failed to fetch|NetworkError/i.test(message);
+  return /AuthRetryableFetchError|504|503|502|Failed to fetch|NetworkError/i.test(
+    message,
+  );
 };
 
 const SIGNUP_BONUS_AMOUNT = 40000;
@@ -63,7 +74,8 @@ const Auth = () => {
           // detectSessionInUrl normally performs this exchange automatically.
           // The fallback supports environments where automatic detection is delayed.
           if (!oauthSession) {
-            const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(oauthCode);
+            const { error: exchangeError } =
+              await supabase.auth.exchangeCodeForSession(oauthCode);
             if (exchangeError) throw exchangeError;
 
             ({
@@ -74,7 +86,9 @@ const Auth = () => {
           if (!oauthSession) throw new Error("Google session was not created");
 
           const oauthReferralCode =
-            searchParams.get("ref") || localStorage.getItem("referralCode") || null;
+            searchParams.get("ref") ||
+            localStorage.getItem("referralCode") ||
+            null;
           const { error: rewardError } = await supabase.rpc(
             "finalize_signup_rewards",
             { p_referral_code: oauthReferralCode },
@@ -93,7 +107,8 @@ const Auth = () => {
           } = await supabase.auth.getSession();
 
           if (oauthSession) {
-            const oauthReferralCode = localStorage.getItem("referralCode") || null;
+            const oauthReferralCode =
+              localStorage.getItem("referralCode") || null;
             const { error: rewardError } = await supabase.rpc(
               "finalize_signup_rewards",
               { p_referral_code: oauthReferralCode },
@@ -108,7 +123,10 @@ const Auth = () => {
         }
 
         // Fallback: normal session check
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
         if (error) throw error;
 
         if (session) {
@@ -116,7 +134,8 @@ const Auth = () => {
           return;
         }
 
-        const { data: userData, error: userError } = await supabase.auth.getUser();
+        const { data: userData, error: userError } =
+          await supabase.auth.getUser();
         if (userError) throw userError;
         if (userData.user) {
           navigate("/dashboard", { replace: true });
@@ -141,7 +160,8 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
-      const finalRefCode = signupData.referralCode || localStorage.getItem("referralCode") || "";
+      const finalRefCode =
+        signupData.referralCode || localStorage.getItem("referralCode") || "";
       const { data, error } = await supabase.auth.signUp({
         email: signupData.email.trim(),
         password: signupData.password,
@@ -162,7 +182,9 @@ const Auth = () => {
       // yet, so RLS correctly prevents this request from reading the profile.
 
       localStorage.removeItem("referralCode");
-      toast.success(`Welcome to Renix-Ultra! You got ₦${SIGNUP_BONUS_AMOUNT.toLocaleString()} bonus!`);
+      toast.success(
+        `Welcome to Renix-Ultra! You got ₦${SIGNUP_BONUS_AMOUNT.toLocaleString()} bonus!`,
+      );
       navigate("/dashboard", { replace: true });
     } catch (error: any) {
       console.error(error);
@@ -203,7 +225,9 @@ const Auth = () => {
 
       if (loginError) throw loginError;
       if (!loginSession) {
-        throw new Error("Login succeeded but session was not created. Please try again.");
+        throw new Error(
+          "Login succeeded but session was not created. Please try again.",
+        );
       }
 
       toast.success("Welcome back!");
@@ -216,21 +240,25 @@ const Auth = () => {
       }
 
       if (isRetryableAuthIssue(error)) {
-        toast.error("Authentication server timed out. Please try again in a few seconds.");
+        toast.error(
+          "Authentication server timed out. Please try again in a few seconds.",
+        );
       } else {
         toast.error(error.message || "Invalid email or password");
       }
     } finally {
       setIsLoading(false);
     }
-  };;
+  };
 
   const handleGoogleAuth = async () => {
     setIsLoading(true);
 
     try {
       const referralCode =
-        signupData.referralCode.trim() || localStorage.getItem("referralCode") || "";
+        signupData.referralCode.trim() ||
+        localStorage.getItem("referralCode") ||
+        "";
 
       if (referralCode) {
         localStorage.setItem("referralCode", referralCode);
@@ -252,7 +280,11 @@ const Auth = () => {
     }
   };
 
-  const GoogleAuthButton = ({ label = "Continue with Google" }: { label?: string }) => (
+  const GoogleAuthButton = ({
+    label = "Continue with Google",
+  }: {
+    label?: string;
+  }) => (
     <button
       type="button"
       onClick={handleGoogleAuth}
@@ -269,179 +301,237 @@ const Auth = () => {
 
   return (
     <>
-    <div className="min-h-screen liquid-bg flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-[#0b1118] backdrop-blur-lg border border-[#00E53A]/30 shadow-[0_0_30px_rgba(0,229,58,0.1)] animate-slide-up">
-        <CardHeader className="text-center">
-          <CardTitle className="text-4xl font-bold gradient-text mb-2 text-white">
-            Renix-Ultra
-          </CardTitle>
-          <CardDescription className="text-[#94A3B8]">
-            Turn one click into thousands!
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="signup" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6 bg-[#06090d] border border-[#1e293b] p-1 rounded-xl">
-              <TabsTrigger
-                value="signup"
-                className="data-[state=active]:bg-[#00E53A] data-[state=active]:text-[#04080a] data-[state=active]:shadow-[0_0_15px_rgba(0,229,58,0.4)] text-[#94A3B8] font-semibold rounded-lg transition-all"
-              >
-                Sign Up
-              </TabsTrigger>
-              <TabsTrigger
-                value="login"
-                className="data-[state=active]:bg-[#00E53A] data-[state=active]:text-[#04080a] data-[state=active]:shadow-[0_0_15px_rgba(0,229,58,0.4)] text-[#94A3B8] font-semibold rounded-lg transition-all"
-              >
-                Login
-              </TabsTrigger>
-            </TabsList>
+      <div className="min-h-screen liquid-bg flex items-center justify-center p-4">
+        <Card className="w-full max-w-md bg-[#0b1118] backdrop-blur-lg border border-[#00E53A]/30 shadow-[0_0_30px_rgba(0,229,58,0.1)] animate-slide-up">
+          <CardHeader className="text-center">
+            <CardTitle className="text-4xl font-bold gradient-text mb-2 text-white">
+              Renix-Ultra
+            </CardTitle>
+            <CardDescription className="text-[#94A3B8]">
+              Turn one click into thousands!
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="signup" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6 bg-[#06090d] border border-[#1e293b] p-1 rounded-xl">
+                <TabsTrigger
+                  value="signup"
+                  className="data-[state=active]:bg-[#00E53A] data-[state=active]:text-[#04080a] data-[state=active]:shadow-[0_0_15px_rgba(0,229,58,0.4)] text-[#94A3B8] font-semibold rounded-lg transition-all"
+                >
+                  Sign Up
+                </TabsTrigger>
+                <TabsTrigger
+                  value="login"
+                  className="data-[state=active]:bg-[#00E53A] data-[state=active]:text-[#04080a] data-[state=active]:shadow-[0_0_15px_rgba(0,229,58,0.4)] text-[#94A3B8] font-semibold rounded-lg transition-all"
+                >
+                  Login
+                </TabsTrigger>
+              </TabsList>
 
-            <TabsContent value="signup">
-              <div className="mb-4">
-                <GoogleAuthButton label="Continue with Google" />
-              </div>
+              <TabsContent value="signup">
+                <div className="mb-4">
+                  <GoogleAuthButton label="Continue with Google" />
+                </div>
 
-              <div className="relative mb-4">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-[#1e293b]" />
+                <div className="relative mb-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-[#1e293b]" />
+                  </div>
+                  <div className="relative flex justify-center text-[11px] uppercase tracking-[0.2em] text-[#94A3B8]">
+                    <span className="bg-[#0b1118] px-2">
+                      or sign up with email
+                    </span>
+                  </div>
                 </div>
-                <div className="relative flex justify-center text-[11px] uppercase tracking-[0.2em] text-[#94A3B8]">
-                  <span className="bg-[#0b1118] px-2">or sign up with email</span>
-                </div>
-              </div>
 
-              <form onSubmit={handleSignup} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName" className="text-[#CBD5E1]">Full Name</Label>
-                  <Input
-                    id="fullName"
-                    placeholder="Enter your full name"
-                    value={signupData.fullName}
-                    onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
-                    required
-                    className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-[#CBD5E1]">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={signupData.email}
-                    onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
-                    required
-                    className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-[#CBD5E1]">Password</Label>
-                  <div className="relative">
+                <form onSubmit={handleSignup} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName" className="text-[#CBD5E1]">
+                      Full Name
+                    </Label>
                     <Input
-                      id="password"
-                      type={showSignupPassword ? "text" : "password"}
-                      placeholder="Create a password"
-                      value={signupData.password}
-                      onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
+                      id="fullName"
+                      placeholder="Enter your full name"
+                      value={signupData.fullName}
+                      onChange={(e) =>
+                        setSignupData({
+                          ...signupData,
+                          fullName: e.target.value,
+                        })
+                      }
                       required
                       className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowSignupPassword((s) => !s)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8]"
-                      aria-label={showSignupPassword ? "Hide password" : "Show password"}
-                    >
-                      {showSignupPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="referralCode" className="text-[#CBD5E1]">Referral Code (Optional)</Label>
-                  <Input
-                    id="referralCode"
-                    placeholder="Enter referral code"
-                    value={signupData.referralCode}
-                    onChange={(e) => setSignupData({ ...signupData, referralCode: e.target.value })}
-                    disabled={!!refParam}
-                    readOnly={!!refParam}
-                    className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20 disabled:opacity-60"
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Creating Account..." : "Sign Up & Get ₦40,000 Bonus"}
-                </Button>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="login">
-              <div className="mb-4">
-                <GoogleAuthButton label="Continue with Google" />
-              </div>
-
-              <div className="relative mb-4">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-[#1e293b]" />
-                </div>
-                <div className="relative flex justify-center text-[11px] uppercase tracking-[0.2em] text-[#94A3B8]">
-                  <span className="bg-[#0b1118] px-2">or login with email</span>
-                </div>
-              </div>
-
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="login-email" className="text-[#CBD5E1]">Email</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={loginData.email}
-                    onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                    required
-                    className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="login-password" className="text-[#CBD5E1]">Password</Label>
-                  <div className="relative">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-[#CBD5E1]">
+                      Email
+                    </Label>
                     <Input
-                      id="login-password"
-                      type={showLoginPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      value={loginData.password}
-                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={signupData.email}
+                      onChange={(e) =>
+                        setSignupData({ ...signupData, email: e.target.value })
+                      }
                       required
                       className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowLoginPassword((s) => !s)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8]"
-                      aria-label={showLoginPassword ? "Hide password" : "Show password"}
-                    >
-                      {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-[#CBD5E1]">
+                      Password
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showSignupPassword ? "text" : "password"}
+                        placeholder="Create a password"
+                        value={signupData.password}
+                        onChange={(e) =>
+                          setSignupData({
+                            ...signupData,
+                            password: e.target.value,
+                          })
+                        }
+                        required
+                        className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowSignupPassword((s) => !s)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8]"
+                        aria-label={
+                          showSignupPassword ? "Hide password" : "Show password"
+                        }
+                      >
+                        {showSignupPassword ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="referralCode" className="text-[#CBD5E1]">
+                      Referral Code (Optional)
+                    </Label>
+                    <Input
+                      id="referralCode"
+                      placeholder="Enter referral code"
+                      value={signupData.referralCode}
+                      onChange={(e) =>
+                        setSignupData({
+                          ...signupData,
+                          referralCode: e.target.value,
+                        })
+                      }
+                      disabled={!!refParam}
+                      readOnly={!!refParam}
+                      className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20 disabled:opacity-60"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
+                    disabled={isLoading}
+                  >
+                    {isLoading
+                      ? "Creating Account..."
+                      : "Sign Up & Get ₦40,000 Bonus"}
+                  </Button>
+                </form>
+              </TabsContent>
+
+              <TabsContent value="login">
+                <div className="mb-4">
+                  <GoogleAuthButton label="Continue with Google" />
+                </div>
+
+                <div className="relative mb-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-[#1e293b]" />
+                  </div>
+                  <div className="relative flex justify-center text-[11px] uppercase tracking-[0.2em] text-[#94A3B8]">
+                    <span className="bg-[#0b1118] px-2">
+                      or login with email
+                    </span>
                   </div>
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Logging in..." : "Login"}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-    </div>
-    <FloatingActionButton position="left" messageIntervalMs={10000} supportOnly />
-    <style>{`
+
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="login-email" className="text-[#CBD5E1]">
+                      Email
+                    </Label>
+                    <Input
+                      id="login-email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={loginData.email}
+                      onChange={(e) =>
+                        setLoginData({ ...loginData, email: e.target.value })
+                      }
+                      required
+                      className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="login-password" className="text-[#CBD5E1]">
+                      Password
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="login-password"
+                        type={showLoginPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        value={loginData.password}
+                        onChange={(e) =>
+                          setLoginData({
+                            ...loginData,
+                            password: e.target.value,
+                          })
+                        }
+                        required
+                        className="bg-[#06090d] border-[#1e293b] text-white placeholder:text-[#64748B] focus:border-[#00E53A] focus:ring-[#00E53A]/20"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowLoginPassword((s) => !s)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8]"
+                        aria-label={
+                          showLoginPassword ? "Hide password" : "Show password"
+                        }
+                      >
+                        {showLoginPassword ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Logging in..." : "Login"}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      </div>
+      <FloatingActionButton
+        position="left"
+        messageIntervalMs={10000}
+        supportOnly
+      />
+      <style>{`
       /* ── Dark background (liquid-bg) ── */
       .liquid-bg {
         background-color: #06090d !important;
@@ -532,7 +622,7 @@ const Auth = () => {
         100% { transform: translateX(160%); }
       }
     `}</style>
-  </>
+    </>
   );
 };
 
