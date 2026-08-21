@@ -1,4 +1,4 @@
-const CACHE_NAME = "Renix-Ultra-cache-v1";
+const CACHE_NAME = "Renix-Ultra-cache-v2";
 const APP_SHELL = ["/", "/index.html", "/manifest.webmanifest?v=20260317", "/favicon.ico", "/Renix-Ultra-icon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -43,10 +43,18 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(event.request).then((cached) =>
-      cached || fetch(event.request).catch(() =>
-        new Response("", { status: 503, statusText: "Offline" })
+    fetch(event.request)
+      .then((response) => {
+        if (response.ok && requestUrl.pathname.startsWith("/assets/")) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        }
+        return response;
+      })
+      .catch(() =>
+        caches.match(event.request).then((cached) =>
+          cached || new Response("", { status: 503, statusText: "Offline" })
+        )
       )
-    )
   );
 });
