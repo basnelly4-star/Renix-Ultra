@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -9,7 +8,22 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: (() => {
+    const base = [react()];
+    if (mode === "development") {
+      try {
+        // require dynamically to avoid loading native bindings in production builds
+        // (some environments may have @swc/core native binding issues)
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { componentTagger } = require("lovable-tagger");
+        base.push(componentTagger());
+      } catch (e) {
+        // failed to load tagger — ignore in CI/production
+        // console.warn("lovable-tagger not available:", e);
+      }
+    }
+    return base;
+  })(),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
