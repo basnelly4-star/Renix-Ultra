@@ -84,6 +84,83 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_user();
 
+-- Google OAuth does not include the app referral code in raw_user_meta_data.
+-- Call this function after OAuth returns to finish rewards exactly once.
+CREATE OR REPLACE FUNCTION public.finalize_signup_rewards(p_referral_code text DEFAULT NULL)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  current_user_id uuid := auth.uid();
+  current_profile public.profiles%ROWTYPE;
+  referrer_id uuid;
+  welcome_bonus integer := 20000;
+  referral_bonus integer := 15000;
+BEGIN
+  IF current_user_id IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  SELECT * INTO current_profile
+    FROM public.profiles
+   WHERE id = current_user_id
+   FOR UPDATE;
+
+  IF current_profile.id IS NULL THEN
+    RAISE EXCEPTION 'Profile not found';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM public.transactions
+     WHERE user_id = current_user_id
+       AND description = 'Welcome bonus'
+  ) THEN
+    UPDATE public.profiles
+       SET balance = COALESCE(balance, 0) + welcome_bonus,
+           updated_at = now()
+     WHERE id = current_user_id;
+
+    INSERT INTO public.transactions (user_id, type, amount, description, status)
+    VALUES (current_user_id, 'credit', welcome_bonus, 'Welcome bonus', 'completed');
+  END IF;
+
+  IF current_profile.referred_by IS NULL AND NULLIF(trim(p_referral_code), '') IS NOT NULL THEN
+    SELECT id INTO referrer_id
+      FROM public.profiles
+     WHERE upper(trim(referral_code)) = upper(trim(p_referral_code))
+       AND id <> current_user_id
+     LIMIT 1;
+
+    IF referrer_id IS NOT NULL THEN
+      UPDATE public.profiles
+         SET referred_by = referrer_id,
+             updated_at = now()
+       WHERE id = current_user_id;
+
+      UPDATE public.profiles
+         SET balance = COALESCE(balance, 0) + referral_bonus,
+             total_referrals = COALESCE(total_referrals, 0) + 1,
+             updated_at = now()
+       WHERE id = referrer_id;
+
+      INSERT INTO public.transactions (user_id, type, amount, description, status)
+      VALUES (
+        referrer_id,
+        'credit',
+        referral_bonus,
+        'Referral bonus for user ' || current_user_id::text,
+        'completed'
+      );
+    END IF;
+  END IF;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.finalize_signup_rewards(text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.finalize_signup_rewards(text) TO authenticated;
+
 -- Repair existing profiles that were created without the welcome credit.
 UPDATE public.profiles AS p
    SET balance = 20000,

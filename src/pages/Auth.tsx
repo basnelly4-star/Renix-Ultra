@@ -58,21 +58,18 @@ const Auth = () => {
           try {
             const { data, error } = await supabase.auth.getSessionFromUrl();
             if (!error && data?.session) {
-              // ensure profile exists for oauth users
-              const userId = data.session.user.id;
-              const email = data.session.user.email || "";
-              const fullName =
-                data.session.user.user_metadata?.fullName ||
-                data.session.user.user_metadata?.full_name ||
-                email.split("@")[0] ||
-                "User";
+              const oauthReferralCode =
+                searchParams.get("ref") || localStorage.getItem("referralCode") || null;
+              const { error: rewardError } = await supabase.rpc(
+                "finalize_signup_rewards",
+                { p_referral_code: oauthReferralCode },
+              );
 
-              await supabase.from("profiles").upsert({
-                id: userId,
-                email,
-                full_name: fullName,
-                referral_code: Math.random().toString(36).substr(2, 6).toUpperCase(),
-              });
+              if (rewardError) {
+                console.error("OAuth reward finalization failed:", rewardError);
+              }
+
+              localStorage.removeItem("referralCode");
 
               navigate("/dashboard", { replace: true });
               return;
@@ -207,7 +204,7 @@ const Auth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth${signupData.referralCode ? `?ref=${encodeURIComponent(signupData.referralCode)}` : ""}`,
         },
       });
 

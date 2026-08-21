@@ -420,7 +420,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      finalize_signup_rewards: {
+        Args: {
+          p_referral_code?: string | null
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
