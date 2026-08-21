@@ -5,8 +5,8 @@ CREATE TABLE public.profiles (
   email TEXT NOT NULL,
   referral_code TEXT UNIQUE NOT NULL,
   referred_by UUID REFERENCES public.profiles(id),
-  balance DECIMAL(12, 2) DEFAULT 50000.00,
-  referral_earnings DECIMAL(12, 2) DEFAULT 12000.00,
+  balance DECIMAL(12, 2) DEFAULT 20000.00,
+  referral_earnings DECIMAL(12, 2) DEFAULT 15000.00,
   total_referrals INTEGER DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -128,7 +128,7 @@ BEGIN
   
   -- Create welcome bonus transaction
   INSERT INTO public.transactions (user_id, type, amount, description)
-  VALUES (NEW.id, 'credit', 50000.00, 'Welcome bonus');
+  VALUES (NEW.id, 'credit', 20000.00, 'Welcome bonus');
   
   RETURN NEW;
 END;

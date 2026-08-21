@@ -113,7 +113,7 @@ export const WelcomeModal = () => {
 
               <p className="text-sm text-muted-foreground mx-3">
                 As a new user you'll receive a welcome bonus of{" "}
-                <span className="font-bold">₦50,000</span>. This bonus is
+                <span className="font-bold">₦20,000</span>. This bonus is
                 credited after you complete the required steps (joining our
                 Telegram is one of them).
               </p>

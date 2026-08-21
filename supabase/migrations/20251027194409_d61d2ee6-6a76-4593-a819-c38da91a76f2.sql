@@ -55,7 +55,7 @@ BEGIN
   
   -- Create welcome bonus transaction
   INSERT INTO public.transactions (user_id, type, amount, description, status)
-  VALUES (NEW.id, 'credit', 50000.00, 'Welcome bonus', 'completed');
+  VALUES (NEW.id, 'credit', 20000.00, 'Welcome bonus', 'completed');
   
   RETURN NEW;
 END;

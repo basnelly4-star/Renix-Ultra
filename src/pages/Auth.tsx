@@ -15,6 +15,9 @@ const isRetryableAuthIssue = (error: unknown) => {
   return /AuthRetryableFetchError|504|503|502|Failed to fetch|NetworkError/i.test(message);
 };
 
+const SIGNUP_BONUS_AMOUNT = 20000;
+const REFERRAL_BONUS_AMOUNT = 15000;
+
 const Auth = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -115,6 +118,23 @@ const Auth = () => {
 
     try {
       const finalRefCode = signupData.referralCode || localStorage.getItem("referralCode") || "";
+      let referrerId: string | null = null;
+
+      if (finalRefCode && finalRefCode.trim() !== "") {
+        const { data: referrer, error: referrerError } = await supabase
+          .from("profiles")
+          .select("id, balance, total_referrals, referral_code")
+          .ilike("referral_code", finalRefCode.trim())
+          .maybeSingle();
+
+        if (referrerError) {
+          console.warn("Referral lookup error:", referrerError);
+        }
+
+        if (referrer) {
+          referrerId = referrer.id;
+        }
+      }
 
       const { data, error } = await supabase.auth.signUp({
         email: signupData.email.trim(),
@@ -133,77 +153,99 @@ const Auth = () => {
       const userId = data.user.id;
       const generatedRefCode = Math.random().toString(36).substr(2, 6).toUpperCase();
 
-      // Create user profile
-      await supabase.from("profiles").upsert({
-        id: userId,
-        email: data.user.email!,
-        full_name: signupData.fullName,
-        referral_code: generatedRefCode,
-        balance: 50000,
-        total_referrals: 0,
-      });
+      const { data: existingProfile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
 
-      // Welcome bonus
-      await supabase.from("transactions").insert({
-        user_id: userId,
-        type: "credit",
-        amount: 50000,
-        description: "Welcome bonus",
-        status: "completed",
-      });
+      if (!existingProfile) {
+        // Only create profile with bonus on first signup
+        await supabase.from("profiles").insert({
+          id: userId,
+          email: data.user.email!,
+          full_name: signupData.fullName,
+          referral_code: generatedRefCode,
+          balance: SIGNUP_BONUS_AMOUNT,
+          total_referrals: 0,
+          referred_by: referrerId,
+        });
+
+        // Create welcome bonus transaction
+        const { error: transError } = await supabase
+          .from("transactions")
+          .insert({
+            user_id: userId,
+            type: "credit",
+            amount: SIGNUP_BONUS_AMOUNT,
+            description: "Welcome bonus",
+            status: "completed",
+          });
+
+        if (transError) {
+          console.warn("Transaction insert warning:", transError);
+        }
+      } else {
+        // Profile already exists, just ensure balance is set to bonus amount
+        const currentBalance = Number(existingProfile.balance) || 0;
+        if (currentBalance < SIGNUP_BONUS_AMOUNT) {
+          await supabase
+            .from("profiles")
+            .update({ balance: SIGNUP_BONUS_AMOUNT })
+            .eq("id", userId);
+
+          // Add transaction if not already credited
+          const { data: existingTransaction } = await supabase
+            .from("transactions")
+            .select("id")
+            .eq("user_id", userId)
+            .eq("description", "Welcome bonus")
+            .maybeSingle();
+
+          if (!existingTransaction) {
+            await supabase.from("transactions").insert({
+              user_id: userId,
+              type: "credit",
+              amount: SIGNUP_BONUS_AMOUNT,
+              description: "Welcome bonus",
+              status: "completed",
+            });
+          }
+        }
+      }
 
       // Handle referral
-      if (finalRefCode && finalRefCode.trim() !== "") {
-        console.log("🔍 DEBUG: Looking for referrer with code:", finalRefCode.trim());
-        
+      if (referrerId) {
         const { data: referrer, error: referrerError } = await supabase
           .from("profiles")
-          .select("id, balance, total_referrals, referral_code")
-          .ilike("referral_code", finalRefCode.trim())
+          .select("id, balance, total_referrals")
+          .eq("id", referrerId)
           .maybeSingle();
 
-        console.log("🔍 DEBUG: Referrer found:", referrer);
-        console.log("🔍 DEBUG: Referrer error:", referrerError);
-
-        if (referrer) {
-          console.log("🔍 DEBUG: Updating referrer:", referrer.id);
+        if (referrer && !referrerError) {
           const currentBalance = Number(referrer.balance) || 0;
           const currentReferrals = Number(referrer.total_referrals) || 0;
-          
-          const newBalance = currentBalance + 12000;
-          const newReferrals = currentReferrals + 1;
 
-          console.log("🔍 DEBUG: Current balance:", currentBalance, "referrals:", currentReferrals);
-          console.log("🔍 DEBUG: New balance:", newBalance, "referrals:", newReferrals);
-
-          const { error: updateError } = await supabase
+          await supabase
             .from("profiles")
             .update({
-              balance: newBalance,
-              total_referrals: newReferrals,
+              balance: currentBalance + REFERRAL_BONUS_AMOUNT,
+              total_referrals: currentReferrals + 1,
             })
             .eq("id", referrer.id);
-
-          console.log("🔍 DEBUG: Update error:", updateError);
-
-          if (!updateError) {
-            console.log("🔍 DEBUG: Successfully updated referrer");
-          }
 
           await supabase.from("transactions").insert({
             user_id: referrer.id,
             type: "credit",
-            amount: 12000,
+            amount: REFERRAL_BONUS_AMOUNT,
             description: `Referral bonus from ${signupData.fullName}`,
             status: "completed",
           });
-        } else {
-          console.log("🔍 DEBUG: No referrer found or error occurred");
         }
       }
 
       localStorage.removeItem("referralCode");
-      toast.success("Welcome to Renix-Ultra! You got ₦50,000 bonus!");
+      toast.success(`Welcome to Renix-Ultra! You got ₦${SIGNUP_BONUS_AMOUNT.toLocaleString()} bonus!`);
       navigate("/dashboard", { replace: true });
     } catch (error: any) {
       console.error(error);
@@ -407,7 +449,7 @@ const Auth = () => {
                   className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Creating Account..." : "Sign Up & Get ₦50,000 Bonus"}
+                  {isLoading ? "Creating Account..." : "Sign Up & Get ₦20,000 Bonus"}
                 </Button>
               </form>
             </TabsContent>

@@ -33,7 +33,7 @@ const Welcome = () => {
         <div className="grid md:grid-cols-3 gap-4 py-8">
           <div className="bg-[#0b1118]/80 backdrop-blur-lg p-6 rounded-2xl border border-[#00E53A]/30 space-y-2 shadow-[0_0_20px_rgba(0,229,58,0.05)]">
             <Gift className="w-12 h-12 mx-auto text-[#00FF55] animate-pulse-glow" />
-            <h3 className="text-xl font-bold text-white">₦50,000 Bonus</h3>
+            <h3 className="text-xl font-bold text-white">₦20,000 Bonus</h3>
             <p className="text-[#94A3B8] text-sm">
               Welcome reward credited to your account
             </p>
@@ -43,7 +43,7 @@ const Welcome = () => {
             <Users className="w-12 h-12 mx-auto text-[#00E53A] animate-pulse-glow" />
             <h3 className="text-xl font-bold text-white">Refer & Earn</h3>
             <p className="text-[#94A3B8] text-sm">
-              ₦12,000 for each friend you invite
+              ₦15,000 for each friend you invite
             </p>
           </div>
 

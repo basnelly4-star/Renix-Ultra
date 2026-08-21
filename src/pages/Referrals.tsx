@@ -57,7 +57,7 @@ const Referrals = () => {
   const shareReferral = async () => {
     const shareData = {
       title: "Join Renix-Ultra",
-      text: `Join me on Renix-Ultra and earn ₦50,000 welcome bonus! Use my referral code: ${profile?.referral_code}`,
+      text: `Join me on Renix-Ultra and earn ₦20,000 welcome bonus! Use my referral code: ${profile?.referral_code}`,
       url: referralLink,
     };
 
@@ -118,7 +118,7 @@ const Referrals = () => {
               <p className="text-3xl font-bold text-[#00E53A]">
                 ₦
                 {Number(
-                  (profile.total_referrals || 0) * 12000,
+                  (profile.total_referrals || 0) * 15000,
                 ).toLocaleString()}
               </p>
             </div>
@@ -190,14 +190,14 @@ const Referrals = () => {
                 2
               </span>
               <span>
-                They sign up using your link and get ₦50,000 welcome bonus
+                They sign up using your link and get ₦20,000 welcome bonus
               </span>
             </li>
             <li className="flex gap-3">
               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#00E53A] text-[#04080a] flex items-center justify-center text-xs font-bold">
                 3
               </span>
-              <span>You earn ₦12,000 added to your balance instantly!</span>
+              <span>You earn ₦15,000 added to your balance instantly!</span>
             </li>
           </ol>
         </Card>

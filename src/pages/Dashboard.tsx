@@ -486,13 +486,18 @@ const Dashboard = () => {
 
     setClaiming(true);
     try {
-      const { error: claimError } = await supabase
-        .from("claims")
-        .insert({ user_id: userId, amount: 1000 });
+      // Get current profile balance
+      const { data: currentProfile, error: profileError } = await supabase
+        .from("profiles")
+        .select("balance")
+        .eq("id", userId)
+        .single();
 
-      if (claimError) throw claimError;
+      if (profileError || !currentProfile) throw profileError || new Error("Profile not found");
 
-      const newBalance = (profile?.balance || 0) + 1000;
+      const newBalance = (currentProfile.balance || 0) + 1000;
+
+      // Update balance FIRST, then create records
       const { error: updateError } = await supabase
         .from("profiles")
         .update({ balance: newBalance })
@@ -500,13 +505,29 @@ const Dashboard = () => {
 
       if (updateError) throw updateError;
 
-      await supabase.from("transactions").insert({
-        user_id: userId,
-        type: "credit",
-        amount: 1000,
-        description: "Mini claim bonus",
-        status: "completed",
-      });
+      // Insert claim record
+      const { error: claimError } = await supabase
+        .from("claims")
+        .insert({ user_id: userId, amount: 1000, claimed_at: new Date().toISOString() });
+
+      if (claimError) {
+        console.warn("Claim logging failed:", claimError);
+      }
+
+      // Insert transaction record
+      const { error: transError } = await supabase
+        .from("transactions")
+        .insert({
+          user_id: userId,
+          type: "credit",
+          amount: 1000,
+          description: "Mini claim bonus",
+          status: "completed",
+        });
+
+      if (transError) {
+        console.warn("Transaction logging failed:", transError);
+      }
 
       toast.success("₦1,000 claimed successfully!");
       setLastClaimTime(new Date());
@@ -523,6 +544,7 @@ const Dashboard = () => {
       setShowDailyRewardNotif(false);
       hasDailyClaimedRef.current = true;
     } catch (error: any) {
+      console.error("Claim error:", error);
       toast.error("Failed to claim bonus");
     } finally {
       setClaiming(false);

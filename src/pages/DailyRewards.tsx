@@ -205,7 +205,7 @@ const DailyRewards = () => {
         return;
       }
 
-      // Get current profile - only fetch balance
+      // Get current profile
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("balance")
@@ -259,40 +259,38 @@ const DailyRewards = () => {
       };
       localStorage.setItem("dailyRewardStreak", JSON.stringify(streakData));
 
-      // Do database operations in background (non-blocking)
+      // Calculate new balance
       const newBalance = (profile.balance || 0) + rewardAmount;
 
-      // Update balance in background
-      supabase
+      // Update balance and wait for it to complete
+      const { error: balanceError } = await supabase
         .from("profiles")
         .update({ balance: newBalance })
-        .eq("id", user.id)
-        .then((result) => {
-          if (!result.error) {
-            toast({
-              description: `₦${rewardAmount.toLocaleString()} added to your balance!`,
-            });
-          } else {
-            console.error("Update error:", result.error);
-            toast({ description: "Failed to save balance (try refreshing)" });
-          }
-        });
+        .eq("id", user.id);
 
-      // Log the claim in claims table (non-blocking)
+      if (balanceError) {
+        console.error("Balance update error:", balanceError);
+        toast({ description: "Failed to save balance" });
+      } else {
+        toast({
+          description: `₦${rewardAmount.toLocaleString()} added to your balance!`,
+        });
+      }
+
+      // Log the claim in claims table
       const claimData = {
         user_id: user.id,
         amount: rewardAmount,
         claimed_at: new Date().toISOString(),
       };
 
-      supabase
+      const { error: claimError } = await supabase
         .from("claims")
-        .insert([claimData])
-        .then((result) => {
-          if (result.error) {
-            console.error("Insert error:", result.error);
-          }
-        });
+        .insert([claimData]);
+
+      if (claimError) {
+        console.error("Claim logging error:", claimError);
+      }
 
       setClaimingDay(null);
     } catch (error) {
