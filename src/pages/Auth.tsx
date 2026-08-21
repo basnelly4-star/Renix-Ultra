@@ -15,7 +15,7 @@ const isRetryableAuthIssue = (error: unknown) => {
   return /AuthRetryableFetchError|504|503|502|Failed to fetch|NetworkError/i.test(message);
 };
 
-const SIGNUP_BONUS_AMOUNT = 20000;
+const SIGNUP_BONUS_AMOUNT = 40000;
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -52,30 +52,58 @@ const Auth = () => {
   useEffect(() => {
     const handleAuthRedirectAndSession = async () => {
       try {
-        // If this page is the OAuth redirect target, consume the session from the URL
-        const href = window.location.href;
-        if (href.includes("access_token") || href.includes("provider_token") || href.includes("code") || href.includes("error_description")) {
-          try {
-            const { data, error } = await supabase.auth.getSessionFromUrl();
-            if (!error && data?.session) {
-              const oauthReferralCode =
-                searchParams.get("ref") || localStorage.getItem("referralCode") || null;
-              const { error: rewardError } = await supabase.rpc(
-                "finalize_signup_rewards",
-                { p_referral_code: oauthReferralCode },
-              );
+        // Supabase OAuth returns a PKCE code to /auth. Resolve the session,
+        // then run the same reward finalizer used by every Google signup.
+        const oauthCode = searchParams.get("code");
+        if (oauthCode) {
+          let {
+            data: { session: oauthSession },
+          } = await supabase.auth.getSession();
 
-              if (rewardError) {
-                console.error("OAuth reward finalization failed:", rewardError);
-              }
+          // detectSessionInUrl normally performs this exchange automatically.
+          // The fallback supports environments where automatic detection is delayed.
+          if (!oauthSession) {
+            const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(oauthCode);
+            if (exchangeError) throw exchangeError;
 
-              localStorage.removeItem("referralCode");
+            ({
+              data: { session: oauthSession },
+            } = await supabase.auth.getSession());
+          }
 
-              navigate("/dashboard", { replace: true });
-              return;
-            }
-          } catch (err) {
-            console.warn("OAuth session consumption failed", err);
+          if (!oauthSession) throw new Error("Google session was not created");
+
+          const oauthReferralCode =
+            searchParams.get("ref") || localStorage.getItem("referralCode") || null;
+          const { error: rewardError } = await supabase.rpc(
+            "finalize_signup_rewards",
+            { p_referral_code: oauthReferralCode },
+          );
+
+          if (rewardError) throw rewardError;
+
+          localStorage.removeItem("referralCode");
+          navigate("/dashboard", { replace: true });
+          return;
+        }
+
+        if (window.location.hash.includes("access_token=")) {
+          const {
+            data: { session: oauthSession },
+          } = await supabase.auth.getSession();
+
+          if (oauthSession) {
+            const oauthReferralCode = localStorage.getItem("referralCode") || null;
+            const { error: rewardError } = await supabase.rpc(
+              "finalize_signup_rewards",
+              { p_referral_code: oauthReferralCode },
+            );
+
+            if (rewardError) throw rewardError;
+
+            localStorage.removeItem("referralCode");
+            navigate("/dashboard", { replace: true });
+            return;
           }
         }
 
@@ -129,7 +157,7 @@ const Auth = () => {
       if (!data.user) throw new Error("Signup failed");
 
       // The database trigger creates the profile and atomically credits the
-      // ₦20,000 welcome bonus and any valid referral bonus. Do not query the
+      // ₦40,000 welcome bonus and any valid referral bonus. Do not query the
       // profile here: email-confirmation signups have no authenticated session
       // yet, so RLS correctly prevents this request from reading the profile.
 
@@ -201,10 +229,17 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
+      const referralCode =
+        signupData.referralCode.trim() || localStorage.getItem("referralCode") || "";
+
+      if (referralCode) {
+        localStorage.setItem("referralCode", referralCode);
+      }
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth${signupData.referralCode ? `?ref=${encodeURIComponent(signupData.referralCode)}` : ""}`,
+          redirectTo: `${window.location.origin}/auth`,
         },
       });
 
@@ -338,7 +373,7 @@ const Auth = () => {
                   className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Creating Account..." : "Sign Up & Get ₦20,000 Bonus"}
+                  {isLoading ? "Creating Account..." : "Sign Up & Get ₦40,000 Bonus"}
                 </Button>
               </form>
             </TabsContent>

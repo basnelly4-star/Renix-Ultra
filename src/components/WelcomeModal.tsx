@@ -112,10 +112,10 @@ export const WelcomeModal = () => {
               <h4 className="text-xl font-semibold">Welcome to {APP_NAME}!</h4>
 
               <p className="text-sm text-muted-foreground mx-3">
-                As a new user you'll receive a welcome bonus of{" "}
-                <span className="font-bold">₦20,000</span>. This bonus is
-                credited after you complete the required steps (joining our
-                Telegram is one of them).
+                As a new user you'll receive a signup bonus of{" "}
+                <span className="font-bold">₦40,000</span>. Download the app
+                to receive an additional <span className="font-bold">₦10,000</span>,
+                making <span className="font-bold">₦50,000</span> total.
               </p>
 
               <div className="space-y-2">

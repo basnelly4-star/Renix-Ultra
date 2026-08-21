@@ -57,7 +57,7 @@ const Referrals = () => {
   const shareReferral = async () => {
     const shareData = {
       title: "Join Renix-Ultra",
-      text: `Join me on Renix-Ultra and earn ₦20,000 welcome bonus! Use my referral code: ${profile?.referral_code}`,
+      text: `Join me on Renix-Ultra and earn ₦40,000 signup bonus plus ₦10,000 for downloading the app! Use my referral code: ${profile?.referral_code}`,
       url: referralLink,
     };
 
@@ -190,7 +190,7 @@ const Referrals = () => {
                 2
               </span>
               <span>
-                They sign up using your link and get ₦20,000 welcome bonus
+                They sign up using your link and get ₦40,000, plus ₦10,000 when they download the app
               </span>
             </li>
             <li className="flex gap-3">

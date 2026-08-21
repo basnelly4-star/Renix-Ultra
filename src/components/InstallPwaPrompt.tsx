@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Download, X } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const DISMISS_KEY = "renix-install-prompt-dismissed";
 const REAPPEAR_DELAY_MS = 5 * 60 * 1000;
+const INSTALL_REWARD_KEY = "renix-app-download-reward-claimed";
 
 type BeforeInstallPromptEvent = Event & {
   readonly platforms: string[];
@@ -49,6 +52,22 @@ const InstallPwaPrompt = () => {
       window.clearTimeout(reopenTimeoutRef.current);
       reopenTimeoutRef.current = null;
     }
+  };
+
+  const claimInstallReward = async () => {
+    if (localStorage.getItem(INSTALL_REWARD_KEY) === "true") return;
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return;
+
+    const { error } = await supabase.rpc("claim_app_download_bonus");
+    if (error) {
+      console.error("App download reward failed:", error);
+      return;
+    }
+
+    localStorage.setItem(INSTALL_REWARD_KEY, "true");
+    toast.success("₦10,000 app download bonus added to your balance!");
   };
 
   const scheduleReopen = () => {
@@ -107,6 +126,7 @@ const InstallPwaPrompt = () => {
       setHasInstalled(true);
       setShowPrompt(false);
       clearReopenTimer();
+      void claimInstallReward();
       if (typeof window !== "undefined") {
         localStorage.removeItem(DISMISS_KEY);
       }
@@ -147,6 +167,7 @@ const InstallPwaPrompt = () => {
         clearReopenTimer();
         if (choice.outcome === "accepted") {
           setHasInstalled(true);
+          void claimInstallReward();
           if (typeof window !== "undefined") {
             localStorage.removeItem(DISMISS_KEY);
           }
@@ -214,8 +235,10 @@ const InstallPwaPrompt = () => {
 
           <p className="text-sm text-muted-foreground">
             Download the app to receive notifications, stay updated instantly,
-            and keep your earnings within reach. If you already signed in on
-            this browser, opening the app will keep you logged in automatically.
+            and get an extra <span className="font-bold text-[#00FF55]">₦10,000</span> bonus.
+            That makes your total welcome reward <span className="font-bold text-[#00FF55]">₦50,000</span>.
+            If you already signed in on this browser, opening the app will keep
+            you logged in automatically.
           </p>
           <p className="text-xs text-[#00FF55]">
             If install does not start automatically, use your browser menu and
@@ -229,7 +252,7 @@ const InstallPwaPrompt = () => {
                 Fast install for Android
               </p>
               <p className="text-xs text-muted-foreground">
-                Tap Download Now and add Renix-Ultra to your home screen.
+                Tap Download Now and get your ₦10,000 app bonus.
               </p>
             </div>
           </div>

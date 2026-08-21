@@ -2,7 +2,7 @@
 -- Run this in Supabase SQL Editor, or apply with Supabase migrations.
 
 ALTER TABLE public.profiles
-  ALTER COLUMN balance SET DEFAULT 20000,
+  ALTER COLUMN balance SET DEFAULT 40000,
   ALTER COLUMN referral_earnings SET DEFAULT 15000;
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
@@ -16,7 +16,7 @@ DECLARE
   referrer_id uuid;
   user_full_name text;
   user_referral_code text;
-  welcome_bonus integer := 20000;
+  welcome_bonus integer := 40000;
   referral_bonus integer := 15000;
 BEGIN
   user_full_name := COALESCE(NULLIF(NEW.raw_user_meta_data->>'fullName', ''), split_part(COALESCE(NEW.email, 'user'), '@', 1), 'User');
@@ -96,7 +96,7 @@ DECLARE
   current_user_id uuid := auth.uid();
   current_profile public.profiles%ROWTYPE;
   referrer_id uuid;
-  welcome_bonus integer := 20000;
+  welcome_bonus integer := 40000;
   referral_bonus integer := 15000;
 BEGIN
   IF current_user_id IS NULL THEN
@@ -161,9 +161,54 @@ $$;
 REVOKE ALL ON FUNCTION public.finalize_signup_rewards(text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.finalize_signup_rewards(text) TO authenticated;
 
+-- Award the app-download bonus once per authenticated user.
+CREATE OR REPLACE FUNCTION public.claim_app_download_bonus()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  current_user_id uuid := auth.uid();
+  profile_exists boolean;
+  download_bonus integer := 10000;
+BEGIN
+  IF current_user_id IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  SELECT true INTO profile_exists
+    FROM public.profiles
+   WHERE id = current_user_id
+   FOR UPDATE;
+
+  IF NOT COALESCE(profile_exists, false) THEN
+    RAISE EXCEPTION 'Profile not found';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1
+      FROM public.transactions
+     WHERE user_id = current_user_id
+       AND description = 'App download bonus'
+  ) THEN
+    UPDATE public.profiles
+       SET balance = COALESCE(balance, 0) + download_bonus,
+           updated_at = now()
+     WHERE id = current_user_id;
+
+    INSERT INTO public.transactions (user_id, type, amount, description, status)
+    VALUES (current_user_id, 'credit', download_bonus, 'App download bonus', 'completed');
+  END IF;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.claim_app_download_bonus() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.claim_app_download_bonus() TO authenticated;
+
 -- Repair existing profiles that were created without the welcome credit.
 UPDATE public.profiles AS p
-   SET balance = 20000,
+  SET balance = 40000,
        updated_at = now()
  WHERE COALESCE(p.balance, 0) < 20000
    AND NOT EXISTS (
@@ -173,7 +218,7 @@ UPDATE public.profiles AS p
    );
 
 INSERT INTO public.transactions (user_id, type, amount, description, status)
-SELECT p.id, 'credit', 20000, 'Welcome bonus', 'completed'
+SELECT p.id, 'credit', 40000, 'Welcome bonus', 'completed'
   FROM public.profiles AS p
  WHERE COALESCE(p.balance, 0) >= 20000
    AND NOT EXISTS (
