@@ -181,11 +181,17 @@ const Withdraw = () => {
         data: { session },
       } = await supabase.auth.getSession();
 
+      if (!session?.user?.id) {
+        toast.error("Your session has expired. Please sign in again.");
+        navigate("/auth", { replace: true });
+        return;
+      }
+
       // Create withdrawal record with awaiting_activation_payment status
       const { data: withdrawal, error: withdrawalError } = await supabase
         .from("withdrawals")
         .insert({
-          user_id: session?.user.id,
+          user_id: session.user.id,
           amount,
           account_name: withdrawData.accountName,
           account_number: withdrawData.accountNumber,
@@ -196,14 +202,21 @@ const Withdraw = () => {
         .select()
         .maybeSingle();
 
-      if (withdrawalError) throw withdrawalError;
+      if (withdrawalError) {
+        console.error("Withdrawal submission failed:", withdrawalError);
+        throw withdrawalError;
+      }
+
+      if (!withdrawal) {
+        throw new Error("Withdrawal record was not created");
+      }
 
       // Redirect to payment activation page
       navigate("/withdrawal-activation", {
         state: { withdrawalId: withdrawal.id },
       });
     } catch (error: any) {
-      toast.error("Failed to submit withdrawal");
+      toast.error(error?.message || "Failed to submit withdrawal");
     } finally {
       setSubmitting(false);
     }
