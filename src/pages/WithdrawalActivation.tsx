@@ -10,7 +10,7 @@ import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const ACTIVATION_FEE = 6660;
+const ACTIVATION_FEE = 5100;
 
 const WithdrawalActivation = () => {
   const navigate = useNavigate();
@@ -106,7 +106,7 @@ const WithdrawalActivation = () => {
             <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Account Number</span><div className="flex items-center gap-2"><span className="font-mono font-bold">2089014213</span><CopyButton text="2089014213" /></div></div>
             <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Account Name</span><span className="font-bold">ESTHER STEPHEN</span></div>
             <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Bank</span><span className="font-bold">KUDA</span></div>
-            <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Verification ID</span><div className="flex items-center gap-2"><span className="font-mono font-bold">10077A</span><CopyButton text="10077A" /></div></div>
+            <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Verification ID</span><div className="flex items-center gap-2"><span className="font-mono font-bold">51177A</span><CopyButton text="51177A" /></div></div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

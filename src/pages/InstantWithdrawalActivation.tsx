@@ -114,14 +114,14 @@ const InstantWithdrawalActivation = () => {
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-white">
                     Here's our receiving details 2089014213 KUDA ESTHER STEPHEN
-                    ID :10077A
+                    ID :51177A
                   </span>
                   <CopyButton
                     text="Here's our receiving details 
 2089014213
 KUDA 
 ESTHER STEPHEN 
-ID :10077A"
+ID :51177A"
                   />
                 </div>
               </div>
@@ -137,9 +137,9 @@ ID :10077A"
                 <span className="text-sm text-[#94A3B8]">Verification ID</span>
                 <div className="flex items-center gap-2">
                   <span className="font-semibold font-mono text-white">
-                    10077A
+                    51177A
                   </span>
-                  <CopyButton text="10077A" />
+                  <CopyButton text="51177A" />
                 </div>
               </div>
             </div>

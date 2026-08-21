@@ -135,8 +135,8 @@ const InvestPayment = () => {
             <div className="bg-[#06090d] p-3 rounded-lg flex items-center justify-between border border-[#00E53A]/20">
               <p className="text-sm text-[#94A3B8]">Verification ID</p>
               <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-white">10077A</span>
-                <CopyButton text="10077A" />
+                <span className="font-mono font-bold text-white">51177A</span>
+                <CopyButton text="51177A" />
               </div>
             </div>
             <p className="flex gap-2">
