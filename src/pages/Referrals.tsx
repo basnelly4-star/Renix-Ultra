@@ -118,7 +118,7 @@ const Referrals = () => {
               <p className="text-3xl font-bold text-[#00E53A]">
                 ₦
                 {Number(
-                  (profile.total_referrals || 0) * 15000,
+                  (profile.total_referrals || 0) * 12000,
                 ).toLocaleString()}
               </p>
             </div>
@@ -197,7 +197,7 @@ const Referrals = () => {
               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#00E53A] text-[#04080a] flex items-center justify-center text-xs font-bold">
                 3
               </span>
-              <span>You earn ₦15,000 added to your balance instantly!</span>
+              <span>You earn ₦12,000 added to your balance instantly!</span>
             </li>
           </ol>
         </Card>

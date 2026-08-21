@@ -13,6 +13,7 @@ import {
   ArrowRight,
   Send,
   Users,
+  Download,
 } from "lucide-react";
 import {
   RewardsIcon,
@@ -53,6 +54,8 @@ const Dashboard = () => {
   const [showTestimonials, setShowTestimonials] = useState(false);
   const [showMilestoneModal, setShowMilestoneModal] = useState(false);
   const [showDailyTasksPopup, setShowDailyTasksPopup] = useState(false);
+  const [deferredInstallPrompt, setDeferredInstallPrompt] = useState<Event | null>(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
   const authRetryCountRef = useRef(0);
   const touchStartRef = useRef(0);
   const milestoneShownRef = useRef(false);
@@ -63,6 +66,47 @@ const Dashboard = () => {
   const dailyTasksHideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const whySlideshowRef = useRef<NodeJS.Timeout | null>(null);
   const hasDailyClaimedRef = useRef(false);
+
+  useEffect(() => {
+    const isStandalone = () =>
+      window.matchMedia("(display-mode: standalone)").matches ||
+      Boolean((window.navigator as Navigator & { standalone?: boolean }).standalone);
+
+    if (isStandalone()) return;
+
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setDeferredInstallPrompt(event);
+      setShowInstallButton(true);
+    };
+    const handleAppInstalled = () => {
+      setDeferredInstallPrompt(null);
+      setShowInstallButton(false);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
+  }, []);
+
+  const installAppFromHeader = async () => {
+    if (!deferredInstallPrompt) return;
+
+    const promptEvent = deferredInstallPrompt as Event & {
+      prompt: () => Promise<void>;
+      userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+    };
+
+    await promptEvent.prompt();
+    const choice = await promptEvent.userChoice;
+    setDeferredInstallPrompt(null);
+    if (choice.outcome === "accepted") {
+      setShowInstallButton(false);
+    }
+  };
 
   const testimonials = [
     {
@@ -668,14 +712,27 @@ const Dashboard = () => {
         className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-4 text-[#04080a] glow-brand"
         style={{ pointerEvents: "auto", position: "relative", zIndex: 2 }}
       >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-black/20 backdrop-blur-lg flex items-center justify-center text-lg font-bold brand-glow-avatar">
-            {profile.full_name?.charAt(0) || "U"}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-full bg-black/20 backdrop-blur-lg flex items-center justify-center text-lg font-bold brand-glow-avatar">
+              {profile.full_name?.charAt(0) || "U"}
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs opacity-80 truncate">Hi, {profile.full_name} 👋</p>
+              <p className="text-sm font-semibold">Welcome back!</p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs opacity-80">Hi, {profile.full_name} 👋</p>
-            <p className="text-sm font-semibold">Welcome back!</p>
-          </div>
+          {showInstallButton && (
+            <Button
+              type="button"
+              onClick={installAppFromHeader}
+              aria-label="Download Renix-Ultra app"
+              title="Download app and get ₦10,000"
+              className="h-10 w-10 flex-shrink-0 rounded-full bg-black/20 p-0 text-[#04080a] hover:bg-black/30"
+            >
+              <Download className="h-5 w-5" />
+            </Button>
+          )}
         </div>
       </div>
 

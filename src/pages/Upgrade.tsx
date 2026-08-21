@@ -15,8 +15,8 @@ const Upgrade = () => {
   const upgradeTiers = [
     {
       level: "Tier 2",
-      amount: 15000,
-      price: 15000,
+      amount: 12000,
+      price: 12000,
       color: "from-[#00C836] to-[#00E53A]",
     },
     {
@@ -115,7 +115,7 @@ const Upgrade = () => {
         <div className="space-y-4">
           {upgradeTiers.map((tier, index) => {
             const earningsByTier = [
-              "Earn ₦15,000 per each referral",
+              "Earn ₦12,000 per each referral",
               "Earn ₦25,000 per each referral",
               "Earn ₦35,000 per each referral",
               "Earn ₦45,000 per each referral",

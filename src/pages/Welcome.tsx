@@ -43,7 +43,7 @@ const Welcome = () => {
             <Users className="w-12 h-12 mx-auto text-[#00E53A] animate-pulse-glow" />
             <h3 className="text-xl font-bold text-white">Refer & Earn</h3>
             <p className="text-[#94A3B8] text-sm">
-              ₦15,000 for each friend you invite
+              ₦12,000 for each friend you invite
             </p>
           </div>
 

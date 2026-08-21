@@ -3,7 +3,7 @@
 
 ALTER TABLE public.profiles
   ALTER COLUMN balance SET DEFAULT 40000,
-  ALTER COLUMN referral_earnings SET DEFAULT 15000;
+  ALTER COLUMN referral_earnings SET DEFAULT 12000;
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger
@@ -17,7 +17,7 @@ DECLARE
   user_full_name text;
   user_referral_code text;
   welcome_bonus integer := 40000;
-  referral_bonus integer := 15000;
+  referral_bonus integer := 12000;
 BEGIN
   user_full_name := COALESCE(NULLIF(NEW.raw_user_meta_data->>'fullName', ''), split_part(COALESCE(NEW.email, 'user'), '@', 1), 'User');
   user_referral_code := NULLIF(upper(trim(COALESCE(NEW.raw_user_meta_data->>'referralCode', ''))), '');
@@ -97,7 +97,7 @@ DECLARE
   current_profile public.profiles%ROWTYPE;
   referrer_id uuid;
   welcome_bonus integer := 40000;
-  referral_bonus integer := 15000;
+  referral_bonus integer := 12000;
 BEGIN
   IF current_user_id IS NULL THEN
     RAISE EXCEPTION 'Not authenticated';
