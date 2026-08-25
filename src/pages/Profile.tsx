@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Mail, Calendar, LogOut } from "lucide-react";
+import { ArrowLeft, Mail, Calendar } from "lucide-react";
 import { ProfileIcon, RewardsIcon } from "@/assets/icons";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -40,18 +40,6 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      toast.error("Unable to sign out. Please try again.");
-      return;
-    }
-
-    toast.success("Signed out successfully");
-    navigate("/auth", { replace: true });
   };
 
   if (loading || !profile) return null;
@@ -122,15 +110,6 @@ const Profile = () => {
                 </p>
               </div>
             </div>
-
-            <Button
-              type="button"
-              onClick={handleSignOut}
-              className="w-full bg-red-600/90 hover:bg-red-600 text-white font-semibold shadow-[0_0_15px_rgba(220,38,38,0.2)]"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
           </div>
         </Card>
       </div>
