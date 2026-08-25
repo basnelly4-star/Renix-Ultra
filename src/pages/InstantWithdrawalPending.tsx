@@ -8,12 +8,11 @@ const InstantWithdrawalPending = () => {
   const navigate = useNavigate();
 
   const openWhatsApp = () => {
-    window.location.href =
-      "https://whatsapp.com/channel/0029VbCUz1HF6smt6EnLWw0F";
+    window.location.href = "https://t.me/RenixUltraSupport";
   };
 
   const openTelegram = () => {
-    window.location.href = "https://t.me/Renix-Ultrasupport1";
+    window.location.href = "https://t.me/RenixUltraSupport";
   };
 
   return (

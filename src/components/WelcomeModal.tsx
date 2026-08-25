@@ -36,7 +36,7 @@ export const WelcomeModal = () => {
   const joinTelegram = () => {
     localStorage.setItem("chixx9ja_telegram_joined", "true");
     setTelegramJoined(true);
-    window.location.href = "https://t.me/Renix-Ultra1";
+    window.location.href = "https://t.me/Renixultra";
   };
 
   const handleOpenChange = (open: boolean) => {

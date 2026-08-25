@@ -198,7 +198,7 @@ export const FloatingActionButton = ({
               </div>
               <button
                 onClick={() =>
-                  (window.location.href = "https://t.me/Renix-Ultrasupport1")
+                  (window.location.href = "https://t.me/RenixUltraSupport")
                 }
                 className={`w-14 h-14 rounded-full bg-[#00E53A] hover:bg-[#00FF55] shadow-lg flex items-center justify-center transition-all active:scale-95 touch-manipulation cursor-pointer z-10 ${showPasteLabel ? "tg-icon-pushed" : ""}`}
                 style={{

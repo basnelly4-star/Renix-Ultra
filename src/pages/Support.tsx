@@ -8,11 +8,11 @@ const Support = () => {
   const navigate = useNavigate();
 
   const openWhatsApp = () => {
-    window.location.href = "https://t.me/Renix-Ultrasupport1";
+    window.location.href = "https://t.me/RenixUltraSupport";
   };
 
   const openTelegram = () => {
-    window.location.href = "https://t.me/Renix-Ultrasupport1";
+    window.location.href = "https://t.me/RenixUltraSupport";
   };
 
   return (
@@ -70,7 +70,7 @@ const Support = () => {
         <Card className="bg-[#0b1118] border border-[#00E53A]/20 p-4">
           <p className="text-sm text-center text-[#94A3B8]">
             📱 <strong className="text-white">Telegram:</strong>{" "}
-            <span className="text-[#00FF55]">@Renix-Ultrasupport</span>
+            <span className="text-[#00FF55]">@RenixUltraSupport</span>
           </p>
         </Card>
       </div>

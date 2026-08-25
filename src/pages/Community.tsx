@@ -8,11 +8,11 @@ const Community = () => {
   const navigate = useNavigate();
 
   const openTelegramChannel = () => {
-    window.location.href = "https://t.me/Renix-Ultra1";
+    window.location.href = "https://t.me/Renixultra";
   };
 
   const openTelegramGroup = () => {
-    window.location.href = "https://whatsapp.com/channel/0029VbCUz1HF6smt6EnLWw0F";
+    window.location.href = "https://t.me/Renixultra";
   };
 
   return (

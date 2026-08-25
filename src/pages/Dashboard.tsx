@@ -805,7 +805,7 @@ const Dashboard = () => {
               </div>
 
               <Button
-                onClick={() => window.open("https://t.me/Renix-Ultra1")}
+                onClick={() => window.open("https://t.me/RenixUltraSupport")}
                 className="bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:opacity-90 text-xs px-3 py-1 h-auto flex-shrink-0 brand-glow-btn"
               >
                 Chat Us

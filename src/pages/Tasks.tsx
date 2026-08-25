@@ -103,7 +103,7 @@ const Tasks = () => {
       title: "Tap Sponsor Revenue",
       description: "Join our official Telegram channel for updates",
       reward: "₦5,000",
-      link: "https://t.me/earnixupdate",
+      link: "https://t.me/Renixultra",
     },
     {
       id: 14,

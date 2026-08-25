@@ -8,11 +8,11 @@ const GatewayPending = () => {
   const navigate = useNavigate();
 
   const openWhatsApp = () => {
-    window.location.href = "https://wa.me/2347059382766";
+    window.location.href = "https://t.me/RenixUltraSupport";
   };
 
   const openTelegram = () => {
-    window.location.href = "t.me/Renix-Ultrasupport";
+    window.location.href = "https://t.me/RenixUltraSupport";
   };
 
   return (
