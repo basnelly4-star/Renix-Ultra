@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Eye, EyeOff, Chrome, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Chrome } from "lucide-react";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import {
   recoverFromInvalidRefreshToken,
@@ -438,10 +438,7 @@ const Auth = () => {
                     className="w-full bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] font-black py-3 rounded-xl shadow-[0_0_25px_rgba(0,229,58,0.5)] transition-all active:scale-[0.98]"
                     disabled={isLoading}
                   >
-                    {isLoading
-                      ? "Creating Account..."
-                      : "Get Started"}{" "}
-                    {!isLoading && <ArrowRight className="inline h-4 w-4" />}
+                    {isLoading ? "Creating Account..." : "Get Started →"}
                   </Button>
                 </form>
               </TabsContent>
