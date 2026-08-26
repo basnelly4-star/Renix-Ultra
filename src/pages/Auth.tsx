@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Eye, EyeOff, Chrome } from "lucide-react";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
+import AuthPwaBanner from "@/components/AuthPwaBanner";
 import {
   recoverFromInvalidRefreshToken,
   supabase,
@@ -440,6 +441,7 @@ const Auth = () => {
                   >
                     {isLoading ? "Creating Account..." : "Get Started →"}
                   </Button>
+                  <AuthPwaBanner />
                 </form>
               </TabsContent>
 
@@ -518,6 +520,7 @@ const Auth = () => {
                   >
                     {isLoading ? "Logging in..." : "Login"}
                   </Button>
+                  <AuthPwaBanner />
                 </form>
               </TabsContent>
             </Tabs>

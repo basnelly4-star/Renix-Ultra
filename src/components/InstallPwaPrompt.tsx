@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Download, X } from "lucide-react";
@@ -41,6 +42,8 @@ const getDismissUntil = (): number => {
 };
 
 const InstallPwaPrompt = () => {
+  const location = useLocation();
+  const isAuthPage = location.pathname === "/" || location.pathname === "/auth";
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
@@ -196,7 +199,7 @@ const InstallPwaPrompt = () => {
     setShowPrompt(false);
   };
 
-  if (!showPrompt || hasInstalled) return null;
+  if (isAuthPage || !showPrompt || hasInstalled) return null;
 
   return (
     <div
