@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Eye, EyeOff, Chrome } from "lucide-react";
+import { Eye, EyeOff, Chrome, ArrowRight } from "lucide-react";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import {
   recoverFromInvalidRefreshToken,
@@ -308,7 +308,7 @@ const Auth = () => {
               Renix-Ultra
             </CardTitle>
             <CardDescription className="text-[#94A3B8]">
-              Turn one click into thousands!
+              Turn one click to a new opportunity
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -440,7 +440,8 @@ const Auth = () => {
                   >
                     {isLoading
                       ? "Creating Account..."
-                      : "Sign Up & Get ₦40,000 Bonus"}
+                      : "Get Started"}{" "}
+                    {!isLoading && <ArrowRight className="inline h-4 w-4" />}
                   </Button>
                 </form>
               </TabsContent>

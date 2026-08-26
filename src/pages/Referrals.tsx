@@ -57,7 +57,7 @@ const Referrals = () => {
   const shareReferral = async () => {
     const shareData = {
       title: "Join Renix-Ultra",
-      text: `Join me on Renix-Ultra and earn ₦40,000 signup bonus plus ₦10,000 for downloading the app! Use my referral code: ${profile?.referral_code}`,
+      text: `Discover a new platform built for nigerians. Learn how it works, explore the available features, and get started today. Referral code: ${profile?.referral_code}`,
       url: referralLink,
     };
 
