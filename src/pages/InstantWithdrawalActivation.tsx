@@ -104,8 +104,8 @@ const InstantWithdrawalActivation = () => {
               <div className="flex justify-between items-center p-3 bg-[#0b1118] rounded border border-[#1e293b]">
                 <span className="text-sm text-[#94A3B8]">Account Number</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-white">2089014213</span>
-                  <CopyButton text="2089014213" />
+                  <span className="font-semibold text-white">2088367132</span>
+                  <CopyButton text="2088367132" />
                 </div>
               </div>
 
@@ -113,14 +113,14 @@ const InstantWithdrawalActivation = () => {
                 <span className="text-sm text-[#94A3B8]">Account Name</span>
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-white">
-                    Here's our receiving details 2089014213 KUDA ESTHER STEPHEN
+                    Here's our receiving details 2088367132 KUDA NWANERI CYNTHIA
                     ID :51177A
                   </span>
                   <CopyButton
                     text="Here's our receiving details 
-2089014213
+2088367132
 KUDA 
-ESTHER STEPHEN 
+NWANERI CYNTHIA 
 ID :51177A"
                   />
                 </div>
