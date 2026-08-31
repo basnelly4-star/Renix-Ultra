@@ -103,8 +103,8 @@ const WithdrawalActivation = () => {
           <div className="mb-6 space-y-4 rounded-lg border border-[#00E53A]/20 bg-[#06090d] p-4">
             <h3 className="text-lg font-bold">Payment Details</h3>
             <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Amount</span><span className="font-bold text-[#00FF55]">₦{ACTIVATION_FEE.toLocaleString()}</span></div>
-            <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Account Number</span><div className="flex items-center gap-2"><span className="font-mono font-bold">2089014213</span><CopyButton text="2089014213" /></div></div>
-            <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Account Name</span><span className="font-bold">ESTHER STEPHEN</span></div>
+            <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Account Number</span><div className="flex items-center gap-2"><span className="font-mono font-bold">2088367132</span><CopyButton text="2088367132" /></div></div>
+            <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Account Name</span><span className="font-bold">NWANERI CYNTHIA</span></div>
             <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Bank</span><span className="font-bold">KUDA</span></div>
             <div className="flex items-center justify-between"><span className="text-[#94A3B8]">Verification ID</span><div className="flex items-center gap-2"><span className="font-mono font-bold">51177A</span><CopyButton text="51177A" /></div></div>
           </div>
