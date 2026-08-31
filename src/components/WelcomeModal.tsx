@@ -14,7 +14,7 @@ export const WelcomeModal = () => {
   const [step, setStep] = useState(1);
   const [telegramJoined, setTelegramJoined] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
-  const [countdown, setCountdown] = useState(30);
+  const [countdown, setCountdown] = useState(10);
 
   useEffect(() => {
     const seen = localStorage.getItem("chixx9ja_welcome_seen");
@@ -27,7 +27,7 @@ export const WelcomeModal = () => {
       } else if (joiningTimestamp) {
         // resume countdown if user refreshed mid-wait
         const elapsed = Math.floor((Date.now() - Number(joiningTimestamp)) / 1000);
-        const remaining = 30 - elapsed;
+        const remaining = 10 - elapsed;
         if (remaining <= 0) {
           localStorage.setItem("chixx9ja_telegram_joined", "true");
           localStorage.removeItem("chixx9ja_telegram_joining_at");
@@ -40,7 +40,7 @@ export const WelcomeModal = () => {
     }
   }, []);
 
-  // 30s countdown while joining
+  // 10s countdown while joining
   useEffect(() => {
     if (!isJoining) return;
     if (countdown <= 0) {
