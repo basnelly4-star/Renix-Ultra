@@ -66,7 +66,7 @@ export const WelcomeModal = () => {
     if (isJoining || telegramJoined) return;
     localStorage.setItem("chixx9ja_telegram_joining_at", String(Date.now()));
     setIsJoining(true);
-    setCountdown(30);
+    setCountdown(10);
     window.open("https://t.me/Renixultra", "_blank", "noopener,noreferrer");
   };
 
