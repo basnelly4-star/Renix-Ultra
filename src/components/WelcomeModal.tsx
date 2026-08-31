@@ -5,7 +5,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Gift, Bolt, Users } from "lucide-react";
 
 const APP_NAME = "Renix-Ultra";
@@ -14,29 +13,61 @@ export const WelcomeModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [telegramJoined, setTelegramJoined] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
+  const [countdown, setCountdown] = useState(30);
 
   useEffect(() => {
     const seen = localStorage.getItem("chixx9ja_welcome_seen");
     const telegramStatus = localStorage.getItem("chixx9ja_telegram_joined");
+    const joiningTimestamp = localStorage.getItem("chixx9ja_telegram_joining_at");
     if (!seen) {
       setIsOpen(true);
       if (telegramStatus === "true") {
         setTelegramJoined(true);
+      } else if (joiningTimestamp) {
+        // resume countdown if user refreshed mid-wait
+        const elapsed = Math.floor((Date.now() - Number(joiningTimestamp)) / 1000);
+        const remaining = 30 - elapsed;
+        if (remaining <= 0) {
+          localStorage.setItem("chixx9ja_telegram_joined", "true");
+          localStorage.removeItem("chixx9ja_telegram_joining_at");
+          setTelegramJoined(true);
+        } else {
+          setIsJoining(true);
+          setCountdown(remaining);
+        }
       }
     }
   }, []);
 
+  // 30s countdown while joining
+  useEffect(() => {
+    if (!isJoining) return;
+    if (countdown <= 0) {
+      localStorage.setItem("chixx9ja_telegram_joined", "true");
+      localStorage.removeItem("chixx9ja_telegram_joining_at");
+      setTelegramJoined(true);
+      setIsJoining(false);
+      return;
+    }
+    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [isJoining, countdown]);
+
   const close = () => {
     localStorage.setItem("chixx9ja_welcome_seen", "true");
     localStorage.removeItem("chixx9ja_telegram_joined");
+    localStorage.removeItem("chixx9ja_telegram_joining_at");
     setIsOpen(false);
     setStep(1);
   };
 
   const joinTelegram = () => {
-    localStorage.setItem("chixx9ja_telegram_joined", "true");
-    setTelegramJoined(true);
-    window.location.href = "https://t.me/Renixultra";
+    if (isJoining || telegramJoined) return;
+    localStorage.setItem("chixx9ja_telegram_joining_at", String(Date.now()));
+    setIsJoining(true);
+    setCountdown(30);
+    window.open("https://t.me/Renixultra", "_blank", "noopener,noreferrer");
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -121,17 +152,38 @@ export const WelcomeModal = () => {
               <div className="space-y-2">
                 <button
                   onClick={joinTelegram}
-                  className="w-full bg-gradient-to-r from-[#00E53A] to-[#00FF55] hover:from-[#00C836] hover:to-[#00E53A] text-black font-semibold py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(0,229,58,0.3)] active:scale-[0.98]"
+                  disabled={isJoining || telegramJoined}
+                  className={`w-full font-semibold py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(0,229,58,0.3)] active:scale-[0.98] flex items-center justify-center gap-2 ${
+                    telegramJoined
+                      ? "bg-muted text-muted-foreground cursor-default shadow-none"
+                      : isJoining
+                        ? "bg-gradient-to-r from-[#00C836] to-[#00E53A] text-black/70 cursor-wait"
+                        : "bg-gradient-to-r from-[#00E53A] to-[#00FF55] hover:from-[#00C836] hover:to-[#00E53A] text-black"
+                  }`}
                 >
-                  Join Telegram Channel
+                  {telegramJoined ? (
+                    "✓ Joined Telegram"
+                  ) : isJoining ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                      Verifying... {countdown}s
+                    </>
+                  ) : (
+                    "Join Telegram Channel"
+                  )}
                 </button>
                 {telegramJoined && (
                   <button
                     onClick={() => setStep(2)}
-                    className="w-full bg-gradient-to-r from-[#00E53A] to-[#00FF55] hover:from-[#00C836] hover:to-[#00E53A] text-black font-semibold py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(0,229,58,0.3)] active:scale-[0.98]"
+                    className="w-full bg-gradient-to-r from-[#00E53A] to-[#00FF55] hover:from-[#00C836] hover:to-[#00E53A] text-black font-semibold py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(0,229,58,0.3)] active:scale-[0.98] animate-in fade-in slide-in-from-top-1 duration-300"
                   >
                     Amazing! Continue →
                   </button>
+                )}
+                {isJoining && (
+                  <p className="text-xs text-muted-foreground text-center">
+                    Please wait {countdown}s — confirming your join...
+                  </p>
                 )}
               </div>
             </div>
