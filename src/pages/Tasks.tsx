@@ -11,6 +11,7 @@ const AD_VIEW_SECONDS = 8;
 
 const Tasks = () => {
   const navigate = useNavigate();
+  const [iframeUrl, setIframeUrl] = useState<string | null>(null);
 
   const tasks = [
     {
@@ -230,7 +231,8 @@ const Tasks = () => {
     if (!processingTask) return;
 
     if (secondsLeft <= 0) {
-      // time up -> auto credit
+      // time up -> auto credit and close iframe
+      setIframeUrl(null);
       doAutoClaim(processingTask);
       return;
     }
@@ -263,34 +265,17 @@ const Tasks = () => {
       return;
     }
 
-    // start counting immediately on tap so the user sees the timer begin right away
-    const beginTaskCountdown = () => {
-      setProcessingTask(task);
-      setSecondsLeft(AD_VIEW_SECONDS);
-      k;
-      toast.info(
-        `Ad opening... Processing "${tas.title}" — you'll be credited in ${AD_VIEW_SECONDS}s. Stay on the advert!`,
-      );
-    };
+    // start counting immediately on tap
+    setProcessingTask(task);
+    setSecondsLeft(AD_VIEW_SECONDS);
+    toast.info(
+      `Ad opened! Processing "${task.title}" — you'll be credited in ${AD_VIEW_SECONDS}s. Stay on the advert!`,
+    );
 
-    beginTaskCountdown();
-
-    // open ad immediately (same click so not blocked)
-    let opened = false;
-    try {
-      const win = window.open(task.link, "_blank", "noopener,noreferrer");
-      if (win) opened = true;
-    } catch {
-      // ignore
-    }
-    if (!opened) {
-      setProcessingTask(null);
-      setSecondsLeft(0);
-      toast.error("Popup blocked — please allow popups and tap again");
-      return;
-    }
-
-    // countdown is already running as soon as the task is tapped
+    // Open the sponsor link in an iframe modal so the app stays active
+    // and the countdown runs visibly. This avoids issues with window.open()
+    // on mobile/PWA where new tabs aren't reliable.
+    setIframeUrl(task.link);
   };
 
   return (
@@ -398,6 +383,52 @@ const Tasks = () => {
           </p>
         </Card>
       </div>
+
+      {/* Task Iframe Modal */}
+      {iframeUrl && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl h-[80vh] bg-[#0b1118] rounded-lg border border-[#00E53A]/30 shadow-[0_0_30px_rgba(0,229,58,0.2)] flex flex-col">
+            {/* Header with timer and close button */}
+            <div className="flex items-center justify-between p-4 border-b border-[#1e293b] bg-gradient-to-r from-[#00C836] to-[#00E53A]">
+              <h2 className="text-lg font-bold text-black">Task Ad</h2>
+              <div className="flex items-center gap-4">
+                {processingTask && (
+                  <span className="text-sm font-bold text-black">
+                    Crediting in {secondsLeft}s
+                  </span>
+                )}
+                <button
+                  onClick={() => {
+                    setIframeUrl(null);
+                    if (timerRef.current) clearTimeout(timerRef.current);
+                  }}
+                  className="text-black hover:opacity-70 font-bold text-lg w-6 h-6 flex items-center justify-center"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Iframe container */}
+            <div className="flex-1 overflow-hidden">
+              <iframe
+                src={iframeUrl}
+                title="Sponsor Task"
+                className="w-full h-full border-none"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+
+            {/* Loading feedback */}
+            <div className="px-4 py-2 bg-[#0b1118] border-t border-[#1e293b]">
+              <p className="text-xs text-[#94A3B8] text-center">
+                {processingTask ? `Credit processing... ${secondsLeft}s remaining` : "Loading sponsor content..."}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <FloatingActionButton />
     </div>
