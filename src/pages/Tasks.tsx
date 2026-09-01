@@ -7,7 +7,7 @@ import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-const AD_VIEW_SECONDS = 15;
+const AD_VIEW_SECONDS = 8;
 
 const Tasks = () => {
   const navigate = useNavigate();
@@ -230,7 +230,7 @@ const Tasks = () => {
     setCanClaim(false);
     setIsCounting(true);
     setShowVerifyModal(true);
-    toast.info("Ad opened! Keep it open for 15s to verify.", { duration: 3000 });
+    toast.info(`Ad opened! Keep it open for ${AD_VIEW_SECONDS}s to verify.`, { duration: 3000 });
   };
 
   const handleCancelVerify = () => {
@@ -243,7 +243,10 @@ const Tasks = () => {
 
   // Step 2: after dwell, verify & pay
   const handleVerifyAndClaim = async () => {
-    if (!activeTask) return;
+    if (!activeTask) {
+      toast.error("No task selected");
+      return;
+    }
     if (!canClaim) {
       toast.error(`Please wait ${secondsLeft}s — keep the sponsor page open!`);
       return;
@@ -256,11 +259,12 @@ const Tasks = () => {
 
     setIsClaiming(true);
     try {
+      console.log("[Tasks] claiming", activeTask.id, activeTask.reward);
       const { data: userData, error: userError } = await supabase.auth.getUser();
       const user = userData?.user;
       if (userError || !user) {
+        console.error("[Tasks] auth error", userError);
         toast.error("Please login first");
-        setIsClaiming(false);
         return;
       }
 
@@ -270,10 +274,21 @@ const Tasks = () => {
         .eq("id", user.id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("[Tasks] profile fetch error", error);
+        throw error;
+      }
+      console.log("[Tasks] profile balance", profile?.balance);
 
       const amount = parseReward(activeTask.reward);
-      const newBalance = (profile.balance ?? 0) + amount;
+      console.log("[Tasks] parsed amount", amount);
+      if (amount <= 0) {
+        toast.error("Invalid reward amount");
+        return;
+      }
+      const currentBalance = Number(profile?.balance ?? 0);
+      const newBalance = currentBalance + amount;
+      console.log("[Tasks] updating balance", currentBalance, "->", newBalance);
 
       const { error: updateError } = await supabase
         .from("profiles")
@@ -281,15 +296,17 @@ const Tasks = () => {
         .eq("id", user.id);
 
       if (updateError) {
-        toast.error("Failed to update balance. Try again.");
-      } else {
-        markTaskAsClaimed(activeTask.id);
-        toast.success(`${activeTask.reward} added to your balance!`);
-        handleCancelVerify();
+        console.error("[Tasks] update error", updateError);
+        toast.error(`Failed to update balance: ${updateError.message}`);
+        return;
       }
-    } catch (err) {
+
+      markTaskAsClaimed(activeTask.id);
+      toast.success(`${activeTask.reward} added to your balance!`);
+      handleCancelVerify();
+    } catch (err: any) {
       console.error("Claim error:", err);
-      toast.error("Something went wrong");
+      toast.error(err?.message || "Something went wrong");
     } finally {
       setIsClaiming(false);
     }
@@ -318,7 +335,7 @@ const Tasks = () => {
         <Card className="bg-gradient-to-br from-[#0b1118] to-[#06090d] backdrop-blur-lg border border-[#00E53A]/30 p-6 shadow-[0_0_20px_rgba(0,229,58,0.1)]">
           <h2 className="text-xl font-bold text-white mb-2">Earn Extra Rewards</h2>
           <p className="text-sm text-[#94A3B8]">
-            Complete 17 daily tasks to earn bonus credits and boost your earnings. Tap a task to open the sponsor ad — keep it open for 15s to verify!
+            Complete 17 daily tasks to earn bonus credits and boost your earnings. Tap a task to open the sponsor ad — keep it open for 8s to verify!
           </p>
         </Card>
 
