@@ -146,10 +146,14 @@ const Tasks = () => {
     return today === lastClaimDate;
   };
 
-  const [claimedTodayMap, setClaimedTodayMap] = useState<Record<number, boolean>>({});
+  const [claimedTodayMap, setClaimedTodayMap] = useState<
+    Record<number, boolean>
+  >({});
 
   // auto-claim state: only one task can be processing at a time
-  const [processingTask, setProcessingTask] = useState<(typeof tasks)[number] | null>(null);
+  const [processingTask, setProcessingTask] = useState<
+    (typeof tasks)[number] | null
+  >(null);
   const [secondsLeft, setSecondsLeft] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -171,7 +175,8 @@ const Tasks = () => {
 
   const doAutoClaim = async (task: (typeof tasks)[number]) => {
     try {
-      const { data: userData, error: userError } = await supabase.auth.getUser();
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
       const user = userData?.user;
       if (userError || !user) {
         toast.error("Please login first");
@@ -246,11 +251,13 @@ const Tasks = () => {
     // if another task is still processing, block and tell them to wait / redo
     if (processingTask) {
       if (processingTask.id === task.id) {
-        toast.error(`Please wait ${secondsLeft}s — "${task.title}" is still processing. Stay on the advert for 8s.`);
+        toast.error(
+          `Please wait ${secondsLeft}s — "${task.title}" is still processing. Stay on the advert for 8s.`,
+        );
       } else {
         toast.error(
           `You must wait ${secondsLeft}s on "${processingTask.title}" advert before you can start another task. Please finish and try again.`,
-          { duration: 4000 }
+          { duration: 4000 },
         );
       }
       return;
@@ -260,7 +267,9 @@ const Tasks = () => {
     const beginTaskCountdown = () => {
       setProcessingTask(task);
       setSecondsLeft(AD_VIEW_SECONDS);
-      toast.info(`Ad opening... Processing "${task.title}" — you'll be credited in ${AD_VIEW_SECONDS}s. Stay on the advert!`);
+      toast.info(
+        `Ad opening... Processing "${task.title}" — you'll be credited in ${AD_VIEW_SECONDS}s. Stay on the advert!`,
+      );
     };
 
     beginTaskCountdown();
@@ -301,9 +310,12 @@ const Tasks = () => {
 
       <div className="p-6 space-y-4">
         <Card className="bg-gradient-to-br from-[#0b1118] to-[#06090d] backdrop-blur-lg border border-[#00E53A]/30 p-6 shadow-[0_0_20px_rgba(0,229,58,0.1)]">
-          <h2 className="text-xl font-bold text-white mb-2">Earn Extra Rewards</h2>
+          <h2 className="text-xl font-bold text-white mb-2">
+            Earn Extra Rewards
+          </h2>
           <p className="text-sm text-[#94A3B8]">
-            Complete 17 daily tasks to earn bonus credits. Tap a task to open the sponsor ad — reward is credited automatically after 8s!
+            Complete 17 daily tasks to earn bonus credits. Tap a task to open
+            the sponsor ad — reward is credited automatically after 8s!
           </p>
         </Card>
 
@@ -318,10 +330,16 @@ const Tasks = () => {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <h3 className="font-semibold text-white mb-1">{task.title}</h3>
-                  <p className="text-sm text-[#94A3B8] mb-3">{task.description}</p>
+                  <h3 className="font-semibold text-white mb-1">
+                    {task.title}
+                  </h3>
+                  <p className="text-sm text-[#94A3B8] mb-3">
+                    {task.description}
+                  </p>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-[#00FF55]">{task.reward}</span>
+                    <span className="text-sm font-bold text-[#00FF55]">
+                      {task.reward}
+                    </span>
                     <span className="text-xs text-[#94A3B8]">reward</span>
                     {isClaimed && (
                       <span className="text-xs bg-[#00E53A] text-[#04080a] px-2 py-1 rounded-full font-bold shadow-[0_0_10px_rgba(0,229,58,0.3)]">
@@ -342,13 +360,16 @@ const Tasks = () => {
                     isClaimed
                       ? "bg-[#1e293b] text-[#64748B] cursor-not-allowed"
                       : isProcessing
-                      ? "bg-amber-400 text-black cursor-wait"
-                      : "bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] shadow-[0_0_20px_rgba(0,229,58,0.3)] transition-all active:scale-[0.98]"
+                        ? "bg-amber-400 text-black cursor-wait"
+                        : "bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] shadow-[0_0_20px_rgba(0,229,58,0.3)] transition-all active:scale-[0.98]"
                   }`}
                 >
-                  {isClaimed ? "Claimed" : isProcessing ? (
+                  {isClaimed ? (
+                    "Claimed"
+                  ) : isProcessing ? (
                     <span className="flex items-center gap-2">
-                      <Loader2 className="w-4 h-4 animate-spin" /> {secondsLeft}s
+                      <Loader2 className="w-4 h-4 animate-spin" /> {secondsLeft}
+                      s
                     </span>
                   ) : (
                     "Tap to Earn"
@@ -359,7 +380,9 @@ const Tasks = () => {
                 <div className="mt-3 w-full h-1.5 bg-[#1e293b] rounded-full overflow-hidden">
                   <div
                     className="h-full bg-amber-400 transition-all duration-1000 ease-linear"
-                    style={{ width: `${((AD_VIEW_SECONDS - secondsLeft) / AD_VIEW_SECONDS) * 100}%` }}
+                    style={{
+                      width: `${((AD_VIEW_SECONDS - secondsLeft) / AD_VIEW_SECONDS) * 100}%`,
+                    }}
                   />
                 </div>
               )}
@@ -369,7 +392,8 @@ const Tasks = () => {
 
         <Card className="bg-[#0b1118] border border-[#00E53A]/20 p-4">
           <p className="text-sm text-center text-[#94A3B8]">
-            Tasks reset every day at midnight. Check back tomorrow for more rewards!
+            Tasks reset every day at midnight. Check back tomorrow for more
+            rewards!
           </p>
         </Card>
       </div>
