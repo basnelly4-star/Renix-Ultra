@@ -263,33 +263,22 @@ const Tasks = () => {
       return;
     }
 
-    // start counting immediately on tap so the user sees the timer begin right away
-    const beginTaskCountdown = () => {
-      setProcessingTask(task);
-      setSecondsLeft(AD_VIEW_SECONDS);
-      toast.info(
-        `Ad opening... Processing "${task.title}" — you'll be credited in ${AD_VIEW_SECONDS}s. Stay on the advert!`,
-      );
-    };
+    // start counting immediately on tap; do not depend on window.open() return value
+    // because on mobile browsers and installed PWAs it is often null/undefined even when
+    // the external sponsor link opens successfully.
+    setProcessingTask(task);
+    setSecondsLeft(AD_VIEW_SECONDS);
+    toast.info(
+      `Ad opened! Processing "${task.title}" — you'll be credited in ${AD_VIEW_SECONDS}s. Stay on the advert!`,
+    );
 
-    beginTaskCountdown();
-
-    // open ad immediately (same click so not blocked)
-    let opened = false;
+    // open the sponsor link in the same page and don't use noopener/noreferrer,
+    // because standalone/mobile contexts do not reliably provide a usable window handle.
     try {
-      const win = window.open(task.link, "_blank", "noopener,noreferrer");
-      if (win) opened = true;
+      window.location.href = task.link;
     } catch {
-      // ignore
+      // ignore — countdown is already running and the user can retry if needed
     }
-    if (!opened) {
-      setProcessingTask(null);
-      setSecondsLeft(0);
-      toast.error("Popup blocked — please allow popups and tap again");
-      return;
-    }
-
-    // countdown is already running as soon as the task is tapped
   };
 
   return (
