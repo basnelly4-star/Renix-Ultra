@@ -256,6 +256,15 @@ const Tasks = () => {
       return;
     }
 
+    // start counting immediately on tap so the user sees the timer begin right away
+    const beginTaskCountdown = () => {
+      setProcessingTask(task);
+      setSecondsLeft(AD_VIEW_SECONDS);
+      toast.info(`Ad opening... Processing "${task.title}" — you'll be credited in ${AD_VIEW_SECONDS}s. Stay on the advert!`);
+    };
+
+    beginTaskCountdown();
+
     // open ad immediately (same click so not blocked)
     let opened = false;
     try {
@@ -265,14 +274,13 @@ const Tasks = () => {
       // ignore
     }
     if (!opened) {
+      setProcessingTask(null);
+      setSecondsLeft(0);
       toast.error("Popup blocked — please allow popups and tap again");
       return;
     }
 
-    // start processing -> will auto-claim in 8s
-    setProcessingTask(task);
-    setSecondsLeft(AD_VIEW_SECONDS);
-    toast.info(`Ad opened! Processing "${task.title}" — you'll be credited in ${AD_VIEW_SECONDS}s. Stay on the advert!`);
+    // countdown is already running as soon as the task is tapped
   };
 
   return (
