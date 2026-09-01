@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Clock, CheckCircle2, ExternalLink } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -138,7 +138,6 @@ const Tasks = () => {
     },
   ];
 
-  // Check if task was claimed today
   const isTaskClaimedToday = (taskId: number) => {
     const lastClaim = localStorage.getItem(`task_${taskId}_claimed`);
     if (!lastClaim) return false;
@@ -149,13 +148,9 @@ const Tasks = () => {
 
   const [claimedTodayMap, setClaimedTodayMap] = useState<Record<number, boolean>>({});
 
-  // Ad dwell verification state
-  const [activeTask, setActiveTask] = useState<(typeof tasks)[number] | null>(null);
-  const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(AD_VIEW_SECONDS);
-  const [isCounting, setIsCounting] = useState(false);
-  const [canClaim, setCanClaim] = useState(false);
-  const [isClaiming, setIsClaiming] = useState(false);
+  // auto-claim state: only one task can be processing at a time
+  const [processingTask, setProcessingTask] = useState<(typeof tasks)[number] | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -163,35 +158,6 @@ const Tasks = () => {
     for (const t of tasks) map[t.id] = isTaskClaimedToday(t.id);
     setClaimedTodayMap(map);
   }, []);
-
-  // countdown ticker
-  useEffect(() => {
-    if (!showVerifyModal || !isCounting) return;
-    if (secondsLeft <= 0) {
-      setCanClaim(true);
-      setIsCounting(false);
-      return;
-    }
-    timerRef.current = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [showVerifyModal, isCounting, secondsLeft]);
-
-  // pause if user hides tab / switches away — forces real dwell
-  useEffect(() => {
-    const onVisibility = () => {
-      if (!showVerifyModal || canClaim) return;
-      if (document.hidden) {
-        setIsCounting(false);
-      } else {
-        // resume only if still has time left
-        if (secondsLeft > 0) setIsCounting(true);
-      }
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, [showVerifyModal, canClaim, secondsLeft]);
 
   const markTaskAsClaimed = (taskId: number) => {
     localStorage.setItem(`task_${taskId}_claimed`, new Date().toISOString());
@@ -203,68 +169,13 @@ const Tasks = () => {
     return isNaN(n) ? 0 : n;
   };
 
-  // Step 1: user taps task -> open ad IMMEDIATELY (same click = not blocked) + start timer
-  const handleTaskTap = (task: (typeof tasks)[number]) => {
-    if (isTaskClaimedToday(task.id)) {
-      toast.error("Already claimed today! Come back tomorrow.");
-      return;
-    }
-    // open ad synchronously so popup blocker allows it
-    let opened = false;
+  const doAutoClaim = async (task: (typeof tasks)[number]) => {
     try {
-      const win = window.open(task.link, "_blank", "noopener,noreferrer");
-      if (win) opened = true;
-    } catch {
-      // ignore
-    }
-    if (!opened) {
-      // fallback: still open but inform user
-      toast.info("Popup blocked — opening ad...");
-      window.location.href = task.link;
-      return;
-    }
-
-    // start verification flow
-    setActiveTask(task);
-    setSecondsLeft(AD_VIEW_SECONDS);
-    setCanClaim(false);
-    setIsCounting(true);
-    setShowVerifyModal(true);
-    toast.info(`Ad opened! Keep it open for ${AD_VIEW_SECONDS}s to verify.`, { duration: 3000 });
-  };
-
-  const handleCancelVerify = () => {
-    setShowVerifyModal(false);
-    setIsCounting(false);
-    setCanClaim(false);
-    setActiveTask(null);
-    if (timerRef.current) clearTimeout(timerRef.current);
-  };
-
-  // Step 2: after dwell, verify & pay
-  const handleVerifyAndClaim = async () => {
-    if (!activeTask) {
-      toast.error("No task selected");
-      return;
-    }
-    if (!canClaim) {
-      toast.error(`Please wait ${secondsLeft}s — keep the sponsor page open!`);
-      return;
-    }
-    if (isTaskClaimedToday(activeTask.id)) {
-      toast.error("Already claimed today! Come back tomorrow.");
-      handleCancelVerify();
-      return;
-    }
-
-    setIsClaiming(true);
-    try {
-      console.log("[Tasks] claiming", activeTask.id, activeTask.reward);
       const { data: userData, error: userError } = await supabase.auth.getUser();
       const user = userData?.user;
       if (userError || !user) {
-        console.error("[Tasks] auth error", userError);
         toast.error("Please login first");
+        setProcessingTask(null);
         return;
       }
 
@@ -274,21 +185,17 @@ const Tasks = () => {
         .eq("id", user.id)
         .single();
 
-      if (error) {
-        console.error("[Tasks] profile fetch error", error);
-        throw error;
-      }
-      console.log("[Tasks] profile balance", profile?.balance);
+      if (error) throw error;
 
-      const amount = parseReward(activeTask.reward);
-      console.log("[Tasks] parsed amount", amount);
+      const amount = parseReward(task.reward);
       if (amount <= 0) {
         toast.error("Invalid reward amount");
+        setProcessingTask(null);
         return;
       }
+
       const currentBalance = Number(profile?.balance ?? 0);
       const newBalance = currentBalance + amount;
-      console.log("[Tasks] updating balance", currentBalance, "->", newBalance);
 
       const { error: updateError } = await supabase
         .from("profiles")
@@ -296,27 +203,80 @@ const Tasks = () => {
         .eq("id", user.id);
 
       if (updateError) {
-        console.error("[Tasks] update error", updateError);
         toast.error(`Failed to update balance: ${updateError.message}`);
+        setProcessingTask(null);
         return;
       }
 
-      markTaskAsClaimed(activeTask.id);
-      toast.success(`${activeTask.reward} added to your balance!`);
-      handleCancelVerify();
+      markTaskAsClaimed(task.id);
+      toast.success(`${task.reward} added to your balance!`);
     } catch (err: any) {
-      console.error("Claim error:", err);
-      toast.error(err?.message || "Something went wrong");
+      console.error("Auto claim error:", err);
+      toast.error(err?.message || "Something went wrong — please try again");
     } finally {
-      setIsClaiming(false);
+      setProcessingTask(null);
+      setSecondsLeft(0);
+      if (timerRef.current) clearTimeout(timerRef.current);
     }
   };
 
-  const progressPct = ((AD_VIEW_SECONDS - secondsLeft) / AD_VIEW_SECONDS) * 100;
+  // countdown -> auto claim at 0
+  useEffect(() => {
+    if (!processingTask) return;
+
+    if (secondsLeft <= 0) {
+      // time up -> auto credit
+      doAutoClaim(processingTask);
+      return;
+    }
+
+    timerRef.current = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [processingTask, secondsLeft]);
+
+  const handleTaskTap = (task: (typeof tasks)[number]) => {
+    // already claimed today?
+    if (isTaskClaimedToday(task.id)) {
+      toast.error("Already claimed today! Come back tomorrow.");
+      return;
+    }
+
+    // if another task is still processing, block and tell them to wait / redo
+    if (processingTask) {
+      if (processingTask.id === task.id) {
+        toast.error(`Please wait ${secondsLeft}s — "${task.title}" is still processing. Stay on the advert for 8s.`);
+      } else {
+        toast.error(
+          `You must wait ${secondsLeft}s on "${processingTask.title}" advert before you can start another task. Please finish and try again.`,
+          { duration: 4000 }
+        );
+      }
+      return;
+    }
+
+    // open ad immediately (same click so not blocked)
+    let opened = false;
+    try {
+      const win = window.open(task.link, "_blank", "noopener,noreferrer");
+      if (win) opened = true;
+    } catch {
+      // ignore
+    }
+    if (!opened) {
+      toast.error("Popup blocked — please allow popups and tap again");
+      return;
+    }
+
+    // start processing -> will auto-claim in 8s
+    setProcessingTask(task);
+    setSecondsLeft(AD_VIEW_SECONDS);
+    toast.info(`Ad opened! Processing "${task.title}" — you'll be credited in ${AD_VIEW_SECONDS}s. Stay on the advert!`);
+  };
 
   return (
     <div className="min-h-screen bg-[#06090d] pb-20">
-      {/* Header */}
       <div className="bg-gradient-to-r from-[#00C836] to-[#00E53A] p-6 text-[#04080a] shadow-[0_4px_20px_rgba(0,229,58,0.3)]">
         <div className="flex items-center gap-4">
           <Button
@@ -335,12 +295,14 @@ const Tasks = () => {
         <Card className="bg-gradient-to-br from-[#0b1118] to-[#06090d] backdrop-blur-lg border border-[#00E53A]/30 p-6 shadow-[0_0_20px_rgba(0,229,58,0.1)]">
           <h2 className="text-xl font-bold text-white mb-2">Earn Extra Rewards</h2>
           <p className="text-sm text-[#94A3B8]">
-            Complete 17 daily tasks to earn bonus credits and boost your earnings. Tap a task to open the sponsor ad — keep it open for 8s to verify!
+            Complete 17 daily tasks to earn bonus credits. Tap a task to open the sponsor ad — reward is credited automatically after 8s!
           </p>
         </Card>
 
         {tasks.map((task) => {
           const isClaimed = claimedTodayMap[task.id] ?? false;
+          const isProcessing = processingTask?.id === task.id;
+
           return (
             <Card
               key={task.id}
@@ -358,20 +320,41 @@ const Tasks = () => {
                         Claimed Today
                       </span>
                     )}
+                    {isProcessing && (
+                      <span className="text-xs bg-amber-400 text-black px-2 py-1 rounded-full font-bold animate-pulse">
+                        Processing {secondsLeft}s
+                      </span>
+                    )}
                   </div>
                 </div>
                 <Button
                   onClick={() => handleTaskTap(task)}
-                  disabled={isClaimed}
-                  className={`px-6 py-3 font-bold whitespace-nowrap ${
+                  disabled={isClaimed || isProcessing}
+                  className={`px-6 py-3 font-bold whitespace-nowrap min-w-[124px] ${
                     isClaimed
                       ? "bg-[#1e293b] text-[#64748B] cursor-not-allowed"
+                      : isProcessing
+                      ? "bg-amber-400 text-black cursor-wait"
                       : "bg-gradient-to-r from-[#00C836] to-[#00E53A] hover:from-[#00E53A] hover:to-[#00FF55] text-[#04080a] shadow-[0_0_20px_rgba(0,229,58,0.3)] transition-all active:scale-[0.98]"
                   }`}
                 >
-                  {isClaimed ? "Claimed" : "Tap to Earn"}
+                  {isClaimed ? "Claimed" : isProcessing ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" /> {secondsLeft}s
+                    </span>
+                  ) : (
+                    "Tap to Earn"
+                  )}
                 </Button>
               </div>
+              {isProcessing && (
+                <div className="mt-3 w-full h-1.5 bg-[#1e293b] rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-amber-400 transition-all duration-1000 ease-linear"
+                    style={{ width: `${((AD_VIEW_SECONDS - secondsLeft) / AD_VIEW_SECONDS) * 100}%` }}
+                  />
+                </div>
+              )}
             </Card>
           );
         })}
@@ -382,78 +365,6 @@ const Tasks = () => {
           </p>
         </Card>
       </div>
-
-      {/* Verification Modal — forces dwell */}
-      {showVerifyModal && activeTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <Card className="w-full max-w-md bg-[#0b1118] border border-[#00E53A]/30 p-6 shadow-[0_0_30px_rgba(0,229,58,0.2)]">
-            <div className="text-center space-y-4">
-              <div className="mx-auto w-14 h-14 rounded-full bg-[#00E53A]/15 flex items-center justify-center border border-[#00E53A]/30">
-                {canClaim ? (
-                  <CheckCircle2 className="w-7 h-7 text-[#00E53A]" />
-                ) : (
-                  <Clock className="w-7 h-7 text-[#00E53A] animate-pulse" />
-                )}
-              </div>
-
-              <div>
-                <h3 className="text-lg font-bold text-white">{canClaim ? "Verified!" : "Verifying Sponsor View..."}</h3>
-                <p className="text-sm text-[#94A3B8] mt-1">
-                  {canClaim
-                    ? "You kept the sponsor page open. Claim your reward now!"
-                    : `Keep the sponsor tab open. Claiming unlocks in ${secondsLeft}s`}
-                </p>
-                <p className="text-xs text-[#64748B] mt-1 flex items-center justify-center gap-1">
-                  <ExternalLink className="w-3 h-3" /> {activeTask.title} — {activeTask.reward}
-                </p>
-              </div>
-
-              {/* Progress */}
-              <div className="space-y-2">
-                <div className="w-full h-2 bg-[#1e293b] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-[#00C836] to-[#00E53A] transition-all duration-1000 ease-linear"
-                    style={{ width: `${progressPct}%` }}
-                  />
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-[#94A3B8]">{canClaim ? "Ready to claim" : "Stay on sponsor page..."}</span>
-                  <span className={`font-bold ${canClaim ? "text-[#00E53A]" : "text-white"}`}>
-                    {canClaim ? "✓" : `${secondsLeft}s`}
-                  </span>
-                </div>
-                {!canClaim && !isCounting && (
-                  <p className="text-xs text-amber-400">Paused — return to this tab to continue timer</p>
-                )}
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <Button
-                  variant="outline"
-                  onClick={handleCancelVerify}
-                  disabled={isClaiming}
-                  className="flex-1 border-[#1e293b] text-[#94A3B8] hover:bg-[#1e293b] hover:text-white"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleVerifyAndClaim}
-                  disabled={!canClaim || isClaiming}
-                  className={`flex-1 font-bold ${
-                    canClaim
-                      ? "bg-gradient-to-r from-[#00C836] to-[#00E53A] text-[#04080a] hover:from-[#00E53A] hover:to-[#00FF55] shadow-[0_0_20px_rgba(0,229,58,0.3)]"
-                      : "bg-[#1e293b] text-[#64748B] cursor-not-allowed"
-                  }`}
-                >
-                  {isClaiming ? "Claiming..." : canClaim ? `Claim ${activeTask.reward}` : `Wait ${secondsLeft}s`}
-                </Button>
-              </div>
-
-              <p className="text-[11px] text-[#475569]">Tip: Don't close the sponsor tab early or your view won't count.</p>
-            </div>
-          </Card>
-        </div>
-      )}
 
       <FloatingActionButton />
     </div>
